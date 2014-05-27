@@ -15,7 +15,7 @@
 
 
 function popout(varargin)
-    global colors degsize;
+   global colors degsize;
    % black, purple, green, light blue, pink, red, yellow, white
    colors = [ 0   0   0;
               255 0   255;
@@ -36,10 +36,10 @@ function popout(varargin)
       
       colorIDX = 1;
       %% 0. fixation
-      %timing.fixation.onset = fixation(w,now()+.5);
+      timing.fixation.onset = fixation(w,now()+.5);
       
       %% 1. draw cue
-      %timing.cue.onset = cue(w,colorIDX);
+      timing.cue.onset = cue(w,colorIDX);
       
       %% 2. draw attention
       timing.attention.onset = drawRing(w,6, 'Position',2,'Color',colorIDX);

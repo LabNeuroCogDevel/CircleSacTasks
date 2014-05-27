@@ -77,6 +77,8 @@ function StimulusOnsetTime = drawRing(w,numStim, varargin)
   
 
   %% draw 'em 
+  % This can probably be done without the for loop. 
+  % Screen's FrameOval and FillRect support vectors for position and color?
    for n = 1:numStim
          % draw ovel
          Screen('FrameOval', w , colors(ColorIdxs(n),:),   ... color
