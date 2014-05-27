@@ -24,8 +24,8 @@ function popout(varargin)
               0   255 0;
               173 216 255; 
               255 173 173;
-              255 255 0;
-              255 192 203;
+              255   0   0;
+              255 255   0;
               255 255 255];
           
           
@@ -38,7 +38,7 @@ function popout(varargin)
       
       colorIDX = 1;
       %% 0. fixation
-      timing.fixation.onset = fixation(w,GetSecs()+.5);
+      timing.fixation.onset = fixation(w,GetSecs());
       
       %% 1. draw cue
       timing.cue.onset = cue(w,colorIDX,GetSecs()+.5);
@@ -49,7 +49,8 @@ function popout(varargin)
       
       
       %% 3. draw probe
-      timing.probe.onset = drawRing(w,6,'PROBE', 'Position', 3, 'Color', colorIDX, 'Direction', 1);
+      timing.probe.onset = drawRing(w,6,'PROBE', 'Position', 2, 'Direction', 1,'when',GetSecs()+.5);
+      
       %attention(w,100,6, 'Position', [1,2], 'Color',[1,2],'Direction',[1,1], 'when', now())
       
       %% 4. response
