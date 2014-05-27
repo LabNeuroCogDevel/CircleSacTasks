@@ -15,7 +15,9 @@
 
 
 function popout(varargin)
-   global colors degsize;
+   global colors degsize paren;
+   paren=@(x,varargin) x(varargin{:});
+   
    % black, purple, green, light blue, pink, red, yellow, white
    colors = [ 0   0   0;
               255 0   255;
@@ -36,13 +38,14 @@ function popout(varargin)
       
       colorIDX = 1;
       %% 0. fixation
-      timing.fixation.onset = fixation(w,now()+.5);
+      timing.fixation.onset = fixation(w,GetSecs()+.5);
       
       %% 1. draw cue
-      timing.cue.onset = cue(w,colorIDX);
+      timing.cue.onset = cue(w,colorIDX,GetSecs()+.5);
       
+
       %% 2. draw attention
-      timing.attention.onset = drawRing(w,6, 'Position',2,'Color',colorIDX);
+      timing.attention.onset = drawRing(w,6, 'Position',2,'Color',colorIDX,'when',GetSecs()+.5);
       
       
       %% 3. draw probe
@@ -51,6 +54,10 @@ function popout(varargin)
       
       %% 4. response
       %  waiting for input, blank screen in 500ms
+
+      %% pretend we are wating for saccades to do soemthing
+      % push any key to continue
+      KbWait;
 
    
     catch

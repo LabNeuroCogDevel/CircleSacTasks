@@ -1,6 +1,6 @@
 function StimulusOnsetTime = drawRing(w,numStim, varargin)
    % globals used by all functions
-   global colors degsize;
+   global colors degsize paren;
    % colors =  rgb for black, purple, green, light blue, pink, red, yellow, white
  
     
@@ -109,13 +109,8 @@ function StimulusOnsetTime = drawRing(w,numStim, varargin)
    end
    
    [VBLTimestamp StimulusOnsetTime  ] = Screen('Flip',w,when);
-   
-   KbWait;
-end
+   end
 
-function r=paren(x, varargin)
-  r=x(varargin{:});
-end
 
 function r=curly(x, varargin)
  r=x{varargin{:}};
