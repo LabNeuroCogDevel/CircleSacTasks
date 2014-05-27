@@ -15,6 +15,7 @@
 
 
 function popout(varargin)
+   %% globals
    global colors degsize paren;
    paren=@(x,varargin) x(varargin{:});
    
@@ -32,35 +33,41 @@ function popout(varargin)
     % each degree is 100 pixels   
     degsize=100;
     
+    %% try running psychtoolbox
     try
 
       w = setupScreen();
       
-      colorIDX = 1;
+      colorIDX = 3;
       %% 0. fixation
       timing.fixation.onset = fixation(w,GetSecs());
       
       %% 1. draw cue
-      timing.cue.onset = cue(w,colorIDX,GetSecs()+.5);
+      timing.cue.onset       = drawRing(w,'noload','Fill','Position',1,'Color',colorIDX);
       
-
       %% 2. draw attention
-      timing.attention.onset = drawRing(w,6, 'Position',2,'Color',colorIDX,'when',GetSecs()+.5);
+      timing.attention.onset = drawRing(w,'mediumload', 'Position',2,'Color',colorIDX,'when',GetSecs()+.5);
       
       
       %% 3. draw probe
-      timing.probe.onset = drawRing(w,6,'PROBE', 'Position', 2, 'Direction', 1,'when',GetSecs()+.5);
+      timing.probe.onset     = drawRing(w,'PROBE', 'mediumload','Popout', 'Position', 2, 'Direction', 1,'when',GetSecs()+.5);
       
       %attention(w,100,6, 'Position', [1,2], 'Color',[1,2],'Direction',[1,1], 'when', now())
       
       %% 4. response
-      %  waiting for input, blank screen in 500ms
+      %  waiting for input, blank screen in 2000ms
 
       %% pretend we are wating for saccades to do soemthing
       % push any key to continue
       KbWait;
 
-   
+      
+      timing.cue.onset       = drawRing(w,'noload','Fill','Position',1,'Color',colorIDX);
+      timing.attention.onset = drawRing(w, 'Position',2,'Color',colorIDX,'when',GetSecs()+.5);
+      timing.probe.onset     = drawRing(w,'PROBE', 'Popout', 'Position', 2, 'Color',colorIDX, 'Direction', 1,'when',GetSecs()+.5);
+      KbWait;
+
+      
     catch
        % panic? close all
        psychrethrow(psychlasterror);
@@ -88,7 +95,7 @@ function w=setupScreen()
          %Screen('Preference', 'SuppressAllWarnings', 1);
 
          % Open a new window.
-         w = Screen('OpenWindow', screennum,backgroundColor, [0 0 screenResolution] );
+         w = Screen('OpenWindow', screennum,backgroundColor, [0 0 screenResolution]);
          % [ w, windowRect ] = Screen('OpenWindow', max(Screen('Screens')),[ 204 204 204], [] );
 
          %permit transparency
