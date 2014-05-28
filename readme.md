@@ -19,4 +19,4 @@ Run task with `SecondTask/RunMemoryTask.m`
 
 see `docs/`
 
-* `docs/ccnmd 2013 application.pdf` page 66 starts the description of the two tasks
+* `docs/ccnmd 2013 application.pdf` `pg. 66` starts the description of the two tasks
