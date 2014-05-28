@@ -51,6 +51,17 @@
 %%%%%%%%%
 
 %% Attention Task
+% will read in trial sequence (or generate it) and run each trial
+%
+% * each trial is run by the "attentionTrial" function
+% -> "attentionTrial" heavily leverages "drawRing"
+% -> "drawRing" has many options and is used for cue as well as all
+%    popout,habitual and flex types
+%
+% N.B. not all globals are defined here -- backgroundColor is in
+%     "setupScreen"
+% other globals
+
 function attention(varargin)
    %% globals
    global colors degsize paren;
@@ -67,11 +78,12 @@ function attention(varargin)
               255 255 255];...white
           
           
-    % each degree is 100 pixels   
+    % each degree is 100 pixels arbitarily, need subj. dist. from screen   
     degsize=100;
 
     % colors to use for repeated color task
-    popoutColorIDX   = 3;   % popout color is always green; obscured color is random each time
+    popoutColorIDX      = 3;   % popout color is always green
+    popoutWrongColorIDX = 2;   % other color is always purple
 
     %% try running psychtoolbox
     try
@@ -86,7 +98,10 @@ function attention(varargin)
       positionIDX=randi(6); % under highload, there are 6 different postiions
       saccDirIDX =randi(2); % only using left and right for now
 
-      [timing(1), correct(1) ] = attentionTrial(w,positionIDX,saccDirIDX,[popoutColorIDX 2],GetSecs(),'Popout');
+      [timing(1), correct(1) ] = attentionTrial(...
+                                   w,positionIDX,saccDirIDX,...
+                                   [popoutColorIDX popoutWrongColorIDX],...
+                                   GetSecs(),'Popout');
   
   
       %% habitual
