@@ -21,6 +21,54 @@
 
 %%%%%%%%%
 
+% Aim 1: Attention. 
+% Patients and healthy controls will perform, in separate blocks, 
+% three tasks that impose graded degrees of 
+% challenge on top-down attention. In order of increasing challenge, these 
+% are a visual pop-out task in “habitual” 
+% mode, a visual search task in “habitual” mode and a visual search task 
+% in “flexible” mode. The trial structure will 
+% be the same regardless of task (Fig. 5.1). After the 
+% appearance of a central cross, on which the subject 
+% must fixate, a color cue appears briefly at fixation. 
+% This instructs the subject that it will be necessary 
+% later in the trial to direct attention to a peripheral item 
+% of the same color. After a brief delay, a probe array 
+% appears, encompassing a target and five distractors 
+% at equal eccentricity in a hexagonal arrangement. All 
+% six items are annuli. Each annulus has a gap on 
+% either its left or right side. The subject has two 
+% seconds in which to direct attention to the target, 
+% take note of the location of the gap and respond with 
+% a left or right button press depending on whether the 
+% gap is located on the left or right side of the target. 
+% The size of the gap will be adjusted during preliminary 
+% testing so as to ensure that performance requires covert 
+% attention. 
+%
+% Each task has distinctive properties that determine the degree of challenge to top-down attention. Pop-out task 
+% in “habitual” mode. On a given block of trials, the color cue and the target will always be of one color (green in 
+% Fig.5.1) and the distractors will all be of the same color, which will be the same from trial to trial (red in Fig.5.1). 
+% Thus the target can be selected for attention in a top-down fashion, on the basis of its matching the antecedent 
+% cue in color, but top-down selection subject to aid by two bottom-up processes, namely habit (the habit 
+% developed across the block of attending to a certain color) and automatic capture of attention by an item salient 
+% due to its perceptual oddball status. Visual search task in “habitual” mode. In this task, the target will be of the 
+% same color across the entire block of trials but the distractors on any given trial will be of multiple colors. Thus 
+% the target can be selected for attention in a top-down fashion, on the basis of its matching the antecedent cue 
+% in color, but top-down selection is subject to aid by a bottom-up process, namely habit (the habit developed 
+% across the block of attending to a certain color). Visual search task in “flexible” mode. In this task, both the 
+% target and the distractors will vary in color from trial to trial. Thus the target must be selected for attention in a 
+% top-down fashion, on the basis of its matching the antecedent cue in color, without any reliance on bottom-up 
+% aids. The three tasks will be run in interleaved blocks for a total of 480 trials. 
+% Attention hypothesis 1. The performance of subjects with schizophrenia will be impaired. The impairment will 
+% be most prominent under conditions imposing the greatest demand on attention.  
+% Attention hypothesis 2. Cortical activation associated with attention will be reduced in schizophrenia. The 
+% disease effect will increase across areas in the order V1 to PPC to DLPFC. 
+% Attention hypothesis 3. Functional connectivity between DLPFC & PPC associated with attention will be 
+% reduced in schizophrenia. The reduction will be most prominent for measures found in P4 to depend on layer 
+% 3. 
+
+
 %% paradigm
 %    given a screen and a degree size
 % 
