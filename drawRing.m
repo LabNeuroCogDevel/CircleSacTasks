@@ -73,7 +73,8 @@ function StimulusOnsetTime = drawRing(w, varargin)
    end
    
    positions = load.(whatload) .* degsize + ...
-                 repmat( upperLeft,   size( load.(whatload),1) , 1 );
+                 repmat( upperLeft,   size( load.(whatload),1) , 1 ) ...
+                 + (1-.65)/2*degsize;
    
    numStim = size(positions,1);
   
@@ -90,20 +91,27 @@ function StimulusOnsetTime = drawRing(w, varargin)
       % shuffle the list of unused colors, take only the number we need
       shuffledcolors= Shuffle( setdiff( 1:length(colors), varargin{labeledColIdx}) );
       ColorIdxs(randPos) = shuffledcolors(1:length(randPos));    
-      ColorIdxs(varargin{labeledPosIdx}) = varargin{labeledColIdx};
-  % otherwise just shuffle the colors
+      ColorIdxs(varargin{labeledPosIdx}) = varargin{labeledColIdx}(1:length(varargin{labeledPosIdx}) );
   else
+      % otherwise just shuffle the colors
       ColorIdxs = Shuffle(1:length(colors)  );
   end
 
   % if this is a popout, there should only be one other color
   if isPopout && ~isempty(randPos)
-      ColorIdxs(randPos) = ColorIdxs(randPos(1));
+      if ~isempty(varargin) && ~isempty(labeledColIdx) && length(varargin{labeledColIdx}) == 2
+        % if we have 2 colors when calling, use the second colors
+        ColorIdxs(randPos) = varargin{labeledColIdx}(2);
+      else
+        % otherwise use the first random color
+        ColorIdxs(randPos) = ColorIdxs(randPos(1));
+      end
   end
   
   
   % which direction to move in
-  Directions = randi(4,1,numStim);
+  %Directions = randi(4,1,numStim);
+  Directions = randi(2,1,numStim); % do not do up/down (hard for M/EEG?)
   
   % if we have directions specified, set them
   if ~isempty(labeledDirIdx)
@@ -116,6 +124,13 @@ function StimulusOnsetTime = drawRing(w, varargin)
   % This can probably be done without the for loop. 
   % Screen's FrameOval and FillRect support vectors for position and color?
    for n = 1:numStim
+         
+       % DEBUG, draw rectangel -- make sure things are centered
+         %Screen('FillRect', w ,colors(ColorIdxs(n),:)+50,  ... color--same as background
+         %        [ positions(n,:)- (1-.65)/2*degsize   ... top left
+         %          positions(n,:) - (1-.65)/2*degsize + degsize ] ... bottom right 
+         %      );
+       
          % draw oval or fill
          OvalType='FrameOval';
          if shouldFill; OvalType='FillOval'; end
@@ -124,8 +139,6 @@ function StimulusOnsetTime = drawRing(w, varargin)
               degsize.*.05                                 ... pen width
              );
          
-
- 
          % if this is the probe, we want to indicate direction
          if isProbe
             % what direction are we going to show
