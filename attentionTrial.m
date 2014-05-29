@@ -1,15 +1,15 @@
-function [timing, correct] = attentionTrial(w,positionIDX,dirIDX,colorIDX,starttime,varargin)
+function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,starttime,varargin)
 %  attentionTrial -- run an attention trial
 % for popout, provide colorIDX as [targetColorIDX restColorIDX] and
 % varargin as 'Popout'
       
       global listenKeys;
-      
+      times = [ .5 .5 .5 .5 ]; % time between each event in seconds
       timing.fix.ideal    = starttime;
-      timing.cue.ideal    = starttime + .5;
-      timing.attend.ideal = starttime + .5 + .5;
-      timing.probe.ideal  = starttime + .5 + .5 + .5;
-      timing.clear.ideal  = starttime + .5 + .5 + .5 + .5;
+      timing.cue.ideal    = starttime + sum(times(1:1));
+      timing.attend.ideal = starttime + sum(times(1:2));
+      timing.probe.ideal  = starttime + sum(times(1:3));
+      timing.clear.ideal  = starttime + sum(times(1:4));
       
       
       % 0. fix
@@ -30,10 +30,12 @@ function [timing, correct] = attentionTrial(w,positionIDX,dirIDX,colorIDX,startt
       
       % 4. get response
     [ timing.clear.onset, ...
-      timing.RT, ...
-      correct   ]         =  clearAndWait(w,timing.clear.ideal,timing.clear.ideal+1.5,...
+      timing.Response,    ...
+      trial.correct   ]         =  clearAndWait(w,timing.clear.ideal,timing.clear.ideal+1.5,...
                                           listenKeys(dirIDX),@drawBackground);
      
+      trial.timing=timing;
+      trial.RT    = timing.Response - timing.probe.onset;
 end
 
 function drawBackground(w)

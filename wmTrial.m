@@ -1,7 +1,15 @@
-%% memorytask
+%% Working Memory Trail
+% JS 20140528 -- Initial
+% WF 21040529 -- pull out bits that are shared with attention, modify timing
 
-function trial = memorytask(w,a,number,changes,playCue)
-    global colors degsize gridsize LEFT RIGHT;
+function trial = wmTrial(w,a,number,changes,playCue)
+% wmTrial -- play a trial of working memory task
+%  use screen 'w' and audiodev 'a'
+%  show 'number' of circles
+%  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
+%  'playVue' is LEFT | RIGHT beep
+
+    global LEFT RIGHT listenKeys;
     
     i=3;
     if nargin<i || isempty(number)
@@ -23,11 +31,6 @@ function trial = memorytask(w,a,number,changes,playCue)
     [lCircColors, lUnused] = generateCircleColors(number);
     [rCircColors, rUnused] = generateCircleColors(number);
 
-    %disp(lCircColors);
-    %disp(lUnused);
-    %disp(rCircColors);
-    %disp(rUnused);
-
     lcCol2 = lCircColors;
     rcCol2 = rCircColors;
 
@@ -40,85 +43,71 @@ function trial = memorytask(w,a,number,changes,playCue)
         [nUnused,~]=size(rUnused);
         rcCol2(idx,:)=rUnused(randi(nUnused),:);
     end
+    
+   %% -1. get Codes
+   ttls = getCodes(playCue,number,changes);
+   
+   %% -1. correct key
+   % if no change, correct key is playCue
+   % if change, invert playCue
+   
+   correctKey =  mod(playCue - (playCue==changes||changes>2), 2);
+   if(correctKey==0); correctKey=2; end
+   
+   % if playCue wasnt given, set it to change, if both change use higher
+   % represention (LEFT)
+   if(playCue<=0); correctKey=max(changes,2); end
+   
+   %fprintf('(LEFT %d RIGHT %d)\n',LEFT,RIGHT)
+   fprintf('playCue: %d; change: %d; correct: %d\n',playCue,changes,correctKey);
+   
 
-    %defaultBeep = beep(f,beepFreq,beepVol,0.5*f);
 
     %% 0. fixation
     %disp('fixation');
     timing.fixation.onset = fixation(w,GetSecs());
-    t=timing.fixation.onset;
+    %times = [ 1  1.5  .2  1  1];
+    times = [ .5  .5  .3  1  2];
+    timing.cue.ideal      = timing.fixation.onset + sum(times(1:1));
+    timing.memoryset.ideal= timing.fixation.onset + sum(times(1:2));
+    timing.delay.ideal    = timing.fixation.onset + sum(times(1:3));
+    timing.probe.ideal    = timing.fixation.onset + sum(times(1:4));
+    timing.finish.max     = timing.fixation.onset + sum(times(1:5));
 
     %% 1. cue
     %disp('cue');
-    [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,t+1);%GetSecs()+1);
+    [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,timing.cue.ideal);%GetSecs()+1);
+    sendCode(ttl(1))
 
     %% 2. memory set
     %disp('memoryset');
-    timing.memoryset.onset = drawCircles(w, cat(1,lCircColors,rCircColors)',cat(2,lCirclePos,rCirclePos),t+1.5);% GetSecs()+.5);
+    timing.memoryset.onset = drawCircles(w, cat(1,lCircColors,rCircColors)',cat(2,lCirclePos,rCirclePos),timing.memoryset.ideal);% GetSecs()+.5);
+    sendCode(ttl(2))
 
     %% 3. delay
     %disp('delay');
-    timing.delay.onset = cls(w,t+1.8,true);%GetSecs()+0.3);
+    timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
+    sendCode(ttl(3))
 
     %% 4. probe
     %disp('probe');
-    timing.probe.onset = drawCircles(w, cat(1,lcCol2,rcCol2)',cat(2,lCirclePos,rCirclePos), t+2.8);%GetSecs()+1);
+    timing.probe.onset = drawCircles(w, cat(1,lcCol2,rcCol2)',cat(2,lCirclePos,rCirclePos), timing.probe.ideal);%GetSecs()+1);
+    sendCode(ttl(4))
 
     %% 5. check for keypress.
     %disp('cls');
-    [timing.endTime, trial.keyPressed, trial.keyCodes] = checkProbe(w,t+4.8);
-    trial.timing=timing;
+%    [timing.endTime, trial.keyPressed, trial.keyCodes] = checkProbe(w,timing.fixation.onset +4.8);   
+%    correct key set by playCue -- TODO: this is wrong if no change?
+    [ timing.finish.onset, ...
+      timing.Response,     ...
+      trial.correct   ]     =  clearAndWait(w,timing.finish.max,timing.finish.max,...
+                                          listenKeys(correctKey),@drawCross);
+    
+    trial.RT     = timing.Response-timing.probe.onset;                                  
+    trial.timing = timing;
 
     
 end
-
-%% checkProbe
-function [endTime, keyPressed, keys] = checkProbe(w, when)
-    global listenKeys;
-    keyPressed=false;
-    while ~keyPressed && GetSecs()<when
-        [keyPressed, endTime, keyCode] = KbCheck;
-        if keyPressed
-            if(any(keyCode(listenKeys)))
-                keys=keyCode(listenKeys).*listenKeys;
-            else
-                keyPressed=false;
-            end
-        end
-    end
-    if ~keyPressed
-        endTime=GetSecs();
-        keys=listenKeys*0;
-    end
-    cls(w,0,true);
-end
-
-
-%% 5. cls
-function StimulusOnsetTime = cls(w,when,cross)
-    if nargin<3 || isempty(cross)
-        cross=false;
-    end
-    if cross
-        drawCross(w);
-    end
-    [VBLTimeStamp,StimulusOnsetTime] = Screen('Flip',w,when);
-end
-
-
-
-
-%% timing.
-% function makeTimer(cumulative)
-%     global startTime
-%     f=;
-%     if cumulative
-%         f = @() startTime;
-%     else
-%         f = @() getTime();
-%     end
-% end
-
 
 
 %% 1. fixation
@@ -163,11 +152,6 @@ end
 
 %% 2,4. memoryset, probe.
 function StimulusOnsetTime = drawCircles(w,colorArr,posArr,when)
-    %disp('colors:');
-    %disp(colorArr);
-    %disp('posns:');
-    %disp(posArr);
-
     Screen('FillOval',w,colorArr,posArr);
     drawCross(w);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
@@ -201,13 +185,39 @@ function [StimulusOnsetTime, soundStartTime] = cue(w,a,playCue, when)
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end
 
-%% draw fixation cross.
-function drawCross(w)
-    global degsize screenResolution
-    center=screenResolution/2;
-    crosslen = degsize*.1;
-    crossw = degsize*0.025;
-    pos = [0 0 -1 1; -1 1 0 0].*crosslen;
-    color=[0,0,0];
-    Screen('DrawLines',w,pos,crossw,color,center);
+%% get trigger codes
+function triggers = getCodes(cueHemi,cLoad,changes)
+% changes is 0 no change, LEFT=LEFT, RIGHT=RIGHT, 3=both
+%
+
+  global LEFT RIGHT;
+  % triggers for (1) cue (2) array (3) delay (4) probe 
+ 
+  % cue
+  if(cueHemi==LEFT); triggers(1) = 1; 
+  else               triggers(1) = 2; end
+  
+  
+  % array: load and hemisphere
+  cLoad
+  loads    = [1 3 5]
+  arrayTTL = [3 4 5   ... if cue is left
+              6 7 8] ... if cue is right
+  
+  arrayIDX = find(loads == cLoad ) +  3 * cueHemi==RIGHT 
+
+  triggers(2) =  arrayTTL( arrayIDX )
+  
+  
+  % delay: also load and hemisphere
+  triggers(3) = 10 + cLoad + (10 * cueHemi == RIGHT);
+  
+  possibleChanges = [ 0 RIGHT LEFT 3 ];
+  
+  % probe:  hemisphere 100 or 200, load (2 3 5), 
+  %     and sameness (1=both,2=left, 3=right, 4=neither)
+  triggers(4) = 100 + (100*cueHemi==RIGHT) ... hemi
+                + 10*cload                 ... load
+                + find(possibleChanges==changes); 
+                
 end

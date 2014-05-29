@@ -1,4 +1,4 @@
-function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,correctKey,clearFunc)
+function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,correctKeys,clearFunc)
 % clearAndWait -- list for listenKeys, clear screen
 %    returns 
 %       time of clear
@@ -12,7 +12,7 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
 
  %% initialize
  global listenKeys;
- clearOnsetTime=[];
+ clearOnsetTime=Inf;
  correct=-1;
  RT=Inf;
 
@@ -33,7 +33,7 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
          if(length(key) ~= 1)
              correct = 2;
          else
-             correct = listenKeys(key) == correctKey;
+             correct = any(listenKeys(key) == correctKeys);
          end
          
          RT=responseTime;         
@@ -54,5 +54,5 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
     [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
  end
  
- fprintf('correct: %d; time remeaining %.02f\n', correct,RTwindowEnd-RT)
+ fprintf('iscorrect: %d; time remeaining %.02f\n', correct,RTwindowEnd-RT)
 end

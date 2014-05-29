@@ -87,14 +87,13 @@
 %%%%%%%%%
 
 %% TODO and change log
-%   [ ] determine saccades
 %   [ ] send event codes, different for popout, habitual, and flex?
 %   [ ] read in event order, timing
 %          starttime, [pop|hab|flx], color(idx), correctDirection(idx)
-%   [ ] possible sac. lim. to left or right?
-%   [ ] use rectFrame for percision timing w/photodiode?
-% WF 20140428
+% WF 20140529 -- redudant code merge with working memory
+% WF 20140528
 %   [x] skeleton   
+%   [?] use rectFrame for percision timing w/photodiode?
 
 %%%%%%%%%
 
@@ -151,7 +150,7 @@ function attention(varargin)
       positionIDX=randi(6); % under highload, there are 6 different postiions
       dirIDX =randi(2); % only using left and right for now
 
-      [timing(1), correct(1) ] = attentionTrial(...
+      trial(1) = attentionTrial(...
                                    w,positionIDX,dirIDX,...
                                    [popoutColorIDX popoutWrongColorIDX],...
                                    GetSecs(),'Popout');
@@ -161,7 +160,7 @@ function attention(varargin)
       positionIDX=randi(6); % under highload, there are 6 different postiions
       dirIDX =randi(2); % only using left and right for now
            
-     [timing(2), correct(2) ] =attentionTrial(w,positionIDX,dirIDX,popoutColorIDX,GetSecs()); 
+     trial(2) =attentionTrial(w,positionIDX,dirIDX,popoutColorIDX,GetSecs()); 
   
   
       %% flexible
@@ -169,7 +168,7 @@ function attention(varargin)
       positionIDX=randi(6); % under highload, there are 6 different postiions
       dirIDX =randi(2); % only using left and right for now
      
-      [timing(3), correct(3) ] = attentionTrial(w,positionIDX,dirIDX,colorIDX,GetSecs()); 
+      trial(3) = attentionTrial(w,positionIDX,dirIDX,colorIDX,GetSecs()); 
 
       
        %% other usage
@@ -177,14 +176,14 @@ function attention(varargin)
       positionIDX=randi(4);
 
       drawCross(w);
-      [VBLT,timing(4).fix.onset] =  Screen('Flip',w); 
+      [VBLT,trial(4).timing.fix.onset] =  Screen('Flip',w); 
       
-      timing(4).cue.onset       = cue(colorIDX,GetSecs()+.5);
-      timing(4).attention.onset = drawRing(w,'mediumload', 'Position',positionIDX,'Color',colorIDX,'when',GetSecs()+.5);
-      timing(4).probe.onset     = drawRing(w,'PROBE', 'mediumload', 'Position', positionIDX, 'Direction', 1,'when',GetSecs()+.5);
-    [ timing(4).clear.onset ...
-      timing(4).RT          ...
-      correct(4)   ]            =  clearAndWait(w,GetSecs+.5,GetSecs+1.5,...
+      trial(4).timing.cue.onset       = cue(colorIDX,GetSecs()+.5);
+      trial(4).timing.attention.onset = drawRing(w,'mediumload', 'Position',positionIDX,'Color',colorIDX,'when',GetSecs()+.5);
+      trial(4).timing.probe.onset     = drawRing(w,'PROBE', 'mediumload', 'Position', positionIDX, 'Direction', 1,'when',GetSecs()+.5);
+    [ trial(4).timing.clear.onset,...
+      trial(4).timing.Response,   ...
+      trial(4).correct   ]            =  clearAndWait(w,GetSecs+.5,GetSecs+1.5,...
                                           listenKeys(1),@drawCross);
 
 
