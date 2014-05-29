@@ -112,9 +112,14 @@
 
 function attention(varargin)
    %% globals
-   global colors degsize paren;
+   global colors degsize paren listenKeys;
    paren=@(x,varargin) x(varargin{:});
 
+   % what keys will we accept as correct/incorrect
+   KbName('UnifyKeyNames');
+   listenKeys = [ KbName('1!') KbName('2@') KbName('3#') KbName('4$') KbName('space') KbName('space') ];
+   % match direction 
+   
    % black, purple, green, light blue, pink, red, yellow, white
    colors = [ 0   0   0;  ... black
               255 0   255;... purple
@@ -144,39 +149,43 @@ function attention(varargin)
       
       %% pop out
       positionIDX=randi(6); % under highload, there are 6 different postiions
-      saccDirIDX =randi(2); % only using left and right for now
+      dirIDX =randi(2); % only using left and right for now
 
       [timing(1), correct(1) ] = attentionTrial(...
-                                   w,positionIDX,saccDirIDX,...
+                                   w,positionIDX,dirIDX,...
                                    [popoutColorIDX popoutWrongColorIDX],...
                                    GetSecs(),'Popout');
   
   
       %% habitual
       positionIDX=randi(6); % under highload, there are 6 different postiions
-      saccDirIDX =randi(2); % only using left and right for now
-     
-     [timing(2), correct(2) ] =attentionTrial(w,positionIDX,saccDirIDX,popoutColorIDX,GetSecs()); 
+      dirIDX =randi(2); % only using left and right for now
+           
+     [timing(2), correct(2) ] =attentionTrial(w,positionIDX,dirIDX,popoutColorIDX,GetSecs()); 
   
   
       %% flexible
       colorIDX=randi(length(colors));
       positionIDX=randi(6); % under highload, there are 6 different postiions
-      saccDirIDX =randi(2); % only using left and right for now
+      dirIDX =randi(2); % only using left and right for now
      
-      [timing(3), correct(3) ] = attentionTrial(w,positionIDX,saccDirIDX,colorIDX,GetSecs()); 
+      [timing(3), correct(3) ] = attentionTrial(w,positionIDX,dirIDX,colorIDX,GetSecs()); 
 
       
        %% other usage
       colorIDX = 5;
       positionIDX=randi(4);
-      timing(4).fixation.onset  = fixation(w,GetSecs());
+
+      drawCross(w);
+      [VBLT,timing(4).fix.onset] =  Screen('Flip',w); 
+      
       timing(4).cue.onset       = cue(colorIDX,GetSecs()+.5);
       timing(4).attention.onset = drawRing(w,'mediumload', 'Position',positionIDX,'Color',colorIDX,'when',GetSecs()+.5);
       timing(4).probe.onset     = drawRing(w,'PROBE', 'mediumload', 'Position', positionIDX, 'Direction', 1,'when',GetSecs()+.5);
     [ timing(4).clear.onset ...
       timing(4).RT          ...
-      correct(4)   ]            =  clearAndWait(w,GetSecs()+.5);
+      correct(4)   ]            =  clearAndWait(w,GetSecs+.5,GetSecs+1.5,...
+                                          listenKeys(1),@drawCross);
 
 
       
