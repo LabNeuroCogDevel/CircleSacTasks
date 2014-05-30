@@ -49,8 +49,10 @@
 
 
 %% ChangeLog
-% JS 20140528 -- initial
+% WF 20140530 -- event structure
 % WF 20140529 -- shared code with attention task
+% JS 20140528 -- initial
+
 
 %% Working Memory task
 function subject=workingMemory(varargin)
@@ -70,7 +72,14 @@ function subject=workingMemory(varargin)
     listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
     
     % get subject info
-    subject = getSubjectInfo(varargin{:});
+    subject = getSubjectInfo('task','WorkingMemory', varargin{:});
+    % initialze order of events/trials
+    if ~isfield(subject,'events') || ~isfield(subject,'curTrl') || ~isfield(subject,'curBlk') 
+      subject.events = generateWMEvents(trialsPerBlock, blocks);
+      subject.curTrl = 1;
+      subject.curBlk = 1;
+    end
+    
     
     try
         w = setupScreen();

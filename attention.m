@@ -1,3 +1,6 @@
+%% example:
+% attention ID test Age 99 sex m
+%
 %% paradigmn is "Aim 1"  of "P5"
 % The overarching goal of P5 is to measure cortical activation and functional connectivity in antipsychotic-naïve, 
 % first-episode psychosis patients and matched controls performing tasks that require attention and working 
@@ -88,6 +91,7 @@
 
 %% TODO and change log
 %   [ ] send event codes, different for popout, habitual, and flex?
+%   [ ] instructions?
 %   [?] use rectFrame for percision timing w/photodiode?
 % WF 20140530 -- add event ordering via generateAttentionEvents, set
 %                subject info via getSubejctIfno
