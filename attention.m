@@ -88,12 +88,11 @@
 
 %% TODO and change log
 %   [ ] send event codes, different for popout, habitual, and flex?
-%   [ ] read in event order, timing
-%          starttime, [pop|hab|flx], color(idx), correctDirection(idx)
-% WF 20140529 -- redudant code merge with working memory
-% WF 20140528
-%   [x] skeleton   
 %   [?] use rectFrame for percision timing w/photodiode?
+% WF 20140530 -- add event ordering via generateAttentionEvents, set
+%                subject info via getSubejctIfno
+% WF 20140529 -- redudant code merge with working memory
+% WF 20140528 -- skeleton
 
 %%%%%%%%%
 
@@ -111,82 +110,61 @@
 
 function attention(varargin)
    %% globals
-   global colors degsize paren listenKeys;
-   paren=@(x,varargin) x(varargin{:});
+   % colors, paren, and degsize defined in setupscreen
+   global listenKeys;
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
    listenKeys = [ KbName('1!') KbName('2@') KbName('3#') KbName('4$') KbName('space') KbName('space') ];
    % match direction 
-   
-   % black, purple, green, light blue, pink, red, yellow, white
-   colors = [ 0   0   0;  ... black
-              255 0   255;... purple
-              0   255 0;  ... green
-              173 216 255;... light blue
-              255 173 173;... pink
-              255   0   0;... red
-              255 255   0;... yellow
-              255 255 255];...white
-          
-          
-    % each degree is 100 pixels arbitarily, need subj. dist. from screen   
-    degsize=100;
 
     % colors to use for repeated color task
-    popoutColorIDX      = 3;   % popout color is always green
-    popoutWrongColorIDX = 2;   % other color is always purple
-
+    trialsPerBlock      = 75;
+    blocks              = 6;
+    
+    %% setup subject
+    % get subject info, possible resume from previously
+    subject = getSubjectInfo('task','Attention',varargin{:});
+    % initialze order of events/trials
+    if ~isfield(subject,'events') || ~isfield(subject,'curTrl') || ~isfield(subject,'curBlk') 
+      subject.events = generateAttentionEvents(trialsPerBlock, blocks);
+      subject.curTrl = 1;
+      subject.curBlk = 1;
+    end
+    
     %% try running psychtoolbox
     try
 
       w = setupScreen();
-      % cue is always the same call, so we'll save some characters
-      cue = @(color,when) drawRing(w,'noload','Fill','Position',1,'Color',color,'when',when);
 
       
-      
-      %% pop out
-      positionIDX=randi(6); % under highload, there are 6 different postiions
-      dirIDX =randi(2); % only using left and right for now
-
-      trial(1) = attentionTrial(...
-                                   w,positionIDX,dirIDX,...
-                                   [popoutColorIDX popoutWrongColorIDX],...
-                                   GetSecs(),'Popout');
-  
-  
-      %% habitual
-      positionIDX=randi(6); % under highload, there are 6 different postiions
-      dirIDX =randi(2); % only using left and right for now
-           
-     trial(2) =attentionTrial(w,positionIDX,dirIDX,popoutColorIDX,GetSecs()); 
-  
-  
-      %% flexible
-      colorIDX=randi(length(colors));
-      positionIDX=randi(6); % under highload, there are 6 different postiions
-      dirIDX =randi(2); % only using left and right for now
+      % until we run out of trials on this block
+      thisBlk=subject.curBlk;
+      while subject.events(subject.curTrl).block == thisBlk
+          e   = subject.events(subject.curTrl);
+          trl = attentionTrial(w, ...
+              e.trgtpos, ...
+              e.crtDir, ...
+              [ e.trgClr e.wrgClr ], ... only popout has wrong color
+              GetSecs(),...
+              e.type );
+          subject.trial(subject.curTrl) = trl;
+          
+          % redudant data for easy viewing
+          subject.events(subject.curTrl).RT = trl.RT;
+          subject.events(subject.curTrl).Correct = trl.correct;
+          
+          % update where we are before saving
+          subject.curTrl=subject.curTrl+1;
+          subject.curBlk=subject.events(subject.curTrl).block;
+          
+          % save
+          save(subject.file, '-struct', 'subject');
+          
+          % print something
+          fprintf('starting trial %d\n', subject.curTrl);
+      end
      
-      trial(3) = attentionTrial(w,positionIDX,dirIDX,colorIDX,GetSecs()); 
-
-      
-       %% other usage
-      colorIDX = 5;
-      positionIDX=randi(4);
-
-      drawCross(w);
-      [VBLT,trial(4).timing.fix.onset] =  Screen('Flip',w); 
-      
-      trial(4).timing.cue.onset       = cue(colorIDX,GetSecs()+.5);
-      trial(4).timing.attention.onset = drawRing(w,'mediumload', 'Position',positionIDX,'Color',colorIDX,'when',GetSecs()+.5);
-      trial(4).timing.probe.onset     = drawRing(w,'PROBE', 'mediumload', 'Position', positionIDX, 'Direction', 1,'when',GetSecs()+.5);
-    [ trial(4).timing.clear.onset,...
-      trial(4).timing.Response,   ...
-      trial(4).correct   ]            =  clearAndWait(w,GetSecs+.5,GetSecs+1.5,...
-                                          listenKeys(1),@drawCross);
-
-
       
     catch
        % panic? close all
@@ -195,12 +173,4 @@ function attention(varargin)
     end
    
     closedown();
-end
-
-%% how to shutdown
-function closedown()
-     ShowCursor;
-     %ListenChar(0);
-     Screen('CloseAll');
-     Priority(0); % set priority to normal
 end

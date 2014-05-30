@@ -13,18 +13,22 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,starttime,varargin
       
       
       % 0. fix
+      drawBorder(w,[0 0 0], .7);
       drawCross(w);
       [~,timing.fix.onset] =  Screen('Flip',w,timing.fix.ideal); 
       % 1. cue
       drawBorder(w,[0 0 0], 1);
+      %drawCross(w); % can't see cross with big dot there anyway
       timing.cue.onset     = drawRing(w,'noload','Fill','Position',1,'Color',colorIDX,'when',timing.cue.ideal);
       sendCode('x',1); 
       % 2. attend
       drawBorder(w,[0 0 0], .5);
+      drawCross(w);
       timing.attend.onset  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX, 'when',timing.attend.ideal,varargin{:});
       sendCode('x',2); 
       % 3. probe ("response array")
       drawBorder(w,[0 0 0], 0);
+      drawCross(w);
       timing.probe.onset   = drawRing(w, 'PROBE', 'Position', positionIDX, 'Color',colorIDX, 'Direction', dirIDX,'when',timing.probe.ideal,varargin{:});
       sendCode('x',3); 
       
@@ -32,12 +36,13 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,starttime,varargin
     [ timing.clear.onset, ...
       timing.Response,    ...
       trial.correct   ]         =  clearAndWait(w,timing.clear.ideal,timing.clear.ideal+1.5,...
-                                          listenKeys(dirIDX),@drawBackground);
+                                          listenKeys(dirIDX),@drawCross);
      
       trial.timing=timing;
       trial.RT    = timing.Response - timing.probe.onset;
 end
 
+% if we do not want cross, use @drawBackground in clearAndWait
 function drawBackground(w)
   global backgroundColor
   Screen('FillRect', w, backgroundColor )

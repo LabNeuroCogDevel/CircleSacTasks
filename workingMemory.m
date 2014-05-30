@@ -53,29 +53,15 @@
 % WF 20140529 -- shared code with attention task
 
 %% Working Memory task
-function workingMemory(varargin)
-    global colors degsize gridsize screenResolution listenKeys LEFT RIGHT lsound rsound;
-
+function subject=workingMemory(varargin)
+    % colors screenResolution and gridsize are defined in setupScreen
+    global   gridsize  listenKeys LEFT RIGHT lsound rsound;
+    
+    % useful paradigmn info
     gridsize = [9 7];
-    
-    screenResolution = [1024 768]; %[800 600];
-    
-    LEFT = 2;
-    RIGHT = 1;
-    
-    % each degree is 100 pixels
-    degsize=100;
-    
-    % black, purple, green, light blue, pink, red, yellow, white
-    colors = [ 0   0   0;
-               255 0   255;
-               0   255 0;
-               173 216 255; 
-               255 173 173;
-               255   0   0;
-               255 255   0;
-               255 255 255];
-           
+    LEFT = 1;
+    RIGHT = 2;
+
     
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');
@@ -83,10 +69,14 @@ function workingMemory(varargin)
     listenKeys(LEFT) = KbName('1!');
     listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
     
+    % get subject info
+    subject = getSubjectInfo(varargin{:});
+    
     try
         w = setupScreen();
         a = setupAudio();
         
+        % setup beeps
         audioStats = PsychPortAudio('GetStatus',a);
         sampleRate = audioStats.SampleRate;
         
@@ -96,10 +86,15 @@ function workingMemory(varargin)
         rsoundmono = beep(sampleRate,1000,0.4,0.5*sampleRate);
         rsound = [rsoundmono;rsoundmono];
         
-        trial(1)=wmTrial(w,a,5,RIGHT,LEFT);
-        trial(2)=wmTrial(w,a,1,LEFT,0);
-        trial(3)=wmTrial(w,a,3,RIGHT,RIGHT);
-        trial(4)=wmTrial(w,a,3,0,LEFT);
+        % setup possibilities
+        loads   = [1 3 5];
+     
+        loadIDX=randi(3);
+        % sreen,audio,load,hemichange,playcue)
+        trial(1)=wmTrial(w,a,5,RIGHT     ,LEFT);
+        trial(2)=wmTrial(w,a,1,LEFT      ,LEFT);
+        trial(3)=wmTrial(w,a,3,RIGHT     ,RIGHT);
+        trial(4)=wmTrial(w,a,3,0         ,LEFT);
         trial(5)=wmTrial(w,a,1,LEFT+RIGHT,RIGHT);
         
         timing=trial(5).timing;
@@ -108,8 +103,8 @@ function workingMemory(varargin)
         init=timing.fixation.onset;
         fields=fieldnames(timing);
         for i=1:numel(fields)
-            disp(strcat(fields{i},'.onset:'));
             if(isfield(timing.(fields{i}), 'onset'));
+              disp(strcat(fields{i},'.onset:'));
               disp(timing.(fields{i}).onset-init);
             end
         end
@@ -119,7 +114,8 @@ function workingMemory(varargin)
         closedown();
         psychrethrow(psychlasterror);
     end
-    KbWait
+    
+    KbWait;
     
     closedown();
 end

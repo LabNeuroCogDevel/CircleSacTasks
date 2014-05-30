@@ -77,22 +77,22 @@ function trial = wmTrial(w,a,number,changes,playCue)
     %% 1. cue
     %disp('cue');
     [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,timing.cue.ideal);%GetSecs()+1);
-    sendCode(ttl(1))
+    sendCode('x',ttls(1))
 
     %% 2. memory set
     %disp('memoryset');
     timing.memoryset.onset = drawCircles(w, cat(1,lCircColors,rCircColors)',cat(2,lCirclePos,rCirclePos),timing.memoryset.ideal);% GetSecs()+.5);
-    sendCode(ttl(2))
+    sendCode('x',ttls(2))
 
     %% 3. delay
     %disp('delay');
     timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
-    sendCode(ttl(3))
+    sendCode('x',ttls(3))
 
     %% 4. probe
     %disp('probe');
     timing.probe.onset = drawCircles(w, cat(1,lcCol2,rcCol2)',cat(2,lCirclePos,rCirclePos), timing.probe.ideal);%GetSecs()+1);
-    sendCode(ttl(4))
+    sendCode('x',ttls(4))
 
     %% 5. check for keypress.
     %disp('cls');
@@ -103,9 +103,12 @@ function trial = wmTrial(w,a,number,changes,playCue)
       trial.correct   ]     =  clearAndWait(w,timing.finish.max,timing.finish.max,...
                                           listenKeys(correctKey),@drawCross);
     
-    trial.RT     = timing.Response-timing.probe.onset;                                  
-    trial.timing = timing;
-
+    trial.RT      = timing.Response-timing.probe.onset;                                  
+    trial.timing  = timing;
+    trial.load    = number;
+    trial.hemi    = changes;
+    trial.playCue = playCue;
+    
     
 end
 
@@ -199,14 +202,13 @@ function triggers = getCodes(cueHemi,cLoad,changes)
   
   
   % array: load and hemisphere
-  cLoad
-  loads    = [1 3 5]
+  loads    = [1 3 5];
   arrayTTL = [3 4 5   ... if cue is left
-              6 7 8] ... if cue is right
+              6 7 8]; ... if cue is right
   
-  arrayIDX = find(loads == cLoad ) +  3 * cueHemi==RIGHT 
+  arrayIDX = find(loads == cLoad ) +  3 * (cueHemi==RIGHT );
 
-  triggers(2) =  arrayTTL( arrayIDX )
+  triggers(2) =  arrayTTL( arrayIDX );
   
   
   % delay: also load and hemisphere
@@ -217,7 +219,7 @@ function triggers = getCodes(cueHemi,cLoad,changes)
   % probe:  hemisphere 100 or 200, load (2 3 5), 
   %     and sameness (1=both,2=left, 3=right, 4=neither)
   triggers(4) = 100 + (100*cueHemi==RIGHT) ... hemi
-                + 10*cload                 ... load
+                + 10*cLoad                 ... load
                 + find(possibleChanges==changes); 
                 
 end
