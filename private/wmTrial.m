@@ -109,6 +109,7 @@ function trial = wmTrial(w,a,number,changes,playCue)
     trial.hemi    = changes;
     trial.playCue = playCue;
     
+    trial.triggers= ttls;
     
 end
 
@@ -207,7 +208,6 @@ function triggers = getCodes(cueHemi,cLoad,changes)
               6 7 8]; ... if cue is right
   
   arrayIDX = find(loads == cLoad ) +  3 * (cueHemi==RIGHT );
-
   triggers(2) =  arrayTTL( arrayIDX );
   
   

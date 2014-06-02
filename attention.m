@@ -93,6 +93,8 @@
 %   [ ] send event codes, different for popout, habitual, and flex?
 %   [ ] instructions?
 %   [?] use rectFrame for percision timing w/photodiode?
+% WF 20140602 -- save trial (may cause timing issues -- rewritting all of
+%                            subject struct every trial)
 % WF 20140530 -- add event ordering via generateAttentionEvents, set
 %                subject info via getSubejctIfno
 % WF 20140529 -- redudant code merge with working memory
@@ -144,29 +146,19 @@ function attention(varargin)
       
       % until we run out of trials on this block
       thisBlk=subject.curBlk;
+      
       while subject.events(subject.curTrl).block == thisBlk
+      
           e   = subject.events(subject.curTrl);
+          
           trl = attentionTrial(w, ...
               e.trgtpos, ...
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               GetSecs(),...
               e.type );
-          subject.trial(subject.curTrl) = trl;
-          
-          % redudant data for easy viewing
-          subject.events(subject.curTrl).RT = trl.RT;
-          subject.events(subject.curTrl).Correct = trl.correct;
-          
-          % update where we are before saving
-          subject.curTrl=subject.curTrl+1;
-          subject.curBlk=subject.events(subject.curTrl).block;
-          
-          % save
-          save(subject.file, '-struct', 'subject');
-          
-          % print something
-          fprintf('starting trial %d\n', subject.curTrl);
+          % save subject, update position in run
+          subject=saveTrial(subject,trl);
       end
      
       

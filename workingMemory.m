@@ -49,6 +49,8 @@
 
 
 %% ChangeLog
+% WF 20140602 -- save trial (may cause timing issues -- rewritting all of
+%                            subject struct every trial)
 % WF 20140530 -- event structure
 % WF 20140529 -- shared code with attention task
 % JS 20140528 -- initial
@@ -57,13 +59,17 @@
 %% Working Memory task
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT lsound rsound;
+    global   gridsize  listenKeys LEFT RIGHT lsound rsound LOADS;
     
     % useful paradigmn info
     gridsize = [9 7];
     LEFT = 1;
     RIGHT = 2;
+    LOADS = [ 1 3 5];
 
+    
+    trialsPerBlock=100;
+    blocks=2;
     
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');
@@ -94,30 +100,25 @@ function subject=workingMemory(varargin)
         
         rsoundmono = beep(sampleRate,1000,0.4,0.5*sampleRate);
         rsound = [rsoundmono;rsoundmono];
-        
-        % setup possibilities
-        loads   = [1 3 5];
-     
-        loadIDX=randi(3);
-        % sreen,audio,load,hemichange,playcue)
-        trial(1)=wmTrial(w,a,5,RIGHT     ,LEFT);
-        trial(2)=wmTrial(w,a,1,LEFT      ,LEFT);
-        trial(3)=wmTrial(w,a,3,RIGHT     ,RIGHT);
-        trial(4)=wmTrial(w,a,3,0         ,LEFT);
-        trial(5)=wmTrial(w,a,1,LEFT+RIGHT,RIGHT);
-        
-        timing=trial(5).timing;
-        
-        disp('Displaying time deltas');
-        init=timing.fixation.onset;
-        fields=fieldnames(timing);
-        for i=1:numel(fields)
-            if(isfield(timing.(fields{i}), 'onset'));
-              disp(strcat(fields{i},'.onset:'));
-              disp(timing.(fields{i}).onset-init);
-            end
-        end
-        
+
+         % until we run out of trials on this block
+         thisBlk=subject.curBlk;
+
+         while subject.events(subject.curTrl).block == thisBlk
+
+            e   = subject.events(subject.curTrl);
+
+            % sreen,audio,load,hemichange,playcue)
+            trl = wmTrial(w,a, ...
+                  e.load, ...
+                  e.changes, ...
+                  e.playCue);
+
+            % save subject info into mat
+            % update current position in block list
+            subject=saveTrial(subject,trl);
+         end
+      
     catch
         % error kill all.
         closedown();
@@ -127,7 +128,10 @@ function subject=workingMemory(varargin)
     KbWait;
     
     closedown();
+
+    
 end
+
 
 
 %% setup audio
