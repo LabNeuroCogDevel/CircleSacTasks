@@ -31,13 +31,23 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     colors       = Shuffle(repmat(1:nColors,1,ceil(blocks/nColors)));
     colors       = colors(1:blocks);
     
-    % correct direction
-    directions   = Shuffle(repmat(1:nDirs,1,ceil(nTrl/nDirs)));
-    directions   = directions(1:nTrl);
-    
     % position of target
     trgtpos  = Shuffle(repmat(1:nTrgts,1,ceil(nTrl/nTrgts)));
     trgtpos  = trgtpos(1:nTrl);
+    
+     % correct direction
+    directions   = Shuffle(repmat(1:nDirs,1,ceil(nTrl/nDirs)));
+    
+    %re-populates directions so that each position has equal number of left
+    %and right 
+    for i = 1:6;
+        sDirs = (find(trgtpos == i)); 
+        %Creates a matrix half the length of sDirs with ones and another with
+        %twos then concatenates them
+        newDirs = Shuffle([ones(1,ceil(length(find(trgtpos == i))/2)), (repmat(2,1,ceil(length(find(trgtpos == i))/2)))]);
+        newDirs = newDirs(1:length(sDirs));
+        directions(sDirs) = newDirs; 
+    end 
     
     % in >= Matlab2013, events looks like a table in variable explorer
     % if we events as an array of structs
