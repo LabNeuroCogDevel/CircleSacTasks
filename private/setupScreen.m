@@ -50,10 +50,15 @@ function w=setupScreen()
      % set font
      %Screen('TextFont', w, 'Arial');
      %Screen('TextSize', w, 22);
-
-     % keyboard pushes dont go to screen
-     ListenChar(2);
-
+    
+     % Set process priority to max to minimize lag or sharing process time with other processes.
+     Priority(MaxPriority(w));
+    
+     %do not echo keystrokes to MATLAB
+     %ListenChar(2); %leaving out for now because crashing at MRRC
+    
+     HideCursor;
+    
      % conviency ananomous function
      paren=@(x,varargin) x(varargin{:});
 

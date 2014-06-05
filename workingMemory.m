@@ -69,7 +69,7 @@ function subject=workingMemory(varargin)
 
     
     trialsPerBlock=100;
-    blocks=2;
+    blocks=6;
     
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');
@@ -104,6 +104,16 @@ function subject=workingMemory(varargin)
          % until we run out of trials on this block
          thisBlk=subject.curBlk;
 
+         
+         % display instructions
+         newInstructions = { 'Welcome to the Working Memory Game\n', ...
+                             'push the right button if the target is a C\n' ...
+                            };
+         betweenInstructions = { 'Welcome Back' }; 
+         instructions(w,newInstructions,betweenInstructions,subject);
+         
+         
+         % run the actual task
          while subject.events(subject.curTrl).block == thisBlk
 
             e   = subject.events(subject.curTrl);

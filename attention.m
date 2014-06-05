@@ -121,7 +121,7 @@ function attention(varargin)
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
-   listenKeys = [ KbName('1!') KbName('2@') KbName('3#') KbName('4$') KbName('space') KbName('space') ];
+   listenKeys = [ KbName('1!') KbName('2@') KbName('3#') KbName('4$') KbName('space')  ];
    % match direction 
 
     % colors to use for repeated color task
@@ -147,6 +147,16 @@ function attention(varargin)
       % until we run out of trials on this block
       thisBlk=subject.curBlk;
       
+      
+              
+      % display instructions
+      newInstructions = { 'Welcome to the Attention Game\n', ...
+                         'push the right button if the target is a C\n' ...
+                        };
+      betweenInstructions = { 'Welcome Back' }; 
+      instructions(w,newInstructions,betweenInstructions,subject);
+
+      
       while subject.events(subject.curTrl).block == thisBlk
       
           e   = subject.events(subject.curTrl);
@@ -157,6 +167,7 @@ function attention(varargin)
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               GetSecs(),...
               e.type );
+          
           % save subject, update position in run
           subject=saveTrial(subject,trl);
       end
