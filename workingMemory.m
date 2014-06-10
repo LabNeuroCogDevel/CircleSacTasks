@@ -68,10 +68,11 @@ function subject=workingMemory(varargin)
     LOADS = [ 1 3 5];
     
     % fix cue memory delay probe finish
-    TIMES = [ .5  .5  .3  1  2];
+    %TIMES = [ .5  .5  .3  1  2];
+    TIMES = [ .5  .5  .5  1  2];
 
     
-    trialsPerBlock=100;
+    trialsPerBlock=12;
     blocks=6;
     
     % setup keys such that the correct LEFT push is at LEFT index

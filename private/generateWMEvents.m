@@ -34,7 +34,8 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     % -1 other side, 0 no change, 1 same side
     % matched to the lenght of playCue
     % TODO -- or not: add both change
-    posblChanges=[ -1 0 1 ];
+    %posblChanges=[ -1 0 1 ];
+    posblChanges=[ 0 1 ]; % only same or different, no opposite change
     nPlyCue = length(playCue);
     chngType =  repmat(posblChanges,1,ceil(nPlyCue/length(posblChanges)));
     changes=playCue .* chngType(1:nPlyCue);
