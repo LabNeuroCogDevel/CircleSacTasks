@@ -1,4 +1,4 @@
-function StimulusOnsetTime = drawRing(w, varargin)
+function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
    % globals used by all functions
    global colors degsize paren;
    % colors =  rgb for black, purple, green, light blue, pink, red, yellow, white
@@ -89,8 +89,10 @@ function StimulusOnsetTime = drawRing(w, varargin)
   % if we have colors specified, set them and suffle the rest
   if ~isempty(labeledColIdx)
       % shuffle the list of unused colors, take only the number we need
-      shuffledcolors= Shuffle( setdiff( 1:length(colors), varargin{labeledColIdx}) );
-      ColorIdxs(randPos) = shuffledcolors(1:length(randPos));    
+      spefColors=varargin{labeledColIdx};
+      allColors=1:length(colors);
+      shuffledcolors= Shuffle( setdiff( allColors, spefColors) );
+      ColorIdxs(randPos) = shuffledcolors(1:length(randPos));
       ColorIdxs(varargin{labeledPosIdx}) = varargin{labeledColIdx}(1:length(varargin{labeledPosIdx}) );
   else
       % otherwise just shuffle the colors
@@ -108,6 +110,7 @@ function StimulusOnsetTime = drawRing(w, varargin)
       end
   end
   
+
   
   % which direction to move in
   %Directions = randi(4,1,numStim);
@@ -115,10 +118,23 @@ function StimulusOnsetTime = drawRing(w, varargin)
   
   % if we have directions specified, set them
   if ~isempty(labeledDirIdx)
-        Directions(varargin{labeledPosIdx}) = varargin{labeledDirIdx};
+        posidxs=varargin{labeledPosIdx};
+        diridxs=varargin{labeledDirIdx};
+        % only set the direction of positions we have directions for
+        Directions( posidxs(1:length(diridxs) ) ) = diridxs;
   end
   
 
+    
+  %% set varargout: colors and directions
+  i_nout=1;
+  nout=max(nargout,1) - 1;
+  outs = { ColorIdxs, Directions };
+  while( i_nout <= nout && i_nout <= 2)
+      varargout{i_nout} = outs{i_nout};
+      i_nout = i_nout+1;
+  end
+  
 
   %% draw 'em 
   % This can probably be done without the for loop. 

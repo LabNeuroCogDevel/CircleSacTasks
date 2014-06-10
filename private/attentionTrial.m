@@ -16,20 +16,23 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,starttime,varargin
       drawBorder(w,[0 0 0], .7);
       drawCross(w);
       [~,timing.fix.onset] =  Screen('Flip',w,timing.fix.ideal); 
+      
       % 1. cue
       drawBorder(w,[0 0 0], 1);
       %drawCross(w); % can't see cross with big dot there anyway
       timing.cue.onset     = drawRing(w,'noload','Fill','Position',1,'Color',colorIDX,'when',timing.cue.ideal);
       sendCode('x',1); 
+      
       % 2. attend
       drawBorder(w,[0 0 0], .5);
       drawCross(w);
-      timing.attend.onset  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX, 'when',timing.attend.ideal,varargin{:});
+      [ timing.attend.onset, trial.ColorIdxs]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX, 'when',timing.attend.ideal,varargin{:});
       sendCode('x',2); 
+      
       % 3. probe ("response array")
       drawBorder(w,[0 0 0], 0);
       drawCross(w);
-      timing.probe.onset   = drawRing(w, 'PROBE', 'Position', positionIDX, 'Color',colorIDX, 'Direction', dirIDX,'when',timing.probe.ideal,varargin{:});
+      [timing.probe.onset,~,trial.Directions ] = drawRing(w, 'PROBE', 'Position', 1:6, 'Color',trial.ColorIdxs, 'Direction', dirIDX,'when',timing.probe.ideal,varargin{:});
       sendCode('x',3); 
       
       % 4. get response

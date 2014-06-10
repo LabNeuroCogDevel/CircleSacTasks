@@ -59,7 +59,7 @@
 %% Working Memory task
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT LOADS;
+    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock;
     
     % useful paradigmn info
     gridsize = [9 7];
@@ -96,9 +96,9 @@ function subject=workingMemory(varargin)
          
          % display instructions
          newInstructions = { 'Welcome to the Working Memory Game\n', ...
-                             'Attend to the instructed side\n' ...
+                             ['Attend to the instructed side\n' ...
                              'Push 1 for change\n' ...
-                             'Push 2 for change\n' ...
+                             'Push 2 for nochange\n'] ...
                             };
          betweenInstructions = { 'Welcome Back' }; 
          instructions(w,newInstructions,betweenInstructions,subject);
@@ -152,10 +152,10 @@ function a = setupAudio()
 
 
     [y, freq] = audioread('sounds/left_druv.wav');
-    lsound = [y';y'];
+    lsound = [y';0.*y'];
 
     [y, freq] = audioread('sounds/right_druv.wav');
-    rsound = [y';y'];
+    rsound = [0.*y';y'];
 
 end
 

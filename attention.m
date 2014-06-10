@@ -117,14 +117,14 @@
 function attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global listenKeys;
+   global listenKeys trialsPerBlock;
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
    listenKeys = KbName({'1!','2@','3#','4$','space'});
    % match direction 
 
-    % colors to use for repeated color task
+    % trial + block settings
     trialsPerBlock      = 75;
     numBlocks           = 6;
     

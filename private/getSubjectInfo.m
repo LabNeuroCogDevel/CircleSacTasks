@@ -55,6 +55,8 @@ function subject = getSubjectInfo(varargin)
                      fprintf('loaded old\n');
                  subject = load(subject.file);
                  subject.runtime= [ subject.runtime sprintf('%02d:%02d', date(4:5)); ];
+                 fprintf('on block %d trial %d, blocktype: %s\n', ...
+                     subject.curBlk, subject.curTrl, subject.events(subject.curTrl).type);
              end
          end
          
