@@ -125,7 +125,7 @@ function attention(varargin)
    % match direction 
 
     % colors to use for repeated color task
-    trialsPerBlock      = 12;
+    trialsPerBlock      = 75;
     numBlocks           = 6;
     
     %% setup subject

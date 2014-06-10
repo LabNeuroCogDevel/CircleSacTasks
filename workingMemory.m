@@ -68,7 +68,7 @@ function subject=workingMemory(varargin)
     LOADS = [ 1 3 5];
 
     
-    trialsPerBlock=12;
+    trialsPerBlock=100;
     blocks=6;
     
     % setup keys such that the correct LEFT push is at LEFT index
