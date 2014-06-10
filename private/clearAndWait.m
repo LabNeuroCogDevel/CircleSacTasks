@@ -54,5 +54,5 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
     [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
  end
  
- fprintf('iscorrect: %d; time remeaining %.02f\n', correct,RTwindowEnd-RT)
+ fprintf('iscorrect: %d; time remeaining %.02f\n\n', correct,RTwindowEnd-RT)
 end

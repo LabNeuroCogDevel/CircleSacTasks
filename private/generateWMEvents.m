@@ -33,9 +33,10 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     %% on what hemisphere does a chage happen
     % -1 other side, 0 no change, 1 same side
     % matched to the lenght of playCue
-    % TODO: add both change
+    % TODO -- or not: add both change
+    posblChanges=[ -1 0 1 ];
     nPlyCue = length(playCue);
-    chngType =  repmat([ -1 0 1],1,ceil(nPlyCue/3));
+    chngType =  repmat(posblChanges,1,ceil(nPlyCue/length(posblChanges)));
     changes=playCue .* chngType(1:nPlyCue);
     cIdx=changes<0;
     changes(cIdx)= mod( changes(cIdx),2)+1;

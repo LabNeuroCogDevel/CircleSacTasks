@@ -9,7 +9,7 @@ function trial = wmTrial(w,a,number,changes,playCue)
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
 
-    global LEFT RIGHT listenKeys;
+    global LEFT RIGHT listenKeys TIMES;
     
     i=3;
     if nargin<i || isempty(number)
@@ -48,31 +48,33 @@ function trial = wmTrial(w,a,number,changes,playCue)
    ttls = getCodes(playCue,number,changes);
    
    %% -1. correct key
-   % if no change, correct key is playCue
-   % if change, invert playCue
-   
-   correctKey =  mod(playCue - (playCue==changes||changes>2), 2);
-   if(correctKey==0); correctKey=2; end
-   
-   % if playCue wasnt given, set it to change, if both change use higher
-   % represention (LEFT)
-   if(playCue<=0); correctKey=max(changes,2); end
+%    % if no change, correct key is playCue
+%    % if change, invert playCue
+%    
+%    correctKey =  mod(playCue - (playCue==changes||changes>2), 2);
+%    if(correctKey==0); correctKey=2; end
+%    
+%    % if playCue wasnt given, set it to change, if both change use higher
+%    % represention (LEFT)
+%    if(playCue<=0); correctKey=max(changes,2); end
+%    
+   % correct key is 1 for no change, 2 for change
+   %changes is 0 (none), LEFT, or RIGHT (3 for both)
+   correctKey=min(changes,1)+1;
    
    %fprintf('(LEFT %d RIGHT %d)\n',LEFT,RIGHT)
-   fprintf('playCue: %d; change: %d; correct: %d\n',playCue,changes,correctKey);
+   fprintf('playCue(%d=L): %d; change?: %d; correctkey: %d\n',LEFT,playCue,changes,correctKey);
    
 
 
     %% 0. fixation
     %disp('fixation');
     timing.fixation.onset = fixation(w,GetSecs());
-    %times = [ 1  1.5  .2  1  1];
-    times = [ .5  .5  .3  1  2];
-    timing.cue.ideal      = timing.fixation.onset + sum(times(1:1));
-    timing.memoryset.ideal= timing.fixation.onset + sum(times(1:2));
-    timing.delay.ideal    = timing.fixation.onset + sum(times(1:3));
-    timing.probe.ideal    = timing.fixation.onset + sum(times(1:4));
-    timing.finish.max     = timing.fixation.onset + sum(times(1:5));
+    timing.cue.ideal      = timing.fixation.onset + sum(TIMES(1:1));
+    timing.memoryset.ideal= timing.fixation.onset + sum(TIMES(1:2));
+    timing.delay.ideal    = timing.fixation.onset + sum(TIMES(1:3));
+    timing.probe.ideal    = timing.fixation.onset + sum(TIMES(1:4));
+    timing.finish.max     = timing.fixation.onset + sum(TIMES(1:5));
 
     %% 1. cue
     %disp('cue');
@@ -110,7 +112,6 @@ function trial = wmTrial(w,a,number,changes,playCue)
     trial.playCue = playCue;
     
     trial.triggers= ttls;
-    
 end
 
 

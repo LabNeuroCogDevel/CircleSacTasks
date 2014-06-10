@@ -59,13 +59,16 @@
 %% Working Memory task
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock;
+    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES;
     
     % useful paradigmn info
     gridsize = [9 7];
     LEFT = 1;
     RIGHT = 2;
     LOADS = [ 1 3 5];
+    
+    % fix cue memory delay probe finish
+    TIMES = [ .5  .5  .3  1  2];
 
     
     trialsPerBlock=100;
@@ -124,10 +127,12 @@ function subject=workingMemory(varargin)
         % error kill all.
         closedown();
         psychrethrow(psychlasterror);
+        clear a;
     end
     
     
     closedown();
+    clear a;
 
     
 end
