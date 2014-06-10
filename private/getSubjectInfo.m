@@ -12,7 +12,6 @@ function subject = getSubjectInfo(varargin)
  hint.age   = '[0-9]+';
  hint.sex   =  'm|f';
  
- 
  %% go through the field names we care about
  for field=fieldnames(hint)'
         
@@ -33,8 +32,9 @@ function subject = getSubjectInfo(varargin)
        checkInput(fname);
      end
      
-     %% check to see if subject exists on file
-     %   prompt to read file if it does
+     %% create and check subject file
+     %   only check when subject field has been created, but file hasn't
+     %   prompt to read file if already exists on disk
      if( isfield(subject,'task') && isfield(subject,'id') && ~isfield(subject,'file') )
          
          datadir= [ 'data/' subject.task '/' ];
@@ -62,9 +62,16 @@ function subject = getSubjectInfo(varargin)
  end
 
 
- %% so everything will always be the same :)
+ %% record seed
+ % so everything will always be the same :)
  subject.seed = randi(9*10^5);
  rng(subject.seed);
+ 
+
+ %% set subject.curBlk and subject.curTrl
+ % look for e.g. 'block' '2'  in arguments to task function
+ subject = initializeBlock(subject,varargin);
+
  
  %% make sure we get what we asked for
  function checkInput(fname)

@@ -21,8 +21,14 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
         error('%d trials % nTypes != 0 !', nTrl );
     end
     % randomly arrange the types (interleave)
-
-    t            = Shuffle(types(repmat(1:nTypes,1,nTrl/nTypes)));
+    %t            = Shuffle(types(repmat(1:nTypes,1,nTrl/nTypes)));
+    
+    % blocks of only one repeating type
+    blocksPerType = ceil(blocks/nTypes);
+    trailTypeList = Shuffle(repmat([1:nTypes]', blocksPerType,1));
+    trialTypeIdx  = repmat(trailTypeList, 1, trialsPerBlock)';
+    t             = types(trialTypeIdx);
+    
     
     % blocks repeat trialsPerBlock times
     blockrep     = repmat(1:blocks,trialsPerBlock,1);
@@ -40,7 +46,8 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     
     %re-populates directions so that each position has equal number of left
     %and right 
-    for i = 1:6;
+    % ASSUMES ONLY 2 directions
+    for i = 1:nTrgts;
         sDirs = (find(trgtpos == i)); 
         %Creates a matrix half the length of sDirs with ones and another with
         %twos then concatenates them

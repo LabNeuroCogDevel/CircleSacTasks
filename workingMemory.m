@@ -68,7 +68,7 @@ function subject=workingMemory(varargin)
     LOADS = [ 1 3 5];
 
     
-    trialsPerBlock=100;
+    trialsPerBlock=12;
     blocks=6;
     
     % setup keys such that the correct LEFT push is at LEFT index
@@ -79,11 +79,10 @@ function subject=workingMemory(varargin)
     
     % get subject info
     subject = getSubjectInfo('task','WorkingMemory', varargin{:});
+    
     % initialze order of events/trials
-    if ~isfield(subject,'events') || ~isfield(subject,'curTrl') || ~isfield(subject,'curBlk') 
+    if ~isfield(subject,'events') 
       subject.events = generateWMEvents(trialsPerBlock, blocks);
-      subject.curTrl = 1;
-      subject.curBlk = 1;
     end
     
     
@@ -96,10 +95,10 @@ function subject=workingMemory(varargin)
         sampleRate = audioStats.SampleRate;
         
         lsoundmono = beep(sampleRate,500,0.4,0.5*sampleRate);
-        lsound = [lsoundmono;lsoundmono];
+        lsound = [lsoundmono;0.*lsoundmono];
         
         rsoundmono = beep(sampleRate,1000,0.4,0.5*sampleRate);
-        rsound = [rsoundmono;rsoundmono];
+        rsound = [0.*rsoundmono;rsoundmono];
 
          % until we run out of trials on this block
          thisBlk=subject.curBlk;

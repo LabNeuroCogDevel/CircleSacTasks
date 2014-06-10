@@ -121,22 +121,24 @@ function attention(varargin)
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
-   listenKeys = [ KbName('1!') KbName('2@') KbName('3#') KbName('4$') KbName('space')  ];
+   listenKeys = KbName({'1!','2@','3#','4$','space'});
    % match direction 
 
     % colors to use for repeated color task
-    trialsPerBlock      = 75;
-    blocks              = 6;
+    trialsPerBlock      = 12;
+    numBlocks           = 6;
     
     %% setup subject
     % get subject info, possible resume from previously
-    subject = getSubjectInfo('task','Attention',varargin{:});
-    % initialze order of events/trials
-    if ~isfield(subject,'events') || ~isfield(subject,'curTrl') || ~isfield(subject,'curBlk') 
-      subject.events = generateAttentionEvents(trialsPerBlock, blocks);
-      subject.curTrl = 1;
-      subject.curBlk = 1;
+    % also set subject.curTrl and subject.curBlk
+    %  -- read 'block' argument if provided
+    subject = getSubjectInfo('task','Attention', varargin{:});
+   
+    %% initialze order of events/trials if needed
+    if ~isfield(subject,'events') 
+       subject.events = generateAttentionEvents(trialsPerBlock, numBlocks);
     end
+
     
     %% try running psychtoolbox
     try
@@ -156,7 +158,9 @@ function attention(varargin)
       betweenInstructions = { 'Welcome Back' }; 
       instructions(w,newInstructions,betweenInstructions,subject);
 
-      
+      fprintf('Block: %d\nEvent Type: %s\n',...
+              thisBlk,                      ...
+              subject.events(subject.curTrl).type);
       while subject.events(subject.curTrl).block == thisBlk
       
           e   = subject.events(subject.curTrl);
