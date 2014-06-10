@@ -59,7 +59,7 @@
 %% Working Memory task
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT lsound rsound LOADS;
+    global   gridsize  listenKeys LEFT RIGHT LOADS;
     
     % useful paradigmn info
     gridsize = [9 7];
@@ -89,16 +89,6 @@ function subject=workingMemory(varargin)
     try
         w = setupScreen();
         a = setupAudio();
-        
-        % setup beeps
-        audioStats = PsychPortAudio('GetStatus',a);
-        sampleRate = audioStats.SampleRate;
-        
-        lsoundmono = beep(sampleRate,500,0.4,0.5*sampleRate);
-        lsound = [lsoundmono;0.*lsoundmono];
-        
-        rsoundmono = beep(sampleRate,1000,0.4,0.5*sampleRate);
-        rsound = [0.*rsoundmono;rsoundmono];
 
          % until we run out of trials on this block
          thisBlk=subject.curBlk;
@@ -106,7 +96,9 @@ function subject=workingMemory(varargin)
          
          % display instructions
          newInstructions = { 'Welcome to the Working Memory Game\n', ...
-                             'push the right button if the target is a C\n' ...
+                             'Attend to the instructed side\n' ...
+                             'Push 1 for change\n' ...
+                             'Push 2 for change\n' ...
                             };
          betweenInstructions = { 'Welcome Back' }; 
          instructions(w,newInstructions,betweenInstructions,subject);
@@ -134,7 +126,6 @@ function subject=workingMemory(varargin)
         psychrethrow(psychlasterror);
     end
     
-    KbWait;
     
     closedown();
 
@@ -145,8 +136,27 @@ end
 
 %% setup audio
 function a = setupAudio()
+    global rsound lsound;
     InitializePsychSound;
     a = PsychPortAudio('Open');
+            
+        % setup beeps
+%         audioStats = PsychPortAudio('GetStatus',a);
+%         sampleRate = audioStats.SampleRate;
+%         
+%         lsoundmono = beep(sampleRate,500,0.4,0.5*sampleRate);
+%         lsound = [lsoundmono;0.*lsoundmono];
+%         
+%         rsoundmono = beep(sampleRate,1000,0.4,0.5*sampleRate);
+%         rsound = [0.*rsoundmono;rsoundmono];
+
+
+    [y, freq] = audioread('sounds/left_druv.wav');
+    lsound = [y';y'];
+
+    [y, freq] = audioread('sounds/right_druv.wav');
+    rsound = [y';y'];
+
 end
 
 
