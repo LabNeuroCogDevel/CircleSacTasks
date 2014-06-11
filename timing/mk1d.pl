@@ -7,6 +7,7 @@ use 5.14.0;
 
 my @seq    = ();
 my %events = ();
+my $nCatch=0;
 while(<>) {
  my @F = split /;/;
 
@@ -15,14 +16,29 @@ while(<>) {
    # skip if it doesnt look like a name and time
    next if ! /\w+.*\[/; 
 
-   # DEAL WITH CATCH TRIALS
-   next if /CATCH\s*=\s*[\d\.\/]+/;
+   my $name;
+   my @cond=();
+   my @timing=();
 
    print "# $_\n";
 
+   # DEAL WITH CATCH TRIALS
+   if(/ CATCH \s*=\s* ( [\d\.\/]+ )/x){
+     $nCatch++;
+     my $occur=$1;
+     $name="CATCH".$nCatch;
+     say "$name";
+
+     @cond=( [ $name, $occur ], ["NO".$name, 1-$occur] );
+     @timing=(0, 0);
+
+     $events{$name} = [ map { { event=>$name, name=>$cond[$_]->[0], occurRatio=>$cond[$_]->[0], duration=>$timing[$_] } } (0..$#cond)  ];
+     next;
+   }
+
    # get name, should be first bit of word characters
    /^\s*(?<name>\w+)/;
-   my $name=$+{name};
+   $name=$+{name};
    print "using $name\n";
    say STDERR "no name for event!" and exit unless $name;
    say STDERR "name $name already used!" and exit if exists($events{$name});
@@ -31,7 +47,6 @@ while(<>) {
    # add timing to events
    # should be like [.5]
    # -- assume that mulitple matches will match manipulations
-   my @timing=();
    while(/ \[   (?<timing> [\d \. \/]+  )  \]/xg){
     push @timing, $+{timing};
    }
@@ -42,7 +57,6 @@ while(<>) {
    # like { name=occurance ... }
    my $condMatch=""; 
    $condMatch=$& if /{.+}/;
-   my @cond=();
    # {1L=1/2 [.5], 4L=1/2 [.5] }
    while($condMatch=~m/ (?<cond> \w+ ) \s* = \s* (?<count>[\d\.\/]+)  /xg){
     push @cond, [ $name .":".$+{cond}, $+{count} ] ;
@@ -88,28 +102,21 @@ for my $event (@seq) {
    # for each condition of this event
    for my $condition (@{ $events{$event} }){
       
-      my @newseq=@prevseq;
       # start with all the trial sequences that we had before
       # but add this condtion to each
-      for my $i (0..$#newseq) {
-        say "trlsq $i: adding ", $condition->{name}," to ", join("\t",map {$_->{name}} @{$newseq[$i]});
-        push @{$newseq[$i]}, $condition;
-        push @allseq, $newseq[$i];
+      for my $i (0..$#prevseq) {
+        my @newseq = @{$prevseq[$i]};
+        
+        # don't extend trials that end it catch
+        next if $#newseq>0 && $newseq[$#newseq]->{name} =~ /^CATCH\d+$/; 
+
+        push @newseq, $condition;
+        push @allseq, [@newseq ];
       }
-
-      # add this condition for each sequence that already exists
-      # unless the previous trial sequence ended in a catch!
-
    }
-   say "**", $#allseq+1, " trial seqs";
-   say Dumper(@allseq);
 
-   #say "# $event";
-   #say Dumper($allseq[0]);
-   #say Dumper($allseq[1]);
-   #say "\n";
 }
 
-for my $trial (@allseq) {
- say join("\t",map {$_->{name}} @$trial);
+for my $trialseq (@allseq) {
+ say join("\t",map {$_->{name} . $_->{duration}} @$trialseq);
 }
