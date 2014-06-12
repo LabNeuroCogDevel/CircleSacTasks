@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
 use strict; use warnings;
+use 5.14.0; # use "say"
+use List::Util qw(shuffle reduce sum);
+my $VERBOSE=1;
 use Data::Dumper;
-use 5.14.0;
-use List::Util qw(sum reduce);
 
 # example input "snd[.5]; mem {1L=1/2 [.5], 4L=1/2 [.5] }; CATCH=1/6; dly[1];"
 
@@ -61,7 +62,7 @@ while(<>) {
     push @cond, [ $name .":".$+{cond}, $+{count} ] ;
    }
    # default
-   push @cond, [ $name, $timing[0] ] if($#cond<0);
+   push @cond, [ $name, 1 ] if($#cond<0);
    
    # build events hash
    # eventName =>  array of hashes with prefix, occurRatio, and duration
@@ -102,6 +103,7 @@ for my $event (@seq) {
    
    
    # add all catches here
+   # done here because we dont want to add it for each condition
    for my $seq (@prevseq) {
      next if @$seq <= 0;
      push @allseq, $seq if @$seq>0 && @$seq[@$seq-1]->{name} =~ /^CATCH\d+$/; 
@@ -127,8 +129,78 @@ for my $event (@seq) {
 
 }
 
+# calculate occur ratio and total time for each trial sequence
+# new data structure
+#   ( {dur=> ##, freq=> ##, seq=> [ {name=>,event=>,occurRatio=>,duration=>}, {} , {}, ... ] }
+#     {dur=> ##, freq=> ##, seq=> [ {name=>,event=>,occurRatio=>,duration=>}, {} , {}, ... ] }
+#      ...
+#   )
+#
+my @alltrials=();
 for my $trialseq (@allseq) {
- my $occur = reduce {$a*$b} 1, map {$_->{occurRatio} } @$trialseq;
- my $time  = reduce {$a+$b} 0, map {$_->{duration}   } @$trialseq;
- say "$occur @ $time s :", join("\t",map {"$_->{name} $_->{duration}s"} @$trialseq);
+ my $freq = reduce {$a*$b} 1, map {$_->{occurRatio} } @$trialseq;
+ my $time = reduce {$a+$b} 0, map {$_->{duration}   } @$trialseq;
+
+ push @alltrials, {dur=>$time, freq=>$freq, seq=>$trialseq};
+}
+
+
+
+## build run/block
+# we need to know 
+#  * total time --> total number of trials
+#  * mean ITI
+#  * cushion times?
+# need to create:
+#  * # of times each trial sequence is presented
+#  * distribution of ITIs
+
+my $TOTALTIME=5.4*60 + 8;
+my $MEANITI=4;
+my $MINITI=2;
+my $MAXITI=8;
+# time that will be used by trials
+my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
+# number of trials
+#my $NTRIAL = sprintf("%d",$TOTALTIME / $avgTrlTime);
+#say "$TOTALTIME/$avgTrlTime = ", $TOTALTIME/$avgTrlTime, " = $NTRIAL";
+my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial seq freqs
+
+# create number of repetitions for each trial sequence
+# TODO: do we round or floor?
+#$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}+.5) for (0..$#alltrials);
+$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}) for (0..$#alltrials);
+
+my $usedTime =  reduce { $a + $b->{nRep}*($b->{dur}+$MEANITI) } 0, @alltrials;
+say "# will use $usedTime out of $TOTALTIME, leaving ", $TOTALTIME - $usedTime, "s for additional ITI";
+
+# print out each trial sequence for visual varification
+say "$_->{nRep} ($_->{freq}*$TOTALTIME) @ $_->{dur}s: ",
+     join("\t",map {"$_->{name} $_->{duration}s"} @{$_->{seq}})   for (@alltrials);
+
+
+
+
+# create a shuffled list of trial sequence indices
+# this will be the final order that trial sequences are presented
+my @trialSeqIDX;
+push @trialSeqIDX, ($_)x$alltrials[$_]->{nRep} for (0..$#alltrials);
+@trialSeqIDX = shuffle @trialSeqIDX;
+
+
+## create ITIs
+use Math::Random qw(random_exponential);
+my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
+my ($itcount,$ITIsum,@ITIs) = (0,99,0);
+until (  $ITIsum - $ITItime  <= 1 && $ITIsum - $ITItime > 0 ) {
+  @ITIs = map {sprintf("%.1f",$_)} random_exponential($NTRIAL,$MEANITI);
+  @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_; $_=$_<$MINITI?$MINITI:$_ } @ITIs;
+  $ITIsum=sum(@ITIs);
+  $itcount++; # near 50 iterations
+}
+#say join("\t",$itcount,$ITIsum,@ITIs);
+
+## create 1D files, finally!
+for my $trlseq (0..$NTRIAL) {
+  @seq = @{$alltrials[$trialSeqIDX[$trlseq]]};
 }
