@@ -65,10 +65,10 @@ while(<>) {
    
    # build events hash
    # eventName =>  array of hashes with prefix, occurRatio, and duration
-   if( ( $#cond<0 && $#timing==0) || ($#cond == $#timing) ) {
+   if(  $#timing==0 || ($#cond == $#timing) ) {
       $events{$name} = [ map { { event=>$name, name=>$cond[$_]->[0], 
                                  occurRatio=>sprintf("%.04f",$cond[$_]->[1]), 
-                                 duration=>sprintf("%.02f",$timing[$_])      } 
+                                 duration=>sprintf("%.02f",$timing[$_]||$timing[0])      } 
                               } (0..$#cond)  ];
    } else {
      say STDERR "$name: have " , $#timing+1 , " times -- should be 1 or match # manipulations\n";
@@ -101,6 +101,13 @@ for my $event (@seq) {
    @allseq=();
    
    
+   # add all catches here
+   for my $seq (@prevseq) {
+     next if @$seq <= 0;
+     push @allseq, $seq if @$seq>0 && @$seq[@$seq-1]->{name} =~ /^CATCH\d+$/; 
+   }
+   
+
    # for each condition of this event
    for my $condition (@{ $events{$event} }){
       
@@ -110,8 +117,11 @@ for my $event (@seq) {
         my @newseq = @{$prevseq[$i]};
         
         # don't extend trials that end it catch
-        push @newseq, $condition unless $#newseq>0 && $newseq[$#newseq]->{name} =~ /^CATCH\d+$/; 
+        next if $#newseq>0 && $newseq[$#newseq]->{name} =~ /^CATCH\d+$/; 
+
+        push @newseq, $condition; 
         push @allseq, [@newseq ];
+        #say "added $condition->{name}: ", join("\t", map {$_->{name} } @newseq );
       }
    }
 
