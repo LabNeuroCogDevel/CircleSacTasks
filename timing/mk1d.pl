@@ -2,21 +2,46 @@
 use strict; use warnings;
 use 5.14.0; # use "say"
 use List::Util qw/shuffle reduce sum/;
-use List::MoreUtils qw/uniq/;
+use List::MoreUtils qw/uniq zip/;
 my $VERBOSE=1;
 use Data::Dumper;
 
-# example input "snd[.5]; mem {1L=1/2 [.5], 4L=1/2 [.5] }; CATCH=1/6; dly[1];"
+# example input "TEST=mem-dly;TR=2;TOTALTIME=300;snd[.5]; mem {1L=.33 [.3], 4L=.66 [.5] }; CATCH=1/6; dly[1.2];"
 
 my @seq    = ();
 my %events = ();
 my $nCatch=0;
+my @sumstable = ();
+
+# SETTINGS
+my $TOTALTIME;
+my $TR=1.5;
+my $STARTTIME=2;
+my $MEANITI=3;
+my $MINITI=1;
+my $MAXITI=99; #no max
+my $TESTS="";  #no tests
+my $NITER=2;
+
 while(<>) {
+ # remove comments
+ s/#.*//g;
+
+ # split by semi-colon (for one liners)
  my @F = split /;/;
 
  # read in event by event
  for (@F) {
-   # skip if it doesnt look like a name and time
+  
+
+   # check for some settings
+   $TOTALTIME=$1 and next if m/^ \s* TOTALTIME \s* = \s* ( [\d\.]+ ) \s* $/xi;
+   $TR=$1 and next if m/^ \s* TR \s* = \s* ( [\d\.]+ ) \s* $/xi;
+   $TESTS=$1 and next if m/^ \s* TESTS \s* = \s* ( .+ )$/xi;
+   $NITER=$1 and next if m/^ \s* NITER \s* = \s* ( .+ )$/xi;
+
+   
+   # skip if it doesnt look like a name and time or catch
    next if ! /(\w+.*\[)|(CATCH)/; 
 
    my $name;
@@ -56,13 +81,19 @@ while(<>) {
    #####
    # look for any conditions/manipulations
    # like { name=occurance ... }
-   my $condMatch=""; 
-   $condMatch=$& if /{.+}/;
    # {1L=1/2 [.5], 4L=1/2 [.5] }
-   while($condMatch=~m/ (?<cond> \w+ ) \s* = \s* (?<count>[\d\.\/]+)  /xg){
-    push @cond, [ $name .":".$+{cond}, $+{count} ] ;
+   # [.5] {1L,4L}
+   my $condMatch=""; 
+   if(/{.+}/) {
+      $condMatch=$&;
+      my $condcount = /,/g + 1;
+      $condcount=1 if ! $condcount;
+      while($condMatch=~m/ (?<cond> \w+ )  \s* ( (= \s* (?<count>[\d\.\/]+) ) | , |}\s* $)     /xg){
+       #say "$_: $& --> $condcount";
+       push @cond, [ $name .":".$+{cond}, $+{count}?$+{count}:(1/$condcount) ] ;
+      }
    }
-   # default
+   # default condition is name, and full occurance
    push @cond, [ $name, 1 ] if($#cond<0);
    
    # build events hash
@@ -80,6 +111,9 @@ while(<>) {
 
 
 }
+
+say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
+say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
 
 # seq like: 
 #  (snd mem dly)
@@ -156,11 +190,6 @@ for my $trialseq (@allseq) {
 #  * # of times each trial sequence is presented
 #  * distribution of ITIs
 
-my $STARTTIME=2;
-my $TOTALTIME=5.4*60 + 8;
-my $MEANITI=4;
-my $MINITI=1;
-my $MAXITI=99; #no max
 # time that will be used by trials
 my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 # number of trials
@@ -199,66 +228,129 @@ $NTRIAL = $#trialSeqIDX;
 #  cap at max ITI
 use Math::Random qw(random_exponential);
 my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
-my ($itcount,$ITIsum,@ITIs) = (0,99,0);
-until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
-  @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);
-  @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_} @ITIs;
-  $ITIsum=sum(@ITIs);
-  $itcount++;# near 50 iterations
-  say "\tgenerating ITI, on  $itcount iteration" if($itcount>500  && $itcount%50==0 && $VERBOSE);
-}
-say "accounting for $ITIsum of $ITItime ITI time: ", sprintf("%.2f",$ITItime-$ITIsum), " ($itcount itrs)" if $VERBOSE;
-#say join("\t",@ITIs) if $VERBOSE;
 
 
-## create 1D files, finally!
-my $timeused=$STARTTIME;
-my %files;
-mkdir "stims" if ! -d "stims/";
+open my $FHsums, ">", "stimSums.txt" or die "cannot open output txt file";
+say $FHsums join("\t",qw/it h LC/);
 
-for my $seqno (0..$NTRIAL-1) {
-  my $trlseq=$trialSeqIDX[$seqno];
-  for my $seq (@{$alltrials[$trlseq]->{seq} }) {
-   # skip catches
-   next if $seq->{event} =~ /^CATCH/;
-
-   # open the file to write to if we need it
-   open($files{$seq->{name}}, ">", "stims/$seq->{name}.1D") unless exists($files{$seq->{name}}) ;
-
-
-   # print to 1D file
-   print { $files{$seq->{name}} } "$timeused ";
-
-   # also print to event type if name and event aren't the same
-   if($seq->{event} ne $seq->{name} ) {
-      open($files{$seq->{event}}, ">", "stims/$seq->{event}.1D") unless exists($files{$seq->{event}}) ;
-      print { $files{$seq->{event}} } "$timeused ";
-   }
-
-   #say "$timeused $seq->{name} [$seq->{event}] ($seq->{duration})";
-   $timeused+=$seq->{duration};
+for my $deconIt (1..$NITER) {
+  my ($itcount,$ITIsum,@ITIs) = (0,99,0);
+  until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
+    @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);
+    @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_} @ITIs;
+    $ITIsum=sum(@ITIs);
+    $itcount++;# near 50 iterations
+    say "\tgenerating ITI, on  $itcount iteration" if($itcount>500  && $itcount%50==0 && $VERBOSE);
   }
-  #say "$timeused ITI ($ITIs[$seqno])";
-  $timeused+=$ITIs[$seqno];
-  #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
+  say "accounting for $ITIsum of $ITItime ITI time: ", sprintf("%.2f",$ITItime-$ITIsum), " ($itcount itrs)" if $VERBOSE;
+  #say join("\t",@ITIs) if $VERBOSE;
+  
+  
+  ## create 1D files, finally!
+  my $timeused=$STARTTIME;
+  my %files;
+  my $odir="stims/$deconIt/";
+  mkdir "stims" if ! -d "stims/";
+  mkdir "$odir" if ! -d "$odir";
+  
+  
+  for my $seqno (0..$NTRIAL-1) {
+    my $trlseq=$trialSeqIDX[$seqno];
+    for my $seq (@{$alltrials[$trlseq]->{seq} }) {
+     # skip catches
+     next if $seq->{event} =~ /^CATCH/;
+  
+     # open the file to write to if we need it
+     open($files{$seq->{name}}, ">", "$odir/$seq->{name}.1D") unless exists($files{$seq->{name}}) ;
+  
+  
+     # print to 1D file
+     print { $files{$seq->{name}} } "$timeused ";
+  
+     # also print to event type if name and event aren't the same
+     if($seq->{event} ne $seq->{name} ) {
+        open($files{$seq->{event}}, ">", "$odir/$seq->{event}.1D") unless exists($files{$seq->{event}}) ;
+        print { $files{$seq->{event}} } "$timeused ";
+     }
+  
+     #say "$timeused $seq->{name} [$seq->{event}] ($seq->{duration})";
+     $timeused+=$seq->{duration};
+    }
+    #say "$timeused ITI ($ITIs[$seqno])";
+    $timeused+=$ITIs[$seqno];
+    #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
+  }
+  say "final ITI gets a bump of ", $TOTALTIME - $timeused;
+  
+  ## what does the 3dDeconvolve command look like
+  
+  my %allconditions = map { $_->{name} => $_->{duration}  }  map {@$_} values %events;
+  my @stims = grep {$_!~/^(NO)?CATCH/} keys %allconditions;
+  my @cmd=();
+  push @cmd, ("-nodata ". sprintf("%d",$TOTALTIME/$TR+.5) ." $TR", "-polort 9");
+  push @cmd, "-x1D $deconIt/X.xmat.1D ";
+  push @cmd, "-num_stimts ". ($#stims+1);
+  for my $stimno (0..$#stims ) {
+   my $stimno_1=$stimno+1;
+   push @cmd, "-stim_times $stimno_1 $odir/$stims[$stimno].1D 'BLOCK($allconditions{$stims[$stimno]},1)' -stim_label $stimno_1 $stims[$stimno]" ;
+  }
+  
+  
+  ## do we have any tests to run?
+  my @testEq;
+  foreach my $test (split/,/,$TESTS) {
+   my $testName=$test;
+   $testName=~s/\s//g; #remove white space
+   #$testName=~y/+-/PM/;#repace addition and subtraction
+   
+   # if an event has conditions/manipulations
+   # refing that event should have all manips in the contrast matrix
+   
+   # get the plus and minus to zip back 
+   my $init='+'; #if not otherwise given, we start with plus
+   $init=$1 if $test=~s/^\s*([+-])//; # make sure we dont have a bad first field
+   my @seps = $test =~ /[+-]/g;
+   @seps=('+',@seps); 
+  
+   # extract names from tests
+   my @comp = split /[+-]/, $test;
+   
+   # search for actual names
+   # and replace
+   for  (0..$#comp){
+     $comp[$_]=~s/\s//g;
+     my $expanded="";
+     if(!$events{$comp[$_]}){
+       $expanded=" $seps[$_]$comp[$_]";
+       say "WARNING: $comp[$_] is unknown to top level events list, using $expanded";
+     } else {
+        for my $h (@{ $events{$comp[$_]} }){
+             $expanded.=" $seps[$_]$h->{name}";
+        }
+     }
+     $comp[$_]=$expanded;
+   }
+  
+   push @testEq,{eq=> join('',@comp), name=>$testName };
+  }
+  
+  push @cmd, "-num_glt ". ($#testEq+1);
+  push @cmd, "-gltsym 'SYM: $testEq[$_]->{eq}'  -glt_label ". ($_+1). " $testEq[$_]->{name}" for (0..$#testEq);
+  
+  open my $CMD, '-|', "3dDeconvolve ". join(" ",@cmd) ;#." 2>/dev/null";
+  my $label="";
+  my %results=();
+  while(<$CMD>){
+    $label="$2" and next if m/^(Stimulus|General).*:\s+([\w:\+\-]+)/;
+    push @{$results{$1}}, {label=>$label, value=>$2} and next if m/^  (h|LC).+=\s+([\d\.]+)/;
+  }
+  
+  my @sums;
+  push @sums,sum(map {$_->{value}} @{$results{$_}} ) for (qw/h LC/);
+  say $FHsums join("\t",$deconIt,@sums);
+  push @sumstable, [@sums] 
+
 }
-say "final ITI gets a bump of ", $TOTALTIME - $timeused;
-
-## what does the 3dDeconvolve command look like
-
-my %allconditions = map { $_->{name} => $_->{duration}  }  map {@$_} values %events;
-my @stims = grep {$_!~/^(NO)?CATCH/} keys %allconditions;
-my @cmd=();
-push @cmd, ("-nodata ". sprintf("%d",$TOTALTIME/$TR+.5) ."  $TR", "-polort 9");
-push @cmd, "-x1D stims/X.xmat.1D ";
-push @cmd, "-num_stims ". ($#stims+1);
-for my $stimno (0..$#stims ) {
- my $stimno_1=$stimno+1;
- my $dur=.5;
- push @cmd, "-stim_times $stimno_1 stims/$stims[$stimno].1D 'BLOCK($allconditions{$stims[$stimno]},1)' -stim_label $stimno_1 $stims[$stimno]" ;
-}
-say join("\\\n",@cmd);
-
 
 
 ## ALTERNATIVE ITI
