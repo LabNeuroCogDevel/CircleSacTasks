@@ -1,7 +1,8 @@
 #!/usr/bin/env perl
 use strict; use warnings;
 use 5.14.0; # use "say"
-use List::Util qw(shuffle reduce sum);
+use List::Util qw/shuffle reduce sum/;
+use List::MoreUtils qw/uniq/;
 my $VERBOSE=1;
 use Data::Dumper;
 
@@ -93,7 +94,7 @@ while(<>) {
 # allseq will be array of trial arrays
 # (
 #   [ {seq} {memL1} {dly} ]
-#   [ {seq} {memL1} {dly} ]
+#   [ {seq} {memL4} {dly} ]
 # )
 
 my @allseq=([]);
@@ -155,10 +156,11 @@ for my $trialseq (@allseq) {
 #  * # of times each trial sequence is presented
 #  * distribution of ITIs
 
+my $STARTTIME=2;
 my $TOTALTIME=5.4*60 + 8;
 my $MEANITI=4;
-my $MINITI=2;
-my $MAXITI=8;
+my $MINITI=1;
+my $MAXITI=99; #no max
 # time that will be used by trials
 my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 # number of trials
@@ -172,7 +174,7 @@ my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial
 $alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}) for (0..$#alltrials);
 
 my $usedTime =  reduce { $a + $b->{nRep}*($b->{dur}+$MEANITI) } 0, @alltrials;
-say "# will use $usedTime out of $TOTALTIME, leaving ", $TOTALTIME - $usedTime, "s for additional ITI";
+say "# will use $usedTime out of $TOTALTIME, leaving ", $TOTALTIME - $usedTime, "s in addition to the $MEANITI sec meaned ITI";
 
 # print out each trial sequence for visual varification
 say "$_->{nRep} ($_->{freq}*$TOTALTIME) @ $_->{dur}s: ",
@@ -187,20 +189,83 @@ my @trialSeqIDX;
 push @trialSeqIDX, ($_)x$alltrials[$_]->{nRep} for (0..$#alltrials);
 @trialSeqIDX = shuffle @trialSeqIDX;
 
+# update total trials to the actual total 
+$NTRIAL = $#trialSeqIDX;
+
 
 ## create ITIs
+# sample from expodential
+#  subtract min from mean and add it back to the result
+#  cap at max ITI
 use Math::Random qw(random_exponential);
 my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
 my ($itcount,$ITIsum,@ITIs) = (0,99,0);
-until (  $ITIsum - $ITItime  <= 1 && $ITIsum - $ITItime > 0 ) {
-  @ITIs = map {sprintf("%.1f",$_)} random_exponential($NTRIAL,$MEANITI);
-  @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_; $_=$_<$MINITI?$MINITI:$_ } @ITIs;
+until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
+  @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);
+  @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_} @ITIs;
   $ITIsum=sum(@ITIs);
-  $itcount++; # near 50 iterations
+  $itcount++;# near 50 iterations
+  say "\tgenerating ITI, on  $itcount iteration" if($itcount>500  && $itcount%50==0 && $VERBOSE);
 }
-#say join("\t",$itcount,$ITIsum,@ITIs);
+say "accounting for $ITIsum of $ITItime ITI time: ", sprintf("%.2f",$ITItime-$ITIsum), " ($itcount itrs)" if $VERBOSE;
+#say join("\t",@ITIs) if $VERBOSE;
+
 
 ## create 1D files, finally!
-for my $trlseq (0..$NTRIAL) {
-  @seq = @{$alltrials[$trialSeqIDX[$trlseq]]};
+my $timeused=$STARTTIME;
+my %files;
+mkdir "stims" if ! -d "stims/";
+
+for my $seqno (0..$NTRIAL-1) {
+  my $trlseq=$trialSeqIDX[$seqno];
+  for my $seq (@{$alltrials[$trlseq]->{seq} }) {
+   # skip catches
+   next if $seq->{event} =~ /^CATCH/;
+
+   # open the file to write to if we need it
+   open($files{$seq->{name}}, ">", "stims/$seq->{name}.1D") unless exists($files{$seq->{name}}) ;
+
+
+   # print to 1D file
+   print { $files{$seq->{name}} } "$timeused ";
+
+   # also print to event type if name and event aren't the same
+   if($seq->{event} ne $seq->{name} ) {
+      open($files{$seq->{event}}, ">", "stims/$seq->{event}.1D") unless exists($files{$seq->{event}}) ;
+      print { $files{$seq->{event}} } "$timeused ";
+   }
+
+   #say "$timeused $seq->{name} [$seq->{event}] ($seq->{duration})";
+   $timeused+=$seq->{duration};
+  }
+  #say "$timeused ITI ($ITIs[$seqno])";
+  $timeused+=$ITIs[$seqno];
+  #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
 }
+say "final ITI gets a bump of ", $TOTALTIME - $timeused;
+
+## what does the 3dDeconvolve command look like
+
+my %allconditions = map { $_->{name} => $_->{duration}  }  map {@$_} values %events;
+my @stims = grep {$_!~/^(NO)?CATCH/} keys %allconditions;
+my @cmd=();
+push @cmd, ("-nodata ". sprintf("%d",$TOTALTIME/$TR+.5) ."  $TR", "-polort 9");
+push @cmd, "-x1D stims/X.xmat.1D ";
+push @cmd, "-num_stims ". ($#stims+1);
+for my $stimno (0..$#stims ) {
+ my $stimno_1=$stimno+1;
+ my $dur=.5;
+ push @cmd, "-stim_times $stimno_1 stims/$stims[$stimno].1D 'BLOCK($allconditions{$stims[$stimno]},1)' -stim_label $stimno_1 $stims[$stimno]" ;
+}
+say join("\\\n",@cmd);
+
+
+
+## ALTERNATIVE ITI
+#say "\n";
+#my (@ITIpsbl, @ITIdist);
+#my $ITIinterval=.25;
+#push  @ITIpsbl, $MINITI+$ITIinterval*$_ for (0..($MAXITI-$MINITI)*1/$ITIinterval);
+#push @ITIdist, sprintf("%.2f",  $NTRIAL * (1/$MEANITI) *exp(-1/$MEANITI * $_) ) for @ITIpsbl; 
+#say join("\t",@ITIpsbl);
+#say join("\t",@ITIdist);
