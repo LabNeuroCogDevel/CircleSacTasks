@@ -128,6 +128,9 @@ function attention(varargin)
     trialsPerBlock      = 75;
     numBlocks           = 6;
     
+    %% get imaging tech. ("modality" is global)
+    getModality();
+    
     %% setup subject
     % get subject info, possible resume from previously
     % also set subject.curTrl and subject.curBlk
@@ -153,14 +156,22 @@ function attention(varargin)
               
       % display instructions
       newInstructions = { 'Welcome to the Attention Game\n', ...
+                         'push the left button if the target opens on the left\n' ...
                          'push the right button if the target is a C\n' ...
                         };
       betweenInstructions = { 'Welcome Back' }; 
+      
+      
       instructions(w,newInstructions,betweenInstructions,subject);
 
+      % some info to the command window
       fprintf('Block: %d\nEvent Type: %s\n',...
               thisBlk,                      ...
               subject.events(subject.curTrl).type);
+      
+      % do we need
+      startRun();
+      
       while subject.events(subject.curTrl).block == thisBlk
       
           e   = subject.events(subject.curTrl);

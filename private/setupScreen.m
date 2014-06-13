@@ -3,29 +3,26 @@ function w=setupScreen()
     global backgroundColor paren screenResolution colors degsize;
     % 50% grey
     backgroundColor=[1 1 1].*256.*.5;
-
+    
 
     % each degree is 100 pixels
     degsize=100;
 
-    % black, purple, green, light blue, pink, red, yellow, white
-    colors = [ 0   0   0;
-               255 0   255;
-               0   255 0;
-               173 216 255; 
-               255 173 173;
-               255   0   0;
-               255 255   0;
-               255 255 255];
+    % orange, pink, purple, blue, teal, green, puke, brown
+    colors = [  247, 143, 117;
+                241, 142, 166;
+                196, 159, 204;
+                127, 177, 210;
+                81, 187, 179;
+                111, 188, 129;
+                165, 178, 88;
+                216, 161, 83;];
 
 
 
      % Find out how many screens and use smallset screen number.
      %screenResolution = [800 600];
      screenResolution = [1024 768];
-
-
-
 
 
      screennum=max(Screen('Screens'));

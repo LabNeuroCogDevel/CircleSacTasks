@@ -2,14 +2,14 @@
 % JS 20140528 -- Initial
 % WF 21040529 -- pull out bits that are shared with attention, modify timing
 
-function trial = wmTrial(w,a,number,changes,playCue)
+function trial = wmTrial(w,a,number,changes,playCue,color,pos)
 % wmTrial -- play a trial of working memory task
 %  use screen 'w' and audiodev 'a'
 %  show 'number' of circles
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
 
-    global LEFT RIGHT listenKeys TIMES;
+    global LEFT RIGHT listenKeys TIMES colors;
     
     i=3;
     if nargin<i || isempty(number)
@@ -25,39 +25,16 @@ function trial = wmTrial(w,a,number,changes,playCue)
     %% -1. calculations.
 
     offset=calcOffset(w); % get offset due to diff between window size and grid size
-
-    lCirclePos = generateCirclePosns(number,offset);
-    rCirclePos = generateCirclePosns(number,offset,6);
-    [lCircColors, lUnused] = generateCircleColors(number);
-    [rCircColors, rUnused] = generateCircleColors(number);
-
-    lcCol2 = lCircColors;
-    rcCol2 = rCircColors;
-
-    idx=randi(number);
-    if(bitand(changes,LEFT))
-        [nUnused,~]=size(lUnused);
-        lcCol2(idx,:)=lUnused(randi(nUnused),:);
-    end
-    if(bitand(changes,RIGHT))
-        [nUnused,~]=size(rUnused);
-        rcCol2(idx,:)=rUnused(randi(nUnused),:);
-    end
     
+    
+    % get positions
+    lCirclePos = generateCirclePosns(pos.LEFT,offset);
+    rCirclePos = generateCirclePosns(pos.RIGHT,offset,6);
+       
    %% -1. get Codes
    ttls = getCodes(playCue,number,changes);
    
    %% -1. correct key
-%    % if no change, correct key is playCue
-%    % if change, invert playCue
-%    
-%    correctKey =  mod(playCue - (playCue==changes||changes>2), 2);
-%    if(correctKey==0); correctKey=2; end
-%    
-%    % if playCue wasnt given, set it to change, if both change use higher
-%    % represention (LEFT)
-%    if(playCue<=0); correctKey=max(changes,2); end
-%    
    % correct key is 1 for no change, 2 for change
    %changes is 0 (none), LEFT, or RIGHT (3 for both)
    correctKey=min(changes,1)+1;
@@ -79,22 +56,26 @@ function trial = wmTrial(w,a,number,changes,playCue)
     %% 1. cue
     %disp('cue');
     [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,timing.cue.ideal);%GetSecs()+1);
-    sendCode('x',ttls(1))
+    sendCode(ttls(1))
 
     %% 2. memory set
     %disp('memoryset');
-    timing.memoryset.onset = drawCircles(w, cat(1,lCircColors,rCircColors)',cat(2,lCirclePos,rCirclePos),timing.memoryset.ideal);% GetSecs()+.5);
-    sendCode('x',ttls(2))
+    ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
+    ovalpos=cat(2,lCirclePos,rCirclePos);
+    timing.memoryset.onset = drawCircles(w, ovalcolors,ovalpos, timing.memoryset.ideal);% GetSecs()+.5);
+    sendCode(ttls(2))
 
     %% 3. delay
     %disp('delay');
     timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
-    sendCode('x',ttls(3))
+    sendCode(ttls(3))
 
     %% 4. probe
     %disp('probe');
-    timing.probe.onset = drawCircles(w, cat(1,lcCol2,rcCol2)',cat(2,lCirclePos,rCirclePos), timing.probe.ideal);%GetSecs()+1);
-    sendCode('x',ttls(4))
+    ovalcolors=cat(1,colors(color.Resp.LEFT,:),colors(color.Resp.RIGHT,:))';
+    
+    timing.probe.onset = drawCircles(w, ovalcolors,ovalpos, timing.probe.ideal);%GetSecs()+1);
+    sendCode(ttls(4))
 
     %% 5. check for keypress.
     %disp('cls');
@@ -110,8 +91,8 @@ function trial = wmTrial(w,a,number,changes,playCue)
     trial.load    = number;
     trial.hemi    = changes;
     trial.playCue = playCue;
-    
     trial.triggers= ttls;
+    
 end
 
 
@@ -122,41 +103,35 @@ function StimulusOnsetTime = fixation(w,when)
 end
 
 %% -1 calculation.
-function [colorArray, unused] = generateCircleColors(number)
-    global colors;
-    [nColors,~] = size(colors);
-    perm = randperm(nColors); % permute the list.
-    colorArray = colors(perm(1:number),:); % get first n
-    unused = colors(perm(number+1:nColors),:); % gets the unused colors
-    % will need to be transposed later to work with fill ellipse
-end
-
-function locArray = generateCirclePosns(number,offset,varargin)
+function locArray = generateCirclePosns(chosenPos,offset,varargin)
     global degsize;
     
     xpos=0; ypos=0;
     if nargin>2, xpos=varargin{1}; end
-    if nargin>3, ypos=varargin{2}; end
-    
-    %disp(xpos); disp(ypos);
-    
+
+   
     % circles are 65% of a degree
     crclSize= degsize*.65 ;
     
     % more offsets
-    delta=(degsize-crclSize)/2; % circles are not in upper left of square, they are off by [delta, delta]
+    % circles are not in upper left of square, they are off by [delta, delta]
+    delta=(degsize-crclSize)/2;
     
-    % compute locations
-    chosenPos = randperm(21,number)-1; % 21 cells in a grid. We want *number*
+    
     posx = (mod(chosenPos,3)+xpos).*degsize + offset(1) + delta;    % get x and y pos
     posy = (floor(chosenPos/3)+ypos).*degsize + offset(2) + delta;
-    circhwvector = ones(1,number)*crclSize; % height and width of circle are both crclSize for all circles.
-    locArray = cat(1,posx,posy,posx+circhwvector,posy+circhwvector); % concatenate vertically. x on top, then y, height, and width on bottom.
-    % PRETRANSPOSED by the concatenation operation.
+        
+    % height and width of circle are both crclSize for all circles.
+    circhwvector = ones(1,length(chosenPos))*crclSize; 
+    
+    % concatenate vertically. x on top, then y, height, and width on bottom.
+    locArray = [posx;  posy;  posx+circhwvector;    posy+circhwvector];
 end
 
 %% 2,4. memoryset, probe.
 function StimulusOnsetTime = drawCircles(w,colorArr,posArr,when)
+    colorArr
+    posArr
     Screen('FillOval',w,colorArr,posArr);
     drawCross(w);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
@@ -195,7 +170,7 @@ function triggers = getCodes(cueHemi,cLoad,changes)
 % changes is 0 no change, LEFT=LEFT, RIGHT=RIGHT, 3=both
 %
 
-  global LEFT RIGHT;
+  global LEFT RIGHT LOADS;
   % triggers for (1) cue (2) array (3) delay (4) probe 
  
   % cue
@@ -204,11 +179,10 @@ function triggers = getCodes(cueHemi,cLoad,changes)
   
   
   % array: load and hemisphere
-  loads    = [1 3 5];
-  arrayTTL = [3 4 5   ... if cue is left
-              6 7 8]; ... if cue is right
+  arrayTTL = [3 5   ... if cue is left
+              6 8]; ... if cue is right
   
-  arrayIDX = find(loads == cLoad ) +  3 * (cueHemi==RIGHT );
+  arrayIDX = find(LOADS == cLoad ) +  length(LOADS) * (cueHemi==RIGHT );
   triggers(2) =  arrayTTL( arrayIDX );
   
   

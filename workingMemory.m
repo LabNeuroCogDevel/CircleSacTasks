@@ -60,12 +60,15 @@
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
     global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES;
+        
+    %% get imaging tech. ("modality" is global)
+    getModality();
     
     % useful paradigmn info
     gridsize = [9 7];
     LEFT = 1;
     RIGHT = 2;
-    LOADS = [ 1 3 5];
+    LOADS = [ 1 4 ];
     
     % fix cue memory delay probe finish
     %TIMES = [ .5  .5  .3  1  2];
@@ -77,8 +80,8 @@ function subject=workingMemory(varargin)
     
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');
-    listenKeys(RIGHT)= KbName('2@');
     listenKeys(LEFT) = KbName('1!');
+    listenKeys(RIGHT)= KbName('2@');
     listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
     
     % get subject info
@@ -90,7 +93,7 @@ function subject=workingMemory(varargin)
     end
     
     
-    try
+  %  try
         w = setupScreen();
         a = setupAudio();
 
@@ -107,7 +110,7 @@ function subject=workingMemory(varargin)
          betweenInstructions = { 'Welcome Back' }; 
          instructions(w,newInstructions,betweenInstructions,subject);
          
-         
+         startRun();
          % run the actual task
          while subject.events(subject.curTrl).block == thisBlk
 
@@ -117,19 +120,20 @@ function subject=workingMemory(varargin)
             trl = wmTrial(w,a, ...
                   e.load, ...
                   e.changes, ...
-                  e.playCue);
+                  e.playCue, e.Colors, e.pos)
 
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl);
          end
       
-    catch
-        % error kill all.
-        closedown();
-        psychrethrow(psychlasterror);
-        clear a;
-    end
+%     catch
+% 
+%         % error kill all.
+%         closedown();
+%         psychrethrow(psychlasterror);
+%         clear a;
+%     end
     
     
     closedown();
@@ -145,6 +149,17 @@ function a = setupAudio()
     global rsound lsound;
     InitializePsychSound;
     a = PsychPortAudio('Open');
+
+
+    [y, freq] = audioread('sounds/left_druv.wav');
+    lsound = [y';y'];
+
+    [y, freq] = audioread('sounds/right_druv.wav');
+    rsound = [y';y'];
+
+end
+
+
             
         % setup beeps
 %         audioStats = PsychPortAudio('GetStatus',a);
@@ -156,19 +171,8 @@ function a = setupAudio()
 %         rsoundmono = beep(sampleRate,1000,0.4,0.5*sampleRate);
 %         rsound = [0.*rsoundmono;rsoundmono];
 
-
-    [y, freq] = audioread('sounds/left_druv.wav');
-    lsound = [y';0.*y'];
-
-    [y, freq] = audioread('sounds/right_druv.wav');
-    rsound = [0.*y';y'];
-
-end
-
-
-
 %% beep
-function buffer = beep(sampleRate,freq,vol,nSamples)
-    multiplier=2*pi*freq;
-    buffer = sin((1:nSamples).*multiplier/sampleRate).*vol;
-end
+% function buffer = beep(sampleRate,freq,vol,nSamples)
+%     multiplier=2*pi*freq;
+%     buffer = sin((1:nSamples).*multiplier/sampleRate).*vol;
+% end
