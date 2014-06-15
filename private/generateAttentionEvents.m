@@ -71,8 +71,8 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
         end
         
         if(strcmp(t{i},'Popout'))
-            % wrong color is always one more than the right color
-            events(i).wrgClr = mod(colors(blockrep(i)),nColors)+1;
+            % wrong color is always "opposite" color
+            events(i).wrgClr = mod(colors(blockrep(i))+ceil(nColors/2)-1,nColors)+1;
         end
     end
     

@@ -130,8 +130,6 @@ end
 
 %% 2,4. memoryset, probe.
 function StimulusOnsetTime = drawCircles(w,colorArr,posArr,when)
-    colorArr
-    posArr
     Screen('FillOval',w,colorArr,posArr);
     drawCross(w);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);

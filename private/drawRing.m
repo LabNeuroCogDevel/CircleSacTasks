@@ -28,24 +28,6 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
              
 
     
-    % we use the following positions to draw a rectangle that hides
-    % part of the circle and indicates which way a saccade should go
-    %  ordered: left right up down
-    movement = { ...
-        ... LEFT
-        [  [0                   crclSize/6          ], ...
-           [crclSize/2          5*crclSize/6        ]] ...
-         ... RIGHT
-         [ [crclSize-crclSize/2 crclSize/6          ], ...
-           [crclSize            5*crclSize/6        ]] ...
-         ... UP
-         [  [crclSize/6         0                   ], ...
-            [5*crclSize/6       crclSize/2          ]] ...
-         ... DOWN
-         [  [crclSize/6         crclSize-crclSize/2 ], ...
-            [5*crclSize/6       crclSize            ]] ...
-    };
-       
 
   % maybe we want to assing 
   % a specific (1) position with a (2) color and a (3) direction
@@ -55,16 +37,17 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
   labeledPosIdx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'Position'),  varargin ))+1;
   labeledColIdx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'Color'),     varargin ))+1;
   labeledDirIdx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'Direction'), varargin ))+1;
+  
   whenIdx       = find(cellfun(@(x) ischar(x)&&strcmpi(x,'when'),      varargin ))+1;
 
   whatloadIdx   = find(cellfun(@(x) ischar(x)&&any(strfind(x,'load')), varargin ));
   
+  shrinkProbeIdx= find(cellfun(@(x) ischar(x)&&strcmpi(x,'ShrinkProbe'), varargin ))+1;
+  
   shouldFill    = any(cellfun(@(x) ischar(x)&&strcmpi(x,'Fill'),      varargin ));
   isProbe       = any(cellfun(@(x) ischar(x)&&strcmpi(x,'PROBE'),     varargin ));
   isPopout      = any(cellfun(@(x) ischar(x)&&strcmpi(x,'Popout'),    varargin ));
- 
 
-       
    % load = 6, 4, or 2 annuli
    if ~isempty(whatloadIdx)
      whatload=varargin{whatloadIdx};
@@ -110,11 +93,50 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
       end
   end
   
+  
+  
+   
+   if ~isempty(shrinkProbeIdx)
+       shrinkProbe=varargin{shrinkProbeIdx};
+   else
+       shrinkProbe=.7;
+   end
+   
+   %fprintf('DEBUG: shrinkProbe %.3f\n',shrinkProbe)
+   
+   % we use the following positions to draw a rectangle that hides
+   % part of the circle and indicates which way a saccade should go
+   %  ordered: left right up down
+   % the size of the annulis is determined by shrinkProbe (.1 ... 1)
+   annulisSize = crclSize/2 + [-1;1].*crclSize/2 *shrinkProbe;
+   movement = { ...
+        ... LEFT
+        [  [0                    annulisSize(1)      ], ...
+           [crclSize/2           annulisSize(2)      ]] ...
+         ... RIGHT
+         [ [crclSize-crclSize/2  annulisSize(1)      ], ...
+           [crclSize             annulisSize(2)      ]] ...
+         ... UP
+         [  [annulisSize(1)      0                   ], ...
+            [annulisSize(2)      crclSize/2          ]] ...
+         ... DOWN 
+         [  [annulisSize(1)      crclSize-crclSize/2 ], ...
+            [annulisSize(2)      crclSize            ]] ...
+   };
+       
+
+  
+  
 
   
   % which direction to move in
   %Directions = randi(4,1,numStim);
-  Directions = randi(2,1,numStim); % do not do up/down (hard for M/EEG?)
+  %Directions = randi(2,1,numStim); % do not do up/down (hard for M/EEG?)
+  
+  % force there to be about the same number left as there are right
+  Directions = Shuffle(repmat([1; 2], [ceil(numStim/2),1]));
+  Directions = Directions(1:numStim);
+
   
   % if we have directions specified, set them
   if ~isempty(labeledDirIdx)

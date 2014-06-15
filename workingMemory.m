@@ -93,7 +93,7 @@ function subject=workingMemory(varargin)
     end
     
     
-  %  try
+    try
         w = setupScreen();
         a = setupAudio();
 
@@ -120,20 +120,20 @@ function subject=workingMemory(varargin)
             trl = wmTrial(w,a, ...
                   e.load, ...
                   e.changes, ...
-                  e.playCue, e.Colors, e.pos)
+                  e.playCue, e.Colors, e.pos);
 
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl);
          end
       
-%     catch
-% 
-%         % error kill all.
-%         closedown();
-%         psychrethrow(psychlasterror);
-%         clear a;
-%     end
+    catch
+
+        % error kill all.
+        closedown();
+        psychrethrow(psychlasterror);
+        clear a;
+    end
     
     
     closedown();

@@ -6,7 +6,7 @@ function w=setupScreen()
     
 
     % each degree is 100 pixels
-    degsize=100;
+    degsize=50;
 
     % orange, pink, purple, blue, teal, green, puke, brown
     colors = [  247, 143, 117;
@@ -22,13 +22,15 @@ function w=setupScreen()
 
      % Find out how many screens and use smallset screen number.
      %screenResolution = [800 600];
-     screenResolution = [1024 768];
+     
 
 
      screennum=max(Screen('Screens'));
+     
      %wSize=Screen('Resolution', screennum);
      %screenResolution = [wSize.width wSize.height];
 
+     screenResolution = [1024 768];
 
      % Removes the blue screen flash and minimize extraneous warnings.
      % http://psychtoolbox.org/FaqWarningPrefs

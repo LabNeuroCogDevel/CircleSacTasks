@@ -171,9 +171,12 @@ function attention(varargin)
       
       % do we need
       startRun();
-      
+      startofblock=(thisBlk-1)*trialsPerBlock+1;
+      last9Correct=0;
       while subject.events(subject.curTrl).block == thisBlk
-      
+          
+          
+          
           e   = subject.events(subject.curTrl);
           
           trl = attentionTrial(w, ...
@@ -181,10 +184,15 @@ function attention(varargin)
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               GetSecs(),...
-              e.type );
+              e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
           % save subject, update position in run
           subject=saveTrial(subject,trl);
+          
+          % update correct, so we can shrink annuals
+          nineago=subject.curTrl-9;
+          last9 = max(startofblock,nineago):(subject.curTrl-1);   
+          last9Correct = sum([ subject.trial(last9).correct ] == 1);
       end
      
       
