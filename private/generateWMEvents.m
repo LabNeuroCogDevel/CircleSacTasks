@@ -14,6 +14,21 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     blockrep     = repmat(1:blocks,trialsPerBlock,1);
     
     
+    
+    %% timings
+
+            % fix  cue memory delay probe
+    %TIMES =[ .5  .5   .3     1     2];
+    times = [ .5  .5   .5     1     2];
+    timing.fix.ideal   = 0;
+    timing.cue.ideal   = sum(times(1:1));
+    timing.mem.ideal   = sum(times(1:2));
+    timing.delay.ideal = sum(times(1:3));
+    timing.probe.ideal = sum(times(1:4));
+    timing.finish.ideal  = sum(times(1:5));
+    
+    
+    
     %% sound cue (attend to which hemisphere)
     playCue = Shuffle( repmat([LEFT RIGHT],1,ceil(nTrl/2)              )  );
     
@@ -52,9 +67,10 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     % if we have events as an array of structs
     for i=1:nTrl;
         events(i).playCue = playCue(i);
-        events(i).load = loads(i);
+        events(i).load    = loads(i);
         events(i).changes = changes(i);
         events(i).block   = blockrep(i);
+        events(i).timing  = timing; 
     end
     
 

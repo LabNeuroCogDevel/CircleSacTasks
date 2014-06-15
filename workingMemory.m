@@ -59,7 +59,7 @@
 %% Working Memory task
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES;
+    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES modality;
         
     %% get imaging tech. ("modality" is global)
     getModality();
@@ -93,7 +93,7 @@ function subject=workingMemory(varargin)
     end
     
     
-    try
+%     try
         w = setupScreen();
         a = setupAudio();
 
@@ -116,24 +116,24 @@ function subject=workingMemory(varargin)
 
             e   = subject.events(subject.curTrl);
 
-            % sreen,audio,load,hemichange,playcue)
+            % sreen,audio,load,hemichange,playcue, colors, positions
             trl = wmTrial(w,a, ...
                   e.load, ...
                   e.changes, ...
-                  e.playCue, e.Colors, e.pos);
+                  e.playCue, e.Colors, e.pos, e.timing);
 
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl);
          end
       
-    catch
-
-        % error kill all.
-        closedown();
-        psychrethrow(psychlasterror);
-        clear a;
-    end
+%     catch
+% 
+%         % error kill all.
+%         closedown();
+%         psychrethrow(psychlasterror);
+%         clear a;
+%     end
     
     
     closedown();

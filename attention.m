@@ -90,7 +90,6 @@
 %%%%%%%%%
 
 %% TODO and change log
-%   [ ] send event codes, different for popout, habitual, and flex?
 %   [ ] instructions?
 %   [?] use rectFrame for percision timing w/photodiode?
 % WF 20140602 -- save trial (may cause timing issues -- rewritting all of
@@ -176,14 +175,18 @@ function attention(varargin)
       while subject.events(subject.curTrl).block == thisBlk
           
           
-          
+          % get the event so we have
+          % target position, color, and direction
+          % as well as they trial type and timing
           e   = subject.events(subject.curTrl);
+ 
+          
           
           trl = attentionTrial(w, ...
               e.trgtpos, ...
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
-              GetSecs(),...
+              e.timing,...
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
           % save subject, update position in run

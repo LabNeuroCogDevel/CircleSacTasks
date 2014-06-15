@@ -2,7 +2,7 @@
 % JS 20140528 -- Initial
 % WF 21040529 -- pull out bits that are shared with attention, modify timing
 
-function trial = wmTrial(w,a,number,changes,playCue,color,pos)
+function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 % wmTrial -- play a trial of working memory task
 %  use screen 'w' and audiodev 'a'
 %  show 'number' of circles
@@ -43,47 +43,37 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos)
    fprintf('playCue(%d=L): %d; change?: %d; correctkey: %d\n',LEFT,playCue,changes,correctKey);
    
 
+    %% update timing
+    timing = updateTiming(timing,GetSecs());
 
     %% 0. fixation
-    %disp('fixation');
-    timing.fixation.onset = fixation(w,GetSecs());
-    timing.cue.ideal      = timing.fixation.onset + sum(TIMES(1:1));
-    timing.memoryset.ideal= timing.fixation.onset + sum(TIMES(1:2));
-    timing.delay.ideal    = timing.fixation.onset + sum(TIMES(1:3));
-    timing.probe.ideal    = timing.fixation.onset + sum(TIMES(1:4));
-    timing.finish.max     = timing.fixation.onset + sum(TIMES(1:5));
+    timing.fix.onset = fixation(w,timing.fix.ideal);
+
 
     %% 1. cue
-    %disp('cue');
     [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,timing.cue.ideal);%GetSecs()+1);
     sendCode(ttls(1))
 
     %% 2. memory set
-    %disp('memoryset');
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
-    timing.memoryset.onset = drawCircles(w, ovalcolors,ovalpos, timing.memoryset.ideal);% GetSecs()+.5);
+    timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
     sendCode(ttls(2))
 
     %% 3. delay
-    %disp('delay');
     timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
     sendCode(ttls(3))
 
     %% 4. probe
-    %disp('probe');
     ovalcolors=cat(1,colors(color.Resp.LEFT,:),colors(color.Resp.RIGHT,:))';
     
     timing.probe.onset = drawCircles(w, ovalcolors,ovalpos, timing.probe.ideal);%GetSecs()+1);
     sendCode(ttls(4))
 
     %% 5. check for keypress.
-    %disp('cls');
-%    [timing.endTime, trial.keyPressed, trial.keyCodes] = checkProbe(w,timing.fixation.onset +4.8);   
-%    correct key set by playCue -- TODO: this is wrong if no change?
     [ timing.finish.onset, ...
       timing.Response,     ...
-      trial.correct   ]     =  clearAndWait(w,timing.finish.max,timing.finish.max,...
+      trial.correct   ]     =  clearAndWait(w,timing.finish.ideal,timing.finish.ideal,...
                                           listenKeys(correctKey),@drawCross);
     
     trial.RT      = timing.Response-timing.probe.onset;                                  

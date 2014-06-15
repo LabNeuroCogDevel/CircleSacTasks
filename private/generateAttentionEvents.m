@@ -1,5 +1,20 @@
 function events = generateAttentionEvents(trialsPerBlock, blocks)
 %generateAttentionEvents -- generate random order of events for attention
+%
+% block, type, crtDir, trgtpos, trgClr, wrgClr
+%    eventually will also have "RT" and "Correct"
+%
+% also timings:
+%    fix, cue, attend, probe, clear, ITI
+%
+% N.B. * timings for MEG depend on RT
+%      * timings for fMRI do not!
+%      * fMRI can have catch trials
+%
+% So, if timings are given in # < 10 && > 0, assume RT dependant
+% timing of -1 means doesn't happen
+%
+%    
 % three trial types: 
 %   Popout (2 colors), 
 %   Habitual (1 target color, different colored probe distractors)
@@ -15,6 +30,14 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     nTrl   = trialsPerBlock*blocks;
     nTrgts = 6;
     nColors= 8; % if colors were avaible we could use it's length
+
+    %         cue attend probe clear
+    times = [ .5   .5   .5     .5 ]; % time between each event in seconds
+    timing.fix.ideal    = 0;
+    timing.cue.ideal    = sum(times(1:1));
+    timing.attend.ideal = sum(times(1:2));
+    timing.probe.ideal  = sum(times(1:3));
+    timing.clear.ideal  = sum(times(1:4));
 
     
     if( mod(nTrl,nTypes)~=0 )
@@ -74,6 +97,9 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
             % wrong color is always "opposite" color
             events(i).wrgClr = mod(colors(blockrep(i))+ceil(nColors/2)-1,nColors)+1;
         end
+        
+        % MEG timing
+        events(i).timing = timing;
     end
     
 
