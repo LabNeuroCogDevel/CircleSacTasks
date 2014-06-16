@@ -1,4 +1,8 @@
 #!/usr/bin/env perl
+#
+# see http://blogs.perl.org/users/polettix/2012/04/parserecdescent-and-number-of-elements-read-on-the-fly.html
+#     http://search.cpan.org/~jtbraun/Parse-RecDescent-1.967009/lib/Parse/RecDescent.pm
+#
 use strict; use warnings; 
 use 5.14.0;
 use Parse::RecDescent;
