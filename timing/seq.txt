@@ -1,0 +1,19 @@
+TASK=workingMemory
+TOTALTIME=332;TR=1.5;NITER=2;
+TESTS=mem-snd,mem-dly,dly-RSP,mem:L1 +mem:L4 -RSP # care about extracting response and memory
+
+## sequences
+# could be given on CLI like
+#  snd [.5]; mem [.5]{L1,L4}; CATCH=.16; dly [1]; CATCH=.16; RSP [2] {change,nochange}
+
+snd[.5]
+mem [.5] {L1, L4}
+CATCH=.16 # this catch happens 1/6 of the time
+dly [1]
+CATCH=.16
+RSP [2] {change, nochange};
+
+
+# could aslo have written like
+#mem {L1=.5 [.5], L4=.5 [.5] }
+#RSP [2] {change=.5,nochange=.5};

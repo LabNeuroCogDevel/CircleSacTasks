@@ -14,124 +14,42 @@ my $nCatch=0;
 my @sumstable = ();
 
 # SETTINGS
-my $TOTALTIME;
+my $TOTALTIME=60*8;
 my $TR=1.5;
 my $STARTTIME=2;
 my $MEANITI=3;
 my $MINITI=1;
 my $MAXITI=99; #no max
-my $TESTS="";  #no tests
 my $NITER=2;
-my $TASKNAME="TASK";
-
-while(<>) {
- # remove comments
- s/#.*//g;
-
- # split by semi-colon (for one liners)
- my @F = split /;/;
-
- # read in event by event
- for (@F) {
-  
-
-   # check for some settings
-   $TOTALTIME=$1 and next if m/^ \s* TOTALTIME \s* = \s* ( [\d\.]+ ) \s* $/xi;
-   $TR=$1 and next if m/^ \s* TR \s* = \s* ( [\d\.]+ ) \s* $/xi;
-   $TESTS=$1 and next if m/^ \s* TESTS \s* = \s* ( .+ )$/xi;
-   $NITER=$1 and next if m/^ \s* NITER \s* = \s* ( .+ )$/xi;
-   $TASKNAME=$1 and next if m/^ \s* TASK \s* = \s* ( .+ )$/xi;
-
-   
-   # skip if it doesnt look like a name and time or catch
-   next if ! /(\w+.*\[)|(CATCH)/; 
-
-   my $name;
-   my @cond=();
-   my @timing=();
-
-
-   # DEAL WITH CATCH TRIALS
-   if(/ CATCH \s*=\s* ( [\d\.\/]+ )/x){
-     $nCatch++;
-     my $occur=sprintf('%0.4f',$1);
-     $name="CATCH".$nCatch;
-
-     @cond=( [ $name, $occur ], ["NO".$name, 1-$occur] );
-     @timing=(0, 0);
-
-     $events{$name} = [ map { { event=>$name, name=>$cond[$_]->[0], occurRatio=>$cond[$_]->[1], duration=>$timing[$_] } } (0..$#cond)  ];
-     push @seq, $name;
-     next;
-   }
-
-   # get name, should be first bit of word characters
-   /^\s*(?<name>\w+)/;
-   $name=$+{name};
-   say STDERR "no name for event!" and exit unless $name;
-   say STDERR "name $name already used!" and exit if exists($events{$name});
-   push @seq, $name;
-
-   # add timing to events
-   # should be like [.5]
-   # -- assume that mulitple matches will match manipulations
-   while(/ \[   (?<timing> [\d \. \/]+  )  \]/xg){
-    push @timing, $+{timing};
-   }
-
-
-   #####
-   # look for any conditions/manipulations
-   # like { name=occurance ... }
-   # {1L=1/2 [.5], 4L=1/2 [.5] }
-   # [.5] {1L,4L}
-   my $condMatch=""; 
-   if(/{.+}/) {
-      $condMatch=$&;
-      my $condcount = /,/g + 1;
-      $condcount=1 if ! $condcount;
-      while($condMatch=~m/ (?<cond> \w+ )  \s* ( (= \s* (?<count>[\d\.\/]+) ) | , |}\s* $)     /xg){
-       #say "$_: $& --> $condcount";
-       push @cond, [ $name .":".$+{cond}, $+{count}?$+{count}:(1/$condcount) ] ;
-      }
-   }
-   # default condition is name, and full occurance
-   push @cond, [ $name, 1 ] if($#cond<0);
-   
-   # build events hash
-   # eventName =>  array of hashes with prefix, occurRatio, and duration
-   if(  $#timing==0 || ($#cond == $#timing) ) {
-      $events{$name} = [ map { { event=>$name, name=>$cond[$_]->[0], 
-                                 occurRatio=>sprintf("%.04f",$cond[$_]->[1]), 
-                                 duration=>sprintf("%.02f",$timing[$_]||$timing[0])      } 
-                              } (0..$#cond)  ];
-   } else {
-     say STDERR "$name: have " , $#timing+1 , " times -- should be 1 or match # manipulations\n";
-   }
- }
-
-
-
-}
+#my $TESTS="";  #no tests
+my $TESTS="cue-atnd,atnd-probe,probe:cong-probe:incog";  #no tests
 
 say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
 say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
 
-# seq like: 
-#  (snd mem dly)
-# events like:
-#  ( snd => [ {event=>snd,name=>snd,    occurRatio=>1 , duration=>.5 ],
-#    mem => [ {event=>mem,name=>mem.1L, occurRatio=>.5, duration=>.5},
-#             {event=>mem,name=>mem.4L, occurRatio=>.5, duration=>.5}
-#           ]
-#  )          
+my $taskname="attention";
+mkdir "$taskname" if ! -d "$taskname/";
 
-## build tree/ all possible event sequences
-# allseq will be array of trial arrays
-# (
-#   [ {seq} {memL1} {dly} ]
-#   [ {seq} {memL4} {dly} ]
-# )
+@seq = qw/ cue CATCH1 atnd CATCH2 probe /;
+%events = (
+ cue=> [ {event=>"cue", name=>"cue", occurRatio=>1, duration=>.5   }  ],
+
+ CATCH1=> [ {event=>"CATCH1", name=>"CATCH1", occurRatio=>.17, duration=>0   } ,
+            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>.83, duration=>0   }  ],
+
+ atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>.33, duration=>.5} ,
+          {event=>"atnd", name=>"atnd:hab", occurRatio=>.33, duration=>.5} ,
+          {event=>"atnd", name=>"atnd:flex",occurRatio=>.33, duration=>.5}  ],
+
+ CATCH2=> [ {event=>"CATCH2", name=>"CATCH2", occurRatio=>.17, duration=>0   } ,
+            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>.83, duration=>0   }  ],
+
+ probe=>[ {event=>"probe", name=>"probe:cong",  occurRatio=>.5, duration=>.5} ,
+          {event=>"probe", name=>"probe:incog", occurRatio=>.5, duration=>.5} ]
+);
+
+
+
 
 my @allseq=([]);
 for my $event (@seq) {
@@ -183,6 +101,7 @@ for my $trialseq (@allseq) {
 
 
 
+
 ## build run/block
 # we need to know 
 #  * total time --> total number of trials
@@ -214,11 +133,33 @@ say "$_->{nRep} ($_->{freq}*$TOTALTIME) @ $_->{dur}s: ",
 
 
 
-# create a shuffled list of trial sequence indices
-# this will be the final order that trial sequences are presented
-my @trialSeqIDX;
-push @trialSeqIDX, ($_)x$alltrials[$_]->{nRep} for (0..$#alltrials);
-@trialSeqIDX = shuffle @trialSeqIDX;
+## all random
+# # create a shuffled list of trial sequence indices
+# # this will be the final order that trial sequences are presented
+# my @trialSeqIDX;
+# push @trialSeqIDX, ($_)x$alltrials[$_]->{nRep} for (0..$#alltrials);
+# @trialSeqIDX = shuffle @trialSeqIDX;
+
+#########
+## FOR ATTENTION ONLY
+# we want psudeo blocked, so shuffly pop, hab, and flex separetly
+my %trialSeqIDX;
+my @cuedist=qw/flex hab pop/;
+for (0..$#alltrials){
+  my $seqname = reduce {$a.$b->{name}} '', @{$alltrials[$_]->{seq}};
+  $seqname =~ /(flex|pop|hab)/;
+  my $key=$1;
+  if($key) {
+     push @{$trialSeqIDX{$key}}, ($_)x$alltrials[$_]->{nRep};
+  } else {
+    my $trialidx=$_;
+    my $cuedistIDX=0;
+    push @{$trialSeqIDX{$cuedist[++$cuedistIDX %( $#cuedist+1)]}}, $trialidx for (1..$alltrials[$trialidx]->{nRep} )
+  }
+}
+my @trialSeqIDX = ();
+push @trialSeqIDX,shuffle @{$trialSeqIDX{$_}} for (shuffle @cuedist);
+#########
 
 # update total trials to the actual total 
 $NTRIAL = $#trialSeqIDX;
@@ -232,13 +173,9 @@ use Math::Random qw(random_exponential);
 my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
 
 
-mkdir "$TASKNAME" if ! -d "$TASKNAME/";
-
-open my $FHsums, ">", "$TASKNAME/stimSums.txt" or die "cannot open output txt file";
+open my $FHsums, ">", "$taskname/stimSums.txt" or die "cannot open output txt file";
 say $FHsums join("\t",qw/it h LC/);
 
-# used later to add -1 to those missing from catch
-# in alltiming output
 my @noCatchSeq = grep { ! /CATCH/ } @seq;
 
 for my $deconIt (1..$NITER) {
@@ -257,24 +194,26 @@ for my $deconIt (1..$NITER) {
   ## create 1D files, finally!
   my $timeused=$STARTTIME;
   my %files;
-  my $odir="$TASKNAME/stims/$deconIt/";
-  # should've used makepath
-  mkdir "$TASKNAME/stims" if ! -d "$TASKNAME/stims/";
+  my $odir="$taskname/stims/$deconIt/";
+  mkdir "$taskname/stims" if ! -d "$taskname/stims/";
   mkdir "$odir" if ! -d "$odir";
+  
   
   # write sequence and timing to read into matlab
   open($files{alltiming}, ">", "$odir/alltiming.txt") unless exists($files{alltiming}) ;
-  
+
   for my $seqno (0..$NTRIAL-1) {
     my $trlseq=$trialSeqIDX[$seqno];
 
+    my @eventseq=@{$alltrials[$trlseq]->{seq} };
     my @eventSeqTime=();
 
-    for my $seq (@{$alltrials[$trlseq]->{seq} }) {
+    # write out times for each event to 1D
+    for my $seq (@eventseq) {
+
      # skip catches
      next if $seq->{event} =~ /^CATCH/;
 
-     # add timing to array containing all timing
      push @eventSeqTime, [ $seq->{name},$timeused ];
   
      # open the file to write to if we need it
@@ -294,18 +233,20 @@ for my $deconIt (1..$NITER) {
      $timeused+=$seq->{duration};
     }
 
-
     # finish catch trials
     push @eventSeqTime, [ $noCatchSeq[$_], -1 ] for ( ($#eventSeqTime+1)..($#noCatchSeq));
+    
     
     # write out this trial
     print {$files{alltiming}} join("\t", map {$_->[0]."\t".$_->[1]} @eventSeqTime ), "\n";
 
 
+    
     #say "$timeused ITI ($ITIs[$seqno])";
     $timeused+=$ITIs[$seqno];
     #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
   }
+
   say "final ITI gets a bump of ", $TOTALTIME - $timeused;
   
   ## what does the 3dDeconvolve command look like
