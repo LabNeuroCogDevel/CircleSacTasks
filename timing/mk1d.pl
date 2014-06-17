@@ -242,6 +242,10 @@ say $FHsums join("\t",qw/it h LC/);
 my @noCatchSeq = grep { ! /CATCH/ } @seq;
 
 for my $deconIt (1..$NITER) {
+  
+  # setup a different order each time
+  @trialSeqIDX = shuffle @trialSeqIDX;
+
   my ($itcount,$ITIsum,@ITIs) = (0,99,0);
   until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
     @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);

@@ -1,5 +1,5 @@
 TASK=workingMemory
-TOTALTIME=332;TR=1.5;NITER=2;
+TOTALTIME=332;TR=1.5;NITER=200;
 TESTS=mem-snd,mem-dly,dly-RSP,mem:L1 +mem:L4 -RSP # care about extracting response and memory
 
 ## sequences
