@@ -60,5 +60,5 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
     [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
  end
  
- fprintf('iscorrect: %d %d %d; time remeaining %.02f\n\n', correct, correctKeys, find(keyCode), RTwindowEnd-RT)
+ fprintf('iscorrect: %d (want: %d; have: %d); time remeaining %.02f\n\n', correct,correctKeys, find(keyCode),RTwindowEnd-RT)
 end
