@@ -19,8 +19,8 @@ function [timing]=updateTiming(timing,starttime,varargin)
     else
         firstEvent=varargin{1};
     end
-
-    if(timing.(firstEvent).ideal==0)
+    
+   %if(timing.(firstEvent).ideal==0)
       % and adjust timings if using event timing
       for f=fields(timing)'
           % but also preserve catch trials
@@ -28,7 +28,7 @@ function [timing]=updateTiming(timing,starttime,varargin)
             timing.(f{1}).ideal = timing.(f{1}).ideal + starttime;
           end
       end
-    end
+   %end
     
     
 end

@@ -10,17 +10,23 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 %  'playVue' is LEFT | RIGHT beep
 
     global LEFT RIGHT listenKeys TIMES colors;
+    %% -1. get Codes
+    ttls = getCodes(playCue,number,changes);
+   
+    %% set trial info
+    trial.RT      =  Inf;  
+    trial.correct = nan;
+    trial.timing  = timing;
+    trial.load    = number;
+    trial.hemi    = changes;
+    trial.playCue = playCue;
+    trial.triggers= ttls;
     
-    i=3;
-    if nargin<i || isempty(number)
-        number=5;
-    end; i=i+1;
-    if nargin<i || isempty(changes)
-        changes=0;
-    end; i=i+1;
-    if nargin<i || isempty(playCue)
-        playCue=LEFT;
-    end;
+    
+    % defaults  -- mising color, pos, and timing
+    if isempty(number),    number=5;    end
+    if isempty(changes),   changes=0;   end
+    if isempty(playCue),   playCue=LEFT;end
     
     %% -1. calculations.
 
@@ -31,9 +37,7 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     lCirclePos = generateCirclePosns(pos.LEFT,offset);
     rCirclePos = generateCirclePosns(pos.RIGHT,offset,6);
        
-   %% -1. get Codes
-   ttls = getCodes(playCue,number,changes);
-   
+ 
    %% -1. correct key
    % correct key is 1 for no change, 2 for change
    %changes is 0 (none), LEFT, or RIGHT (3 for both)
@@ -42,9 +46,6 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
    %fprintf('(LEFT %d RIGHT %d)\n',LEFT,RIGHT)
    fprintf('playCue(%d=L): %d; change?: %d; correctkey: %d\n',LEFT,playCue,changes,correctKey);
    
-
-    %% update timing
-    timing = updateTiming(timing,GetSecs());
 
     %% 0. fixation
     timing.fix.onset = fixation(w,timing.fix.ideal);
@@ -55,16 +56,19 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     sendCode(ttls(1))
 
     %% 2. memory set
+    if(timing.mem.ideal<0); trial.timing  = timing; return; end
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
     sendCode(ttls(2))
 
     %% 3. delay
+    if(timing.delay.ideal<0); trial.timing  = timing; return; end
     timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
     sendCode(ttls(3))
 
     %% 4. probe
+    if(timing.probe.ideal<0); trial.timing  = timing; return; end
     ovalcolors=cat(1,colors(color.Resp.LEFT,:),colors(color.Resp.RIGHT,:))';
     
     timing.probe.onset = drawCircles(w, ovalcolors,ovalpos, timing.probe.ideal);%GetSecs()+1);
@@ -75,13 +79,10 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
       timing.Response,     ...
       trial.correct   ]     =  clearAndWait(w,timing.finish.ideal,timing.finish.ideal,...
                                           listenKeys(correctKey),@drawCross);
-    
+        
     trial.RT      = timing.Response-timing.probe.onset;                                  
     trial.timing  = timing;
-    trial.load    = number;
-    trial.hemi    = changes;
-    trial.playCue = playCue;
-    trial.triggers= ttls;
+    
     
 end
 

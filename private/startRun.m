@@ -15,6 +15,7 @@ function [starttime]=startRun()
   
   if(strcmpi(modality,'fMRI'))
       fprintf('TODO: setup wait for ^\n');
+      starttime=GetSecs();
   end
   
   

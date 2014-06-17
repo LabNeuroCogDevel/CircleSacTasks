@@ -16,7 +16,18 @@ function subject=saveTrial(subject,trl)
   % save
   save(subject.file, '-struct', 'subject');
 
-  % print something
-  fprintf('finished trial %d\n', subject.curTrl-1);
+  % show timing
+  fprintf('timing %d\toffset\tideal\tonset\n', subject.curTrl-1);
+  for t=fieldnames(trl.timing)'
+       if strcmp(t{1}, 'Response'), continue,   end
+       tstruct = trl.timing.(t{1});
+       catcht=''; if(tstruct.ideal==-1), catcht='*'; end
+       fprintf('\t%s%s\t%.3f\t%.3f\t%.3f\n',t{1},catcht, ...
+             tstruct.onset - tstruct.ideal, ...
+             tstruct.ideal, ...
+             tstruct.onset);
+  end
+  fprintf('\n');
+  
 end
 

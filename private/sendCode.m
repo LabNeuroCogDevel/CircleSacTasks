@@ -4,7 +4,7 @@ function  sendCode( code )
 % also initializes global HANDLE as ltp1 if not done yet
  global modality DIOHANDLE;
  
- if(strcmpi(modality,'MEG')) % use ismember to extend (e.g. fMRIwTrigger)
+ if(strcmpi(modality,'MEG') && ispc) % use ismember to extend (e.g. fMRIwTrigger)
    if(isempty(DIOHANDLE))
        DIOHANDLE=digitalio('parallel','lpt1');
        addline(DIOHANDLE,0:7,0,'out');

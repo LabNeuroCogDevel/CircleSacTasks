@@ -59,7 +59,7 @@
 %% Working Memory task
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES modality;
+    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES modality CUMULATIVE;
         
     %% get imaging tech. ("modality" is global)
     getModality();
@@ -74,10 +74,7 @@ function subject=workingMemory(varargin)
     %TIMES = [ .5  .5  .3  1  2];
     TIMES = [ .5  .5  .5  1  2];
 
-    
-    trialsPerBlock=12;
-    blocks=6;
-    
+       
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');
     listenKeys(LEFT) = KbName('1!');
@@ -88,8 +85,19 @@ function subject=workingMemory(varargin)
     subject = getSubjectInfo('task','WorkingMemory', varargin{:});
     
     % initialze order of events/trials
+    % this is done differently for MEG and fMRI
     if ~isfield(subject,'events') 
-      subject.events = generateWMEvents(trialsPerBlock, blocks);
+      if strcmp(modality,'fMRI')
+        trialsPerBlock=49; % doesn't matter?
+        blocks=6;
+        subject.events = readWMEvents(blocks);
+      elseif strcmp(modality,'MEG')
+        trialsPerBlock=12;
+        blocks=6;
+        subject.events = generateWMEvents(trialsPerBlock, blocks);
+      else
+        error('what modality is %s',modality);
+      end
     end
     
     
@@ -110,18 +118,29 @@ function subject=workingMemory(varargin)
          betweenInstructions = { 'Welcome Back' }; 
          instructions(w,newInstructions,betweenInstructions,subject);
          
-         startRun();
+         % starttime is now
+         starttime=startRun();
+         
          % run the actual task
          while subject.events(subject.curTrl).block == thisBlk
 
+            
+            % update timing
+            % initTime is right now (event) or when trial started
+            initTime= (~CUMULATIVE) * GetSecs() +  CUMULATIVE*starttime;
+            subject.events(subject.curTrl).timing =  updateTiming(...
+                  subject.events(subject.curTrl).timing, ...
+                  initTime);
+              
             e   = subject.events(subject.curTrl);
+                        
 
             % sreen,audio,load,hemichange,playcue, colors, positions
             trl = wmTrial(w,a, ...
                   e.load, ...
                   e.changes, ...
                   e.playCue, e.Colors, e.pos, e.timing);
-
+            
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl);
