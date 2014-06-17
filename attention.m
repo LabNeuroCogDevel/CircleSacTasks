@@ -116,19 +116,33 @@
 function attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global listenKeys trialsPerBlock;
+   global TIMES listenKeys trialsPerBlock modality CUMULATIVE;
+     %       cue attend probe clear
+   TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
    listenKeys = KbName({'1!','2@','3#','4$','space'});
    % match direction 
 
-    % trial + block settings
-    trialsPerBlock      = 75;
-    numBlocks           = 6;
     
     %% get imaging tech. ("modality" is global)
     getModality();
+    % setup block + trial structure
+    if strcmp(modality,'fMRI')
+        trialsPerBlock=60; %48 full + 24 catch
+        blocks=2;
+        getEvents = @() readAttentionEvents(blocks);
+        
+    elseif strcmp(modality,'MEG')
+        trialsPerBlock=75;
+        blocks=6;
+        getEvents = @() generateAttentionEvents(trialsPerBlock, blocks);
+        
+    else
+        error('what modality is %s',modality);
+    end
+    
     
     %% setup subject
     % get subject info, possible resume from previously
@@ -138,7 +152,7 @@ function attention(varargin)
    
     %% initialze order of events/trials if needed
     if ~isfield(subject,'events') 
-       subject.events = generateAttentionEvents(trialsPerBlock, numBlocks);
+       subject.events = getEvents();
     end
 
     
@@ -168,13 +182,22 @@ function attention(varargin)
               thisBlk,                      ...
               subject.events(subject.curTrl).type);
       
-      % do we need
-      startRun();
+      % start time, wait for ^ if needed
+      starttime = startRun(w);
       startofblock=(thisBlk-1)*trialsPerBlock+1;
+      
+      % how many of the last 9 did we get correct? 0 at the start
       last9Correct=0;
+      
       while subject.events(subject.curTrl).block == thisBlk
           
-          
+           % update timing
+           % initTime is right now (event) or when trial started
+           initTime= (~CUMULATIVE) * GetSecs() +  CUMULATIVE*starttime;
+           subject.events(subject.curTrl).timing =  updateTiming(...
+                  subject.events(subject.curTrl).timing, ...
+                  initTime);
+                              
           % get the event so we have
           % target position, color, and direction
           % as well as they trial type and timing
@@ -190,7 +213,7 @@ function attention(varargin)
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
           % save subject, update position in run
-          subject=saveTrial(subject,trl);
+          subject=saveTrial(subject,trl,starttime);
           
           % update correct, so we can shrink annuals
           nineago=subject.curTrl-9;

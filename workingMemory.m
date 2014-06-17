@@ -60,9 +60,6 @@
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
     global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES modality CUMULATIVE;
-        
-    %% get imaging tech. ("modality" is global)
-    getModality();
     
     % useful paradigmn info
     gridsize = [9 7];
@@ -73,6 +70,25 @@ function subject=workingMemory(varargin)
     % fix cue memory delay probe finish
     %TIMES = [ .5  .5  .3  1  2];
     TIMES = [ .5  .5  .5  1  2];
+    % MEG depends on this to set all timings
+    % fMRI depeonds on this to set times after catch trial
+
+    
+    
+    %% get imaging tech. ("modality" is global)
+    getModality();
+    % define trials structure by 
+    if strcmp(modality,'fMRI')
+        trialsPerBlock=36; %24 full + 12 catch
+        blocks=3;
+        getEvents = @() readWMEvents(blocks);
+    elseif strcmp(modality,'MEG')
+        trialsPerBlock=12;
+        blocks=6;
+        getEvents = @() generateWMEvents(trialsPerBlock, blocks);
+    else
+        error('what modality is %s',modality);
+    end
 
        
     % setup keys such that the correct LEFT push is at LEFT index
@@ -87,23 +103,13 @@ function subject=workingMemory(varargin)
     % initialze order of events/trials
     % this is done differently for MEG and fMRI
     if ~isfield(subject,'events') 
-      if strcmp(modality,'fMRI')
-        trialsPerBlock=49; % doesn't matter?
-        blocks=6;
-        subject.events = readWMEvents(blocks);
-      elseif strcmp(modality,'MEG')
-        trialsPerBlock=12;
-        blocks=6;
-        subject.events = generateWMEvents(trialsPerBlock, blocks);
-      else
-        error('what modality is %s',modality);
-      end
+        subject.events = getEvents();
     end
     
     
-%     try
-        w = setupScreen();
-        a = setupAudio();
+     try
+         w = setupScreen();
+         a = setupAudio();
 
          % until we run out of trials on this block
          thisBlk=subject.curBlk;
@@ -119,7 +125,7 @@ function subject=workingMemory(varargin)
          instructions(w,newInstructions,betweenInstructions,subject);
          
          % starttime is now
-         starttime=startRun();
+         starttime=startRun(w);
          
          % run the actual task
          while subject.events(subject.curTrl).block == thisBlk
@@ -143,20 +149,20 @@ function subject=workingMemory(varargin)
             
             % save subject info into mat
             % update current position in block list
-            subject=saveTrial(subject,trl);
+            subject=saveTrial(subject,trl,starttime);
          end
       
-%     catch
-% 
-%         % error kill all.
-%         closedown();
-%         psychrethrow(psychlasterror);
-%         clear a;
-%     end
+     catch
+ 
+         % error kill all.
+         closedown();
+         psychrethrow(psychlasterror);
+         %clear a;
+     end
     
     
     closedown();
-    clear a;
+    %clear a;
 
     
 end

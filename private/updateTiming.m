@@ -12,13 +12,13 @@ function [timing]=updateTiming(timing,starttime,varargin)
       end
     end
 
-    % first event's ideal time is set to 0 for even timing
-    % which field is that, default to fix
-    if(isempty(varargin))
-        firstEvent='fix';
-    else
-        firstEvent=varargin{1};
-    end
+    % % first event's ideal time is set to 0 for even timing
+    % % which field is that, default to fix
+    % if(isempty(varargin))
+    %    firstEvent='fix';
+    % else
+    %     firstEvent=varargin{1};
+    % end
     
    %if(timing.(firstEvent).ideal==0)
       % and adjust timings if using event timing

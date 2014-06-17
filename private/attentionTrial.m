@@ -6,14 +6,12 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       global listenKeys;
  
       %% setup
-      %we need to deterimine if we have event or cumultive timing
-      % and adjust timings if using event timing
-      timing = updateTiming(timing,GetSecs() );
       % default values in case of catch trial
       trial.correct   = -1;
       trial.RT        = Inf;
       trial.ColorIdxs = 0;
       trial.Directions= 0;
+      trial.timing=timing;
 
 
       
@@ -30,21 +28,21 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       sendCode(1); 
       
       % 2. attend
-      if(timing.attend.ideal<0); return; end
+      if(timing.attend.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], .5);
       drawCross(w);
       [ timing.attend.onset, trial.ColorIdxs]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX, 'when',timing.attend.ideal,varargin{:});
       sendCode(2); 
       
       % 3. probe ("response array")
-      if(timing.probe.ideal<0); return; end
+      if(timing.probe.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], 0);
       drawCross(w);
       [timing.probe.onset,~,trial.Directions ] = drawRing(w, 'PROBE', 'Position', 1:6, 'Color',trial.ColorIdxs, 'Direction', dirIDX,'when',timing.probe.ideal,varargin{:});
       sendCode(3); 
       
       % 4. get response
-      if(timing.clear.ideal<0); return; end
+      if(timing.clear.ideal<0); trial.timing  = timing;return; end
     [ timing.clear.onset, ...
       timing.Response,    ...
       trial.correct   ]         =  clearAndWait(w,timing.clear.ideal,timing.clear.ideal+1.5,...

@@ -23,6 +23,7 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
 % with constrants:
 %   blocked or interleaved ?
 %   how many habitial in a row if interleaved?
+    global TIMES;
     types  = { 'Popout','Habitual','Flexible'};
 
     nDirs  = 2;
@@ -32,7 +33,8 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     nColors= 8; % if colors were avaible we could use it's length
 
     %         cue attend probe clear
-    times = [ .5   .5   .5     .5 ]; % time between each event in seconds
+    %times = [ .5   .5   .5     .5 ]; % time between each event in seconds
+    times = TIMES;
     timing.fix.ideal    = 0;
     timing.cue.ideal    = sum(times(1:1));
     timing.attend.ideal = sum(times(1:2));

@@ -2,7 +2,7 @@
 use strict; use warnings;
 use 5.14.0; # use "say"
 use List::Util qw/shuffle reduce sum/;
-use List::MoreUtils qw/uniq zip/;
+# use List::MoreUtils qw/uniq zip/;
 my $VERBOSE=1;
 use Data::Dumper;
 
@@ -14,15 +14,15 @@ my $nCatch=0;
 my @sumstable = ();
 
 # SETTINGS
-my $TOTALTIME=60*8;
+my $TOTALTIME=400;
 my $TR=1.5;
-my $STARTTIME=2;
+my $STARTTIME=20;
 my $MEANITI=3;
 my $MINITI=1;
 my $MAXITI=99; #no max
-my $NITER=2;
+my $NITER=200;
 #my $TESTS="";  #no tests
-my $TESTS="cue-atnd,atnd-probe,probe:cong-probe:incog";  #no tests
+my $TESTS="cue-atnd,atnd-probe,probe:cng-probe:incng";  #no tests
 
 say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
 say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
@@ -30,22 +30,24 @@ say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
 my $taskname="attention";
 mkdir "$taskname" if ! -d "$taskname/";
 
-@seq = qw/ cue CATCH1 atnd CATCH2 probe /;
+@seq = qw/ cue CATCH1 atnd CATCH2 probe clear/;
 %events = (
  cue=> [ {event=>"cue", name=>"cue", occurRatio=>1, duration=>.5   }  ],
 
- CATCH1=> [ {event=>"CATCH1", name=>"CATCH1", occurRatio=>.17, duration=>0   } ,
-            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>.83, duration=>0   }  ],
+ CATCH1=> [ {event=>"CATCH1", name=>"CATCH1", occurRatio=>1/6, duration=>0   } ,
+            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0   }  ],
 
- atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>.33, duration=>.5} ,
-          {event=>"atnd", name=>"atnd:hab", occurRatio=>.33, duration=>.5} ,
-          {event=>"atnd", name=>"atnd:flex",occurRatio=>.33, duration=>.5}  ],
+ atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>1/3, duration=>.5} ,
+          {event=>"atnd", name=>"atnd:hab", occurRatio=>1/3, duration=>.5} ,
+          {event=>"atnd", name=>"atnd:flex",occurRatio=>1/3, duration=>.5}  ],
 
- CATCH2=> [ {event=>"CATCH2", name=>"CATCH2", occurRatio=>.17, duration=>0   } ,
-            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>.83, duration=>0   }  ],
+ CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>10/48, duration=>0   } ,
+            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0   }  ],
 
- probe=>[ {event=>"probe", name=>"probe:cong",  occurRatio=>.5, duration=>.5} ,
-          {event=>"probe", name=>"probe:incog", occurRatio=>.5, duration=>.5} ]
+ probe=>[ {event=>"probe", name=>"probe:cng",   occurRatio=>.5, duration=>.5} ,
+          {event=>"probe", name=>"probe:incng", occurRatio=>.5, duration=>.5}   ], 
+
+ clear=>[ {event=>"clear", name=>"clear",   occurRatio=>1, duration=>1.5}] 
 );
 
 
@@ -113,10 +115,15 @@ for my $trialseq (@allseq) {
 
 # time that will be used by trials
 my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
+
 # number of trials
 #my $NTRIAL = sprintf("%d",$TOTALTIME / $avgTrlTime);
 #say "$TOTALTIME/$avgTrlTime = ", $TOTALTIME/$avgTrlTime, " = $NTRIAL";
 my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial seq freqs
+
+say "TOTAL TRIALSEQ  = " . (1+$#alltrials) if $VERBOSE;
+say "TOTAL TRIAL     = $NTRIAL"     if $VERBOSE;
+say "AVG   TRIAL TIME= $avgTrlTime" if $VERBOSE;
 
 # create number of repetitions for each trial sequence
 # TODO: do we round or floor?
@@ -127,11 +134,14 @@ my $usedTime =  reduce { $a + $b->{nRep}*($b->{dur}+$MEANITI) } 0, @alltrials;
 say "# will use $usedTime out of $TOTALTIME, leaving ", $TOTALTIME - $usedTime, "s in addition to the $MEANITI sec meaned ITI";
 
 # print out each trial sequence for visual varification
-say "$_->{nRep} ($_->{freq}*$TOTALTIME) @ $_->{dur}s: ",
+say "$_->{nRep} ($_->{freq}*".sprintf("%.2f",$NTRIAL).") @ $_->{dur}s: ",
      join("\t",map {"$_->{name} $_->{duration}s"} @{$_->{seq}})   for (@alltrials);
 
 
 
+
+say " ***** \nready to run 3dDeconvolve?" if $VERBOSE;
+readline;
 
 ## all random
 # # create a shuffled list of trial sequence indices
@@ -178,7 +188,15 @@ say $FHsums join("\t",qw/it h LC/);
 
 my @noCatchSeq = grep { ! /CATCH/ } @seq;
 
+
 for my $deconIt (1..$NITER) {
+
+
+  # FOR ATTENTION ONLY
+  # new shuffle of events
+  my @trialSeqIDX = ();
+  push @trialSeqIDX,shuffle @{$trialSeqIDX{$_}} for (shuffle @cuedist);
+
   my ($itcount,$ITIsum,@ITIs) = (0,99,0);
   until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
     @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);
@@ -197,6 +215,7 @@ for my $deconIt (1..$NITER) {
   my $odir="$taskname/stims/$deconIt/";
   mkdir "$taskname/stims" if ! -d "$taskname/stims/";
   mkdir "$odir" if ! -d "$odir";
+
   
   
   # write sequence and timing to read into matlab

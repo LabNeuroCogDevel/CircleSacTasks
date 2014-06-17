@@ -1,11 +1,11 @@
 function events = readWMEvents(blocks)
-    global LEFT RIGHT;
+    global LEFT RIGHT TIMES
     idxs={1 3 5 7};
     [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
     %         cue mem   delay response
-    durtimes = [ .5  .5     1     2];
+    %durtimes = [ .5  .5     1     2];
+    durtimes = TIMES;
     
-    % todo wrap around # blocks?
     events = [];
     for blocknum=1:blocks;
         events= [ events getBlockEvents(blocknum) ];

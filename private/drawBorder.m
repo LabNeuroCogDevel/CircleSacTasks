@@ -1,5 +1,9 @@
 function drawBorder(w, borderColor, intensity,varargin )
 %drawBorder -- draw a border for the photodiode
+ 
+ % only do this for MEG
+ if(strcmp(modality,'MEG')), return, end
+ 
  width=10;
  screen=Screen('Rect',w);
  if(~isempty(varargin)); width=varargin{1}; end
