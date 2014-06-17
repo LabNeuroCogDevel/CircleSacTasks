@@ -22,13 +22,14 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
    clearFunc(w);
  end
  
+keyCode=zeros(256);
  %% wait for a response or until we've gone past the RTwindow
  while(correct < 0 &&  GetSecs() < RTwindowEnd )
      
      [keyPressed, responseTime, keyCode] = KbCheck;
      
      if keyPressed 
-         if any(keyCode(listenKeys)  
+         if any(keyCode(listenKeys)  )
              key=find(keyCode(listenKeys) );
 
              % make sure we didn't just hammer the keys
@@ -40,7 +41,7 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
 
              RT=responseTime;         
              
-         elseif KeyCode(KbName('escape'))
+         elseif keyCode(KbName('escape'))
              closedown()
          end
      end
@@ -60,5 +61,6 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
     [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
  end
  
- fprintf('iscorrect: %d (want: %d; have: %d); time remeaining %.02f\n\n', correct,correctKeys, find(keyCode),RTwindowEnd-RT)
+ fprintf('iscorrect: %d (want: %d; have: %d); time remeaining %.02f\n\n', ...
+         correct, correctKeys, find(keyCode), RTwindowEnd-RT )
 end

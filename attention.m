@@ -127,7 +127,7 @@ function attention(varargin)
 
     
     %% get imaging tech. ("modality" is global)
-    getModality();
+    getModality(varargin{:});
     % setup block + trial structure
     if strcmp(modality,'fMRI')
         trialsPerBlock=60; %48 full + 24 catch

@@ -9,10 +9,17 @@ function getModality(varargin)
     modality='UNKNOWN';
     [~,host] = system('hostname'); host=strtrim(host);
     for modal = fieldnames(modalityHosts)'     
-        if  ~isempty(find(cellfun(@(x) ischar(x)&&strcmpi(x,modal{1}), varargin),1)) || ...
-            ismember(host,modalityHosts.(modal{1}))
+        
+        % if we know this host and we haven't set it yet
+        if     ismember(host,modalityHosts.(modal{1})) && strcmp(modality,'UNKNONW')
+            modality=modal{1};
+        end
+        
+        % othwerise always do what we said to on the command line
+        if  ~isempty(find(cellfun(@(x) ischar(x)&&strcmpi(x,modal{1}), varargin),1))
           modality=modal{1};
         end
+        
     end
     
     %% event or cumulative

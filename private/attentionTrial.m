@@ -31,14 +31,21 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       if(timing.attend.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], .5);
       drawCross(w);
-      [ timing.attend.onset, trial.ColorIdxs]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX, 'when',timing.attend.ideal,varargin{:});
+      [ timing.attend.onset, trial.ColorIdxs,trial.Direction]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX,'Direction', dirIDX, 'when',timing.attend.ideal,varargin{:});
       sendCode(2); 
       
       % 3. probe ("response array")
+      % NOTE THE SHADY THING WE JUST DID:
+      %  we used the attend (whcih doesn't actually display directions) to
+      %  set the directions for this dispaly
+      %   we do this because when we specify 1:6 as postions here,
+      %   we also need 6 directions, and we would only know the one for the
+      %   correct target (positionIDX)
+      trial.Direction
       if(timing.probe.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], 0);
       drawCross(w);
-      [timing.probe.onset,~,trial.Directions ] = drawRing(w, 'PROBE', 'Position', 1:6, 'Color',trial.ColorIdxs, 'Direction', dirIDX,'when',timing.probe.ideal,varargin{:});
+      timing.probe.onset = drawRing(w, 'PROBE', 'Position', 1:6, 'Color',trial.ColorIdxs, 'Direction', trial.Direction,'when',timing.probe.ideal,varargin{:});
       sendCode(3); 
       
       % 4. get response

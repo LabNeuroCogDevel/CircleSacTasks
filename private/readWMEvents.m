@@ -14,7 +14,7 @@ function events = readWMEvents(blocks)
     
 
   function events = getBlockEvents(blocknum)
-    filename='timing/wm.example.txt';
+    filename=['timing/workingMemory/best/' num2str(blocknum) '.txt'];
     fid = fopen(filename,'r');
 
     % make sure we can read files

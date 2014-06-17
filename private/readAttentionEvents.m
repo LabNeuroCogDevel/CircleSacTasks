@@ -15,19 +15,20 @@ function events = readAttentionEvents(blocks)
     paren = @(x, varargin) x(varargin{:});
     curly = @(x, varargin) x{varargin{:}};
     dict.pop='Popout'; dict.hab='Habitual';  dict.flex='Flexible'; dict.catch='Catch';
-    dict.incog=1; dict.cong=0;  dict.probeCatch=0;
+    dict.incng=1; dict.cng=0;  dict.probeCatch=0;
 
 
     
     %% read in file
+    orderfiles = Shuffle({'h_p_f','h_f_p','p_h_f','p_f_h','f_h_p','f_p_h'});
     events = [];
     for blocknum=1:blocks;
-        events= [ events getBlockEvents(blocknum) ];
+         events= [ events getBlockEvents(blocknum, orderfiles{blocknum} )];
     end
     
-    function events = getBlockEvents(blocknum)
+    function events = getBlockEvents(blocknum, filename)
         
-        filename='timing/att.example.txt';
+        filename=['timing/attention/best/' filename '.txt'];
         fid = fopen(filename,'r');
 
 
