@@ -1,6 +1,6 @@
 function drawBorder(w, borderColor, intensity,varargin )
 %drawBorder -- draw a border for the photodiode
- 
+ global modality
  % only do this for MEG
  if(strcmp(modality,'MEG')), return, end
  
