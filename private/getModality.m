@@ -5,7 +5,7 @@ function getModality(varargin)
     % if hostname/cli conflict or overlap, precidence is revers of 
     % modalityHosts field definitions
     modalityHosts.MEG  = {'reese-loeff114'};
-    modalityHosts.fMRI = {'reese-loeff114'};
+    modalityHosts.fMRI = {'reese-loeff114', 'loeff114'};
     modality='UNKNOWN';
     [~,host] = system('hostname'); host=strtrim(host);
     for modal = fieldnames(modalityHosts)'     
