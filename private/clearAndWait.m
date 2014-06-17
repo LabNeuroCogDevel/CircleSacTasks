@@ -26,17 +26,23 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
  while(correct < 0 &&  GetSecs() < RTwindowEnd )
      
      [keyPressed, responseTime, keyCode] = KbCheck;
-     if keyPressed && any(keyCode(listenKeys)  )
-         key=find(keyCode(listenKeys) );
-         
-         % make sure we didn't just hammer the keys
-         if(length(key) ~= 1)
-             correct = 2;
-         else
-             correct = any(listenKeys(key) == correctKeys);
+     
+     if keyPressed 
+         if any(keyCode(listenKeys)  
+             key=find(keyCode(listenKeys) );
+
+             % make sure we didn't just hammer the keys
+             if(length(key) ~= 1)
+                 correct = 2;
+             else
+                 correct = any(listenKeys(key) == correctKeys);
+             end
+
+             RT=responseTime;         
+             
+         elseif KeyCode(KbName('escape'))
+             closedown()
          end
-         
-         RT=responseTime;         
      end
      
      % clear screen when we hit the 'when' time
