@@ -1,6 +1,9 @@
 function events = readAttentionEvents(blocks)
-   global TIMES
+   global TIMES CLEARTIME
     % TIMES is a cue attend probe clear (all .5)
+    % CLEARTIME is the time allowed for a response after the screen is
+    % cleared
+    
     idxs={1 3 5 7};
     [idx.cue, idx.attend, idx.probe, idx.clear ] = idxs{:};
     
@@ -21,6 +24,7 @@ function events = readAttentionEvents(blocks)
     
     %% read in file
     orderfiles = Shuffle({'h_p_f','h_f_p','p_h_f','p_f_h','f_h_p','f_p_h'});
+    fprintf('order: ');for i=1:length(orderfiles), fprintf('%d %s\n',i, orderfiles{i});end; fprintf('\n');
     events = [];
     for blocknum=1:blocks;
          events= [ events getBlockEvents(blocknum, orderfiles{blocknum} )];
@@ -91,6 +95,8 @@ function events = readAttentionEvents(blocks)
             if(strcmp(t{i},'Popout'))
                 % wrong color is always "opposite" color
                 events(i).wrgClr = mod(cuecolors(i)+ceil(nColors/2)-1,nColors)+1;
+            else
+                events(i).wrgClr = [];
             end
 
 
@@ -101,7 +107,11 @@ function events = readAttentionEvents(blocks)
 
                 % find the time we should allow for the last 
                 % non-catch event
-                lastevent=length(idxs);
+                % match
+                %         1    2       3      4      
+                % idx:    cue  attend  probe  clear  
+                % TIMES:  .5   .5      .5     .5
+                lastevent=length(idxs); 
                 while lastevent>0 && optime{idxs{lastevent}+1}(i-1) == -1;
                     lastevent=lastevent-1;
                 end
@@ -110,11 +120,14 @@ function events = readAttentionEvents(blocks)
                 end
 
                 events(i).timing.fix.ideal   = optime{idxs{lastevent}+1}(i-1) + TIMES(lastevent);
+                
+                
+                if lastevent==length(idxs)
+                    events(i).timing.fix.ideal   =events(i).timing.fix.ideal   + CLEARTIME;
+                end
 
             else
                 events(i).timing.fix.ideal=0;
-                % not zero or we'd assume event timing
-                %events(i).timing.fix.ideal=0.0001;
             end
 
             % other times

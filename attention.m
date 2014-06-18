@@ -116,13 +116,14 @@
 function attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global TIMES listenKeys trialsPerBlock modality CUMULATIVE;
-     %       cue attend probe clear
-   TIMES = [ .5   .5   .5     1.5 ]; % time between each event in seconds
+   global TIMES listenKeys trialsPerBlock modality CUMULATIVE CLEARTIME;
+     %       cue attend probe clear  
+   TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
+   CLEARTIME = 1.5; % additional time to response after clearing the screen
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
-   listenKeys = KbName({'1!','2@','3#','4$','space'});
+   listenKeys = KbName({'1!','2@','space'});
    % match direction 
 
     
@@ -184,6 +185,7 @@ function attention(varargin)
       
       % start time, wait for ^ if needed
       starttime = startRun(w);
+      
       startofblock=(thisBlk-1)*trialsPerBlock+1;
       
       % how many of the last 9 did we get correct? 0 at the start
@@ -211,6 +213,7 @@ function attention(varargin)
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               e.timing,...
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
+          
           
           % save subject, update position in run
           subject=saveTrial(subject,trl,starttime);
