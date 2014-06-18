@@ -1,5 +1,5 @@
 function events = readAttentionEvents(blocks)
-   global TIMES CLEARTIME
+   global TIMES CLEARTIME trialsPerBlock
     % TIMES is a cue attend probe clear (all .5)
     % CLEARTIME is the time allowed for a response after the screen is
     % cleared
@@ -27,7 +27,15 @@ function events = readAttentionEvents(blocks)
     fprintf('order: ');for i=1:length(orderfiles), fprintf('%d %s\n',i, orderfiles{i});end; fprintf('\n');
     events = [];
     for blocknum=1:blocks;
-         events= [ events getBlockEvents(blocknum, orderfiles{blocknum} )];
+         thisblock=getBlockEvents(blocknum, orderfiles{blocknum} );
+         if(length(thisblock)~=trialsPerBlock)
+             warning(['expected %d trials (inc catch), have %d -- changing\n' ...
+                      'I hope you know what you are doing'],...
+                    trialsPerBlock, length(thisblock) );
+                
+             trialsPerBlock=length(thisblock);
+         end
+         events= [ events thisblock];
     end
     
     function events = getBlockEvents(blocknum, filename)
@@ -85,6 +93,8 @@ function events = readAttentionEvents(blocks)
             events(i).type   = t{i};
             events(i).crtDir = directions(i);
             events(i).trgtpos= trgtpos(i);
+            events(i).RT     = [];
+            events(i).Correct= []; 
 
             if(strcmp(t{i},'Flexible') )
                 events(i).trgClr = randi(nColors);

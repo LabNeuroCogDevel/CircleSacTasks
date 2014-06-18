@@ -76,14 +76,14 @@ function subject=workingMemory(varargin)
     
     
     %% get imaging tech. ("modality" is global)
-    getModality();
+    getModality(varargin{:});
     % define trials structure by 
     if strcmp(modality,'fMRI')
         trialsPerBlock=36; %24 full + 12 catch
         blocks=3;
         getEvents = @() readWMEvents(blocks);
     elseif strcmp(modality,'MEG')
-        trialsPerBlock=12;
+        trialsPerBlock=3;
         blocks=6;
         getEvents = @() generateWMEvents(trialsPerBlock, blocks);
     else
@@ -104,10 +104,19 @@ function subject=workingMemory(varargin)
     % this is done differently for MEG and fMRI
     if ~isfield(subject,'events') 
         subject.events = getEvents();
+        subject.eventsInit = subject.events;
     end
     
+    %% check trial lengths
+    ntrials = length(find([subject.events.block] == subject.curBlk));
+    if(ntrials ~= trialsPerBlock)
+        warning(['expected %d trials (inc catch), have %d -- changing\n' ...
+                'I hope you know what you are doing'],...
+                trialsPerBlock, ntrials );
+       trialsPerBlock=ntrials;
+    end
     
-     try
+    try
          w = setupScreen();
          a = setupAudio();
 
@@ -122,6 +131,20 @@ function subject=workingMemory(varargin)
                              'Push 2 for nochange\n'] ...
                             };
          betweenInstructions = { 'Welcome Back' }; 
+         endStructions       = {'Thanks For Playing'};
+         
+         
+         % reset the subject to this block
+         startofblock=(thisBlk-1)*trialsPerBlock+1;
+         endofblock  = thisBlk*trialsPerBlock;
+         subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
+         subject.curTrl=startofblock;
+         
+         
+         % some info to the command window
+         fprintf('Block: %d\n',thisBlk);
+          
+         % give the spcheal
          instructions(w,newInstructions,betweenInstructions,subject);
          
          % starttime is now
@@ -151,7 +174,22 @@ function subject=workingMemory(varargin)
             % update current position in block list
             subject=saveTrial(subject,trl,starttime);
          end
-      
+            
+     %% wrap up
+ 
+     % save this block
+     saveblockfname = [ subject.file '_blk' num2str(subject.curBlk-1) '_'  subject.runtime((end-4):end) ];
+     blockevents    = subject.events( startofblock:endofblock );
+     save(saveblockfname,'blockevents');
+     
+  
+     % save everything
+     save(subject.file, '-struct', 'subject');
+     
+     % end screen
+     instructions(w,endStructions,endStructions,subject);   
+         
+         
      catch
  
          % error kill all.

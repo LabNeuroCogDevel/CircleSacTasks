@@ -57,6 +57,10 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 
     %% 2. memory set
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
+    
+    colors(color.Mem.LEFT,:)
+    colors(color.Mem.RIGHT,:)
+    
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);

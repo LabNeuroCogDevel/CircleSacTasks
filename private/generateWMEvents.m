@@ -4,7 +4,7 @@ function events = generateWMEvents(trialsPerBlock, blocks)
 %   load (3 varations), 
 %   change (no change, left change, right change),
 %   cue (left or right)
-    global LEFT RIGHT LOADS colors;
+    global LEFT RIGHT LOADS %colors;
     % LEFT = 1
     % RIGTH= 2
     % LOADS = [ 1 3 5];
@@ -43,7 +43,7 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     
     nLoad = length(LOADS);
     nPlyCue = length(playCue);
-    nColors = 8; %size(colors,1);
+    %nColors = 8; %size(colors,1);
 
     loads = Shuffle(repmat(LOADS,1,ceil(nTrl/nLoad)));
 
@@ -61,12 +61,18 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     %% create structure
     % in >= Matlab2013, events looks like a table in variable explorer
     % if we have events as an array of structs
+    zs=zeros(nTrl,1);
+    events = struct('playCue',zs,'load',zs,'changes',zs,'block',zs,'RT',[], 'Correct', []);
+   
     for i=1:nTrl;
         events(i).playCue = playCue(i);
         events(i).load    = loads(i);
         events(i).changes = changes(i);
         events(i).block   = blockrep(i);
         events(i).timing  = timing; 
+        events(i).RT      = []; 
+        events(i).Correct = []; 
+
     end
     
 

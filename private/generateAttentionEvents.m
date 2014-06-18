@@ -88,6 +88,8 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
         events(i).type   = t{i};
         events(i).crtDir = directions(i);
         events(i).trgtpos= trgtpos(i);
+        events(i).RT     = [];
+        events(i).Correct= []; 
         
         if(strcmp(t{i},'Flexible') )
             events(i).trgClr = randi(nColors);

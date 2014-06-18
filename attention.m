@@ -113,7 +113,7 @@
 %     "setupScreen"
 % other globals
 
-function attention(varargin)
+function subject = attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
    global TIMES listenKeys trialsPerBlock modality CUMULATIVE CLEARTIME;
@@ -154,6 +154,16 @@ function attention(varargin)
     %% initialze order of events/trials if needed
     if ~isfield(subject,'events') 
        subject.events = getEvents();
+       subject.eventsInit = subject.events;
+    end
+    
+    %% check trial lengths
+    ntrials = length(find([subject.events.block] == subject.curBlk));
+    if(ntrials ~= trialsPerBlock)
+        warning(['expected %d trials (inc catch), have %d -- changing\n' ...
+                'I hope you know what you are doing'],...
+                trialsPerBlock, ntrials );
+       trialsPerBlock=ntrials;
     end
 
     
@@ -173,23 +183,36 @@ function attention(varargin)
                          'push the left button if the target opens on the left\n' ...
                          'push the right button if the target is a C\n' ...
                         };
-      betweenInstructions = { 'Welcome Back' }; 
+      betweenInstructions = { 'Welcome Back' };
+      endStructions       = {'Thanks For Playing'};
       
       
-      instructions(w,newInstructions,betweenInstructions,subject);
 
+
+
+      
+      % reset the subject to this block
+      startofblock=(thisBlk-1)*trialsPerBlock+1;
+      endofblock  = thisBlk*trialsPerBlock;
+      subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
+      subject.curTrl=startofblock;
+      
+      % how many of the last 9 did we get correct? 0 at the start
+      last9Correct=0;
+      
       % some info to the command window
       fprintf('Block: %d\nEvent Type: %s\n',...
               thisBlk,                      ...
               subject.events(subject.curTrl).type);
       
+      
+      % give the spcheal
+      instructions(w,newInstructions,betweenInstructions,subject);
+      
       % start time, wait for ^ if needed
       starttime = startRun(w);
       
-      startofblock=(thisBlk-1)*trialsPerBlock+1;
-      
-      % how many of the last 9 did we get correct? 0 at the start
-      last9Correct=0;
+      subject.starttime(thisBlk)=starttime;
       
       while subject.events(subject.curTrl).block == thisBlk
           
@@ -225,6 +248,20 @@ function attention(varargin)
       end
      
       
+     %% wrap up
+
+     % save this block
+     saveblockfname = [ subject.file '_blk' num2str(subject.curBlk-1) '_'  subject.runtime((end-4):end) ];
+     blockevents    = subject.events( startofblock:endofblock );
+     save(saveblockfname,'blockevents');
+     
+  
+     % save everything
+     save(subject.file, '-struct', 'subject');
+     
+     % end screen
+     instructions(w,endStructions,endStructions,subject);
+
     catch
        % panic? close all
        psychrethrow(psychlasterror);

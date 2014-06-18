@@ -11,7 +11,7 @@ function subject=saveTrial(subject,trl,starttime)
 
   % update where we are before saving
   subject.curTrl=subject.curTrl+1;
-  subject.curBlk=subject.events(subject.curTrl).block;
+  subject.curBlk=subject.events(subject.curTrl).block; %unnecessary
 
   % save
   save(subject.file, '-struct', 'subject');

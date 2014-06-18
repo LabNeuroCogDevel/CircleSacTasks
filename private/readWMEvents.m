@@ -35,11 +35,16 @@ function events = readWMEvents(blocks)
     playCue = Shuffle( repmat([LEFT RIGHT],1,ceil(length(memload)/2)  )  );
     
     
+    zs=zeros(length(memload),1);
+    events = struct('playCue',zs,'load',zs,'changes',zs,'block',zs,'RT',[], 'Correct', []);
+               
     for i=1:length(memload);
         events(i).playCue = playCue(i);
         events(i).load    = memload(i);
         events(i).changes = memchange(i);
         events(i).block   = blocknum;
+        events(i).RT      = []; 
+        events(i).Correct = []; 
         
         %% setup timing
         
