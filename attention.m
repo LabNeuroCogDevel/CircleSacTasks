@@ -129,8 +129,21 @@ function subject = attention(varargin)
     
     %% get imaging tech. ("modality" is global)
     getModality(varargin{:});
+    tpbidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'tpb'), varargin),1);
+    %% setup block and trial structure
+    %if we specified eg "tpb 5 nblocks 3" on the command line
+    % use for testing!
+    if ~isempty(tpbidx)
+        trialsPerBlock=varargin{tbpidx+1};
+        blocks=3;
+        blocksidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'nblocks'), varargin),1);
+        if ~isempty(blocksidx)
+            blocks=varargin{blocksidx+1};
+        end
+        getEvents = @() generateAttentionEvents(trialsPerBlock, blocks);
+         
     % setup block + trial structure
-    if strcmp(modality,'fMRI')
+    elseif strcmp(modality,'fMRI')
         trialsPerBlock=60; %48 full + 24 catch
         blocks=2;
         getEvents = @() readAttentionEvents(blocks);
@@ -139,7 +152,8 @@ function subject = attention(varargin)
         trialsPerBlock=75;
         blocks=6;
         getEvents = @() generateAttentionEvents(trialsPerBlock, blocks);
-        
+       
+
     else
         error('what modality is %s',modality);
     end

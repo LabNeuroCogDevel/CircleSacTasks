@@ -11,7 +11,7 @@ function getModality(varargin)
     for modal = fieldnames(modalityHosts)'     
         
         % if we know this host and we haven't set it yet
-        if     ismember(host,modalityHosts.(modal{1})) && strcmp(modality,'UNKNONW')
+        if     ismember(host,modalityHosts.(modal{1})) && strcmp(modality,'UNKNOWN')
             modality=modal{1};
         end
         
