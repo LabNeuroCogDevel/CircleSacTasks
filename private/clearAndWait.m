@@ -1,9 +1,9 @@
 function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,correctKeys,clearFunc)
-% clearAndWait -- list for listenKeys, clear screen
+% clearAndWait -- list for listenKeys, clear screen with clearFunc
 %    returns 
 %       time of clear
 %       time of response (not actuall RT)
-%       correct (-1 noresp, 0 wrong, 1 write, 2 too many keys)
+%       correct (-1 noresp, 0 wrong, 1 right, 2 too many keys)
 %    listen for anything in listenKeys (global) to be pressed
 %    clear the screen with "clearFunc" at "clearWhen"
 %    stop listening after RTwindowEnd
@@ -48,11 +48,10 @@ keyCode=zeros(256);
      
      % clear screen when we hit the 'when' time
      if( clearWhen ~= RTwindowEnd && ... we want to draw before the end
-         isempty(clearOnsetTime)   && ... we haven't drawn already
+         clearOnsetTime == Inf    && ... we haven't drawn already
          GetSecs() >= clearWhen )     ... its time to draw
              
          [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
-         
      end
  end
  

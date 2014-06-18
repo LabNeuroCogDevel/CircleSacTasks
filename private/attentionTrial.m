@@ -3,7 +3,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
 % for popout, provide colorIDX as [targetColorIDX restColorIDX] and
 % varargin as 'Popout'
       
-      global listenKeys;
+      global listenKeys TIMES;
  
       %% setup
       % default values in case of catch trial
@@ -41,7 +41,6 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       %   we do this because when we specify 1:6 as postions here,
       %   we also need 6 directions, and we would only know the one for the
       %   correct target (positionIDX)
-      trial.Direction
       if(timing.probe.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], 0);
       drawCross(w);
@@ -52,7 +51,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       if(timing.clear.ideal<0); trial.timing  = timing;return; end
     [ timing.clear.onset, ...
       timing.Response,    ...
-      trial.correct   ]         =  clearAndWait(w,timing.clear.ideal,timing.clear.ideal+1.5,...
+      trial.correct   ]         =  clearAndWait(w,timing.clear.ideal,timing.clear.ideal+TIMES(end),...
                                           listenKeys(dirIDX),@drawCross);
                                       
       

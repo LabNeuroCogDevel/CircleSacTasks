@@ -118,7 +118,7 @@ function attention(varargin)
    % colors, paren, and degsize defined in setupscreen
    global TIMES listenKeys trialsPerBlock modality CUMULATIVE;
      %       cue attend probe clear
-   TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
+   TIMES = [ .5   .5   .5     1.5 ]; % time between each event in seconds
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');

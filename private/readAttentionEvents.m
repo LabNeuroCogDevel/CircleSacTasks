@@ -1,8 +1,8 @@
 function events = readAttentionEvents(blocks)
    global TIMES
     % TIMES is a cue attend probe clear (all .5)
-    idxs={1 3 5};
-    [idx.cue, idx.attend,  idx.probe ] = idxs{:};
+    idxs={1 3 5 7};
+    [idx.cue, idx.attend, idx.probe, idx.clear ] = idxs{:};
     
     
     nTrgts = 6;
@@ -35,7 +35,7 @@ function events = readAttentionEvents(blocks)
         % make sure we can read files
         if(isempty(fid) || fid <0), error('could not find %s',filename), end
         % read in file (like string tab onsettime )
-        optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f');
+        optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
         fclose(fid);
 
 
@@ -121,7 +121,7 @@ function events = readAttentionEvents(blocks)
             events(i).timing.cue.ideal    = optime{idx.cue+1}(i);
             events(i).timing.attend.ideal = optime{idx.attend+1}(i);
             events(i).timing.probe.ideal  = optime{idx.probe+1}(i);
-            events(i).timing.clear.ideal  = optime{idx.probe+1}(i) + TIMES(end);
+            events(i).timing.clear.ideal  = optime{idx.clear+1}(i);
 
         end
     end
