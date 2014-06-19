@@ -130,7 +130,7 @@ function subject = attention(varargin)
     
     %% different trial structures for each modality
     function getEvents = setfMRI
-        trialsPerBlock=60; %48 full + 24 catch
+        trialsPerBlock=72; %48 full + 24 catch
         blocks=2;
         getEvents = readAttentionEvents(blocks);
     end
@@ -204,8 +204,8 @@ function subject = attention(varargin)
       % reset the subject to this block
       startofblock=(thisBlk-1)*trialsPerBlock+1;
       endofblock  = thisBlk*trialsPerBlock;
-      subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
-      subject.curTrl=startofblock;
+      %subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
+      %subject.curTrl=startofblock;
       
       % how many of the last 9 did we get correct? 0 at the start
       last9Correct=0;
@@ -249,6 +249,7 @@ function subject = attention(varargin)
           
           
           % save subject, update position in run
+          % subject.curTrl and subject.curBlk are updated
           subject=saveTrial(subject,trl,starttime);
           
           % update correct, so we can shrink annuals

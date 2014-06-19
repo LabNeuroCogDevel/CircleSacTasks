@@ -34,7 +34,7 @@ function events = readAttentionEvents(blocks,varargin)
     end
     
     orderfiles = Shuffle(filelist);
-    events.filelist= orderfiles;
+    %events.filelist= orderfiles;
     fprintf('order: \n');for i=1:length(orderfiles), fprintf('%d %s\n',i, orderfiles{i});end; fprintf('\n');
     
     events = [];
