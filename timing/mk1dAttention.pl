@@ -2,7 +2,7 @@
 use strict; use warnings;
 use 5.14.0; # use "say"
 use List::Util qw/shuffle reduce sum/;
-# use List::MoreUtils qw/uniq zip/;
+use List::MoreUtils qw/uniq zip/;
 my $VERBOSE=1;
 use Data::Dumper;
 
@@ -14,13 +14,16 @@ my $nCatch=0;
 my @sumstable = ();
 
 # SETTINGS
-my $TOTALTIME=400;
-my $TR=1.5;
+my $TOTALTIME=390;
 my $STARTTIME=20;
+my $TOTALSCANNER=$TOTALTIME + $STARTTIME + 30*2;
+my $TR=1.5;
 my $MEANITI=3;
 my $MINITI=1;
 my $MAXITI=99; #no max
 my $NITER=200;
+my $MINIBLOCK=30;
+my $TOTALTRIALS=24+48;
 #my $TESTS="";  #no tests
 my $TESTS="cue-atnd,atnd-probe,probe:cng-probe:incng";  #no tests
 
@@ -32,22 +35,22 @@ mkdir "$taskname" if ! -d "$taskname/";
 
 @seq = qw/ cue CATCH1 atnd CATCH2 probe clear/;
 %events = (
- cue=> [ {event=>"cue", name=>"cue", occurRatio=>1, duration=>.5   }  ],
+ cue=> [ {event=>"cue", name=>"cue", occurRatio=>1, duration=>.5, nrep=>24+48   }  ],
 
- CATCH1=> [ {event=>"CATCH1", name=>"CATCH1", occurRatio=>1/6, duration=>0   } ,
-            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0   }  ],
+ CATCH1=> [ {event=>"CATCH1", name=>"CATCH1", occurRatio=>1/6, duration=>0, nrep=>12   } ,
+            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>12+48   }  ],
 
- atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>1/3, duration=>.5} ,
-          {event=>"atnd", name=>"atnd:hab", occurRatio=>1/3, duration=>.5} ,
-          {event=>"atnd", name=>"atnd:flex",occurRatio=>1/3, duration=>.5}  ],
+ atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>1/3, duration=>.5,nrep=>48/3} ,
+          {event=>"atnd", name=>"atnd:hab", occurRatio=>1/3, duration=>.5, nrep=>48/3} ,
+          {event=>"atnd", name=>"atnd:flex",occurRatio=>1/3, duration=>.5, nrep=>48/3}  ],
 
- CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>10/48, duration=>0   } ,
-            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0   }  ],
+ CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>10/48, duration=>0, nrep=>12   } ,
+            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0, nrep=>48     }  ],
 
- probe=>[ {event=>"probe", name=>"probe:cng",   occurRatio=>.5, duration=>.5} ,
-          {event=>"probe", name=>"probe:incng", occurRatio=>.5, duration=>.5}   ], 
+ probe=>[ {event=>"probe", name=>"probe:cng",   occurRatio=>.5, duration=>.5, nrep=>48/2} ,
+          {event=>"probe", name=>"probe:incng", occurRatio=>.5, duration=>.5,nrep=>48/2 } ], 
 
- clear=>[ {event=>"clear", name=>"clear",   occurRatio=>1, duration=>1.5}] 
+ clear=>[ {event=>"clear", name=>"clear",   occurRatio=>1, duration=>1.5, nrep=>48}] 
 );
 
 
@@ -119,7 +122,8 @@ my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 # number of trials
 #my $NTRIAL = sprintf("%d",$TOTALTIME / $avgTrlTime);
 #say "$TOTALTIME/$avgTrlTime = ", $TOTALTIME/$avgTrlTime, " = $NTRIAL";
-my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial seq freqs
+my $NTRIAL=$TOTALTRIALS;
+#my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial seq freqs
 
 say "TOTAL TRIALSEQ  = " . (1+$#alltrials) if $VERBOSE;
 say "TOTAL TRIAL     = $NTRIAL"     if $VERBOSE;
@@ -127,8 +131,8 @@ say "AVG   TRIAL TIME= $avgTrlTime" if $VERBOSE;
 
 # create number of repetitions for each trial sequence
 # TODO: do we round or floor?
-#$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}+.5) for (0..$#alltrials);
-$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}) for (0..$#alltrials);
+$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}+.5) for (0..$#alltrials);
+#$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}) for (0..$#alltrials);
 
 my $usedTime =  reduce { $a + $b->{nRep}*($b->{dur}+$MEANITI) } 0, @alltrials;
 say "# will use $usedTime out of $TOTALTIME, leaving ", $TOTALTIME - $usedTime, "s in addition to the $MEANITI sec meaned ITI";
@@ -153,6 +157,10 @@ readline;
 #########
 ## FOR ATTENTION ONLY
 # we want psudeo blocked, so shuffly pop, hab, and flex separetly
+# the hash trialSeqIdx looks like
+#   flex => [1 1 1 4 4 4 5 ...]
+#   hab  => [2 2 3 3 3 7 7 7 ...]
+#   cue  => [6 6 6 8 8  9 9 ...]
 my %trialSeqIDX;
 my @cuedist=qw/flex hab pop/;
 for (0..$#alltrials){
@@ -162,13 +170,26 @@ for (0..$#alltrials){
   if($key) {
      push @{$trialSeqIDX{$key}}, ($_)x$alltrials[$_]->{nRep};
   } else {
+    # these are the catch trials
+    # until we run out of reps, add them one by one to a different type
     my $trialidx=$_;
     my $cuedistIDX=0;
     push @{$trialSeqIDX{$cuedist[++$cuedistIDX %( $#cuedist+1)]}}, $trialidx for (1..$alltrials[$trialidx]->{nRep} )
   }
 }
+
+# # ATTN: give each sequence a trialtype value
+# doesn't help with cue
+#for my $ttype (@cuedist){
+# for my $seqno (uniq(@{$trialSeqIDX{$ttype}} )){
+#   $alltrials[$seqno]->{trialtype} = $ttype;
+#  }
+#}
+
 my @trialSeqIDX = ();
-push @trialSeqIDX,shuffle @{$trialSeqIDX{$_}} for (shuffle @cuedist);
+for my $ttype (shuffle @cuedist) {
+   push @trialSeqIDX, {seqno=>$_ ,ttype=>$ttype} for shuffle @{$trialSeqIDX{$ttype}} 
+}
 #########
 
 # update total trials to the actual total 
@@ -195,7 +216,10 @@ for my $deconIt (1..$NITER) {
   # FOR ATTENTION ONLY
   # new shuffle of events
   my @trialSeqIDX = ();
-  push @trialSeqIDX,shuffle @{$trialSeqIDX{$_}} for (shuffle @cuedist);
+  #push @trialSeqIDX,shuffle @{$trialSeqIDX{$_}} for (shuffle @cuedist);
+  for my $ttype (shuffle @cuedist) {
+      push @trialSeqIDX, {seqno=>$_ ,ttype=>$ttype} for shuffle @{$trialSeqIDX{$ttype}} 
+  }
 
   my ($itcount,$ITIsum,@ITIs) = (0,99,0);
   until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
@@ -203,7 +227,7 @@ for my $deconIt (1..$NITER) {
     @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_} @ITIs;
     $ITIsum=sum(@ITIs);
     $itcount++;# near 50 iterations
-    say "\tgenerating ITI, on  $itcount iteration" if($itcount>500  && $itcount%50==0 && $VERBOSE);
+    say "\tgenerating ITI, on  $itcount iteration: $ITIsum sum vs $ITItime time" if($itcount>500  && $itcount%50==0 && $VERBOSE);
   }
   say "accounting for $ITIsum of $ITItime ITI time: ", sprintf("%.2f",$ITItime-$ITIsum), " ($itcount itrs)" if $VERBOSE;
   #say join("\t",@ITIs) if $VERBOSE;
@@ -222,7 +246,7 @@ for my $deconIt (1..$NITER) {
   open($files{alltiming}, ">", "$odir/alltiming.txt") unless exists($files{alltiming}) ;
 
   for my $seqno (0..$NTRIAL-1) {
-    my $trlseq=$trialSeqIDX[$seqno];
+    my $trlseq=$trialSeqIDX[$seqno]->{seqno};
 
     my @eventseq=@{$alltrials[$trlseq]->{seq} };
     my @eventSeqTime=();
@@ -250,9 +274,16 @@ for my $deconIt (1..$NITER) {
   
      #say "$timeused $seq->{name} [$seq->{event}] ($seq->{duration})";
      $timeused+=$seq->{duration};
+
+     ## ATTENTION ONLY
+     # add MINIBLOCKREST if we've finished with one type
+     if( $seqno<$NTRIAL-1 and  $trialSeqIDX[$seqno]->{ttype} ne $trialSeqIDX[$seqno+1]->{ttype} ) {
+         say "bumping time 30s $seqno $trlseq $trialSeqIDX[$seqno]->{ttype}  $trialSeqIDX[$seqno+1]->{ttype}";
+         $timeused+=30 ;
+     }
     }
 
-    # finish catch trials
+    # finish catch trials with string of all -1
     push @eventSeqTime, [ $noCatchSeq[$_], -1 ] for ( ($#eventSeqTime+1)..($#noCatchSeq));
     
     
@@ -273,7 +304,7 @@ for my $deconIt (1..$NITER) {
   my %allconditions = map { $_->{name} => $_->{duration}  }  map {@$_} values %events;
   my @stims = grep {$_!~/^(NO)?CATCH/} keys %allconditions;
   my @cmd=();
-  push @cmd, ("-nodata ". sprintf("%d",$TOTALTIME/$TR+.5) ." $TR", "-polort 9");
+  push @cmd, ("-nodata ". sprintf("%d",$TOTALSCANNER/$TR+.5) ." $TR", "-polort 4");
   push @cmd, "-x1D $odir/X.xmat.1D ";
   push @cmd, "-num_stimts ". ($#stims+1);
   for my $stimno (0..$#stims ) {
@@ -339,8 +370,7 @@ for my $deconIt (1..$NITER) {
 }
 
 
-## ALTERNATIVE ITI
-#say "\n";
+## ALTERNATIVE SCANNER#say "\n";
 #my (@ITIpsbl, @ITIdist);
 #my $ITIinterval=.25;
 #push  @ITIpsbl, $MINITI+$ITIinterval*$_ for (0..($MAXITI-$MINITI)*1/$ITIinterval);
