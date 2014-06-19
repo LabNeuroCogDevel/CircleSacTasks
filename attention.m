@@ -112,11 +112,12 @@
 % N.B. not all globals are defined here -- backgroundColor is in
 %     "setupScreen"
 % other globals
-
+% usage:
+%    attention MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
 function subject = attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global TIMES listenKeys trialsPerBlock modality CUMULATIVE CLEARTIME;
+   global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME;
      %       cue attend probe clear  
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
@@ -127,37 +128,28 @@ function subject = attention(varargin)
    % match direction 
 
     
-    %% get imaging tech. ("modality" is global)
-    getModality(varargin{:});
-    tpbidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'tpb'), varargin),1);
-    %% setup block and trial structure
-    %if we specified eg "tpb 5 nblocks 3" on the command line
-    % use for testing!
-    if ~isempty(tpbidx)
-        trialsPerBlock=varargin{tbpidx+1};
-        blocks=3;
-        blocksidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'nblocks'), varargin),1);
-        if ~isempty(blocksidx)
-            blocks=varargin{blocksidx+1};
-        end
-        getEvents = @() generateAttentionEvents(trialsPerBlock, blocks);
-         
-    % setup block + trial structure
-    elseif strcmp(modality,'fMRI')
+    %% different trial structures for each modality
+    function getEvents = setfMRI
         trialsPerBlock=60; %48 full + 24 catch
         blocks=2;
-        getEvents = @() readAttentionEvents(blocks);
-        
-    elseif strcmp(modality,'MEG')
+        getEvents = readAttentionEvents(blocks);
+    end
+    function getEvents = setMEG
         trialsPerBlock=75;
         blocks=6;
-        getEvents = @() generateAttentionEvents(trialsPerBlock, blocks);
-       
-
-    else
-        error('what modality is %s',modality);
+        getEvents = generateAttentionEvents(trialsPerBlock, blocks);  
+    end
+    function getEvents = setTEST(t,b)
+        getEvents = generateAttentionEvents(t, b);
     end
     
+   %% get imaging tech. ("modality" is global)
+    eventTypes.fMRI = @() setfMRI;
+    eventTypes.MEG  = @() setMEG;
+    eventTypes.TEST = @(t,b) setTEST(t,b);
+    getEvents = getModality(eventTypes, varargin{:});
+    
+
     
     %% setup subject
     % get subject info, possible resume from previously
@@ -171,6 +163,7 @@ function subject = attention(varargin)
        subject.eventsInit = subject.events;
     end
     
+    
     %% check trial lengths
     ntrials = length(find([subject.events.block] == subject.curBlk));
     if(ntrials ~= trialsPerBlock)
@@ -180,6 +173,9 @@ function subject = attention(varargin)
        trialsPerBlock=ntrials;
     end
 
+    
+    fprintf('%d trials for each %d blocks\n', trialsPerBlock, ...
+            max([subject.events.block]));
     
     %% try running psychtoolbox
     try

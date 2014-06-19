@@ -57,6 +57,7 @@
 
 
 %% Working Memory task
+% usage: workingMemory MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
 function subject=workingMemory(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
     global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES modality CUMULATIVE;
@@ -75,21 +76,28 @@ function subject=workingMemory(varargin)
 
     
     
-    %% get imaging tech. ("modality" is global)
-    getModality(varargin{:});
-    % define trials structure by 
-    if strcmp(modality,'fMRI')
+    %% different trial structures for each modality
+    function getEvents = setfMRI
         trialsPerBlock=36; %24 full + 12 catch
         blocks=3;
-        getEvents = @() readWMEvents(blocks);
-    elseif strcmp(modality,'MEG')
+        getEvents = readWMEvents(blocks);
+    end
+    function getEvents = setMEG
         trialsPerBlock=3;
         blocks=6;
-        getEvents = @() generateWMEvents(trialsPerBlock, blocks);
-    else
-        error('what modality is %s',modality);
+        getEvents = generateWMEvents(trialsPerBlock, blocks); 
     end
-
+    function getEvents = setTEST(t,b)
+        getEvents = generateWMEvents(t, b);
+    end
+    
+    %% get imaging tech. ("modality" is global)
+    eventTypes.fMRI = @() setfMRI();
+    eventTypes.MEG  = @() setMEG();
+    eventTypes.TEST = @(t,b) setTEST(t,b);
+    getEvents = @() getModality(eventTypes, varargin{:});
+    
+    
        
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');

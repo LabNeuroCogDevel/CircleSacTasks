@@ -1,4 +1,4 @@
-function events = readAttentionEvents(blocks)
+function events = readAttentionEvents(blocks,varargin)
    global TIMES CLEARTIME trialsPerBlock
     % TIMES is a cue attend probe clear (all .5)
     % CLEARTIME is the time allowed for a response after the screen is
@@ -22,12 +22,29 @@ function events = readAttentionEvents(blocks)
 
 
     
-    %% read in file
-    orderfiles = Shuffle({'h_p_f','h_f_p','p_h_f','p_f_h','f_h_p','f_p_h'});
-    fprintf('order: ');for i=1:length(orderfiles), fprintf('%d %s\n',i, orderfiles{i});end; fprintf('\n');
+    % get the files to read from
+    % -- could be in the function call
+    if isempty(varargin)
+       filelist={'h_p_f','h_f_p','p_h_f','p_f_h','f_h_p','f_p_h'};
+       for i=1:length(filelist)
+          filelist{i}=['timing/attention/best/' filelist{i} '.txt'];
+       end
+    else
+        filelist=varargin;
+    end
+    
+    orderfiles = Shuffle(filelist);
+    events.filelist= orderfiles;
+    fprintf('order: \n');for i=1:length(orderfiles), fprintf('%d %s\n',i, orderfiles{i});end; fprintf('\n');
+    
     events = [];
+    
     for blocknum=1:blocks;
+        
+         % get this block
          thisblock=getBlockEvents(blocknum, orderfiles{blocknum} );
+         
+         % warn about weird trial lengths
          if(length(thisblock)~=trialsPerBlock)
              warning(['expected %d trials (inc catch), have %d -- changing\n' ...
                       'I hope you know what you are doing'],...
@@ -35,12 +52,13 @@ function events = readAttentionEvents(blocks)
                 
              trialsPerBlock=length(thisblock);
          end
+         
+         % iterivelyl build events
          events= [ events thisblock];
     end
     
     function events = getBlockEvents(blocknum, filename)
         
-        filename=['timing/attention/best/' filename '.txt'];
         fid = fopen(filename,'r');
 
 

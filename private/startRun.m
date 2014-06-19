@@ -8,11 +8,7 @@ function [starttime]=startRun(w)
   
   % clear anything going on with the TTL
   % also will initialize DIOHANDLE for later use
-  if(strcmpi(modality,'MEG'))
-    sendCode(0);
-    starttime=GetSecs();
-  end
-  
+
   if(strcmpi(modality,'fMRI'))
      fprintf('Wait for ^\n');
      DrawFormattedText(w, 'Get Ready! (waiting for scanner)', ...
@@ -29,7 +25,11 @@ function [starttime]=startRun(w)
      end
      
      starttime=responseTime;
+  else
+     starttime=GetSecs();  
   end
   
+  % we should also send the trigger (which wont happen if not MEG)
+  sendCode(0);
   
 end

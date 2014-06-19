@@ -43,7 +43,7 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
 
     
     if( mod(nTrl,nTypes)~=0 )
-        error('%d trials % nTypes != 0 !', nTrl );
+        error('mod( %d trials, %d nTypes) != 0 !', nTrl, nTypes );
     end
     % randomly arrange the types (interleave)
     %t            = Shuffle(types(repmat(1:nTypes,1,nTrl/nTypes)));
