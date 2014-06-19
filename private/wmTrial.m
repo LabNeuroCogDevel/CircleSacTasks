@@ -14,7 +14,7 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     ttls = getCodes(playCue,number,changes);
    
     %% set trial info
-    trial.RT      =  Inf;  
+    trial.RT      = -Inf;  
     trial.correct = nan;
     trial.timing  = timing;
     trial.load    = number;

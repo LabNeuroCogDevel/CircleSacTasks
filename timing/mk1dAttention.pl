@@ -15,7 +15,7 @@ my @sumstable = ();
 
 # SETTINGS
 my $TOTALTIME=390;
-my $STARTTIME=20;
+my $STARTTIME=0;
 my $TOTALSCANNER=$TOTALTIME + $STARTTIME + 30*2;
 my $TR=1.5;
 my $MEANITI=3;
@@ -23,7 +23,7 @@ my $MINITI=1;
 my $MAXITI=99; #no max
 my $NITER=200;
 my $MINIBLOCK=30;
-my $TOTALTRIALS=24+48;
+my $TOTALTRIALS=72; #24+48;
 #my $TESTS="";  #no tests
 my $TESTS="cue-atnd,atnd-probe,probe:cng-probe:incng";  #no tests
 
@@ -193,7 +193,7 @@ for my $ttype (shuffle @cuedist) {
 #########
 
 # update total trials to the actual total 
-$NTRIAL = $#trialSeqIDX;
+$NTRIAL = $#trialSeqIDX +1;
 
 
 ## create ITIs
@@ -245,6 +245,7 @@ for my $deconIt (1..$NITER) {
   # write sequence and timing to read into matlab
   open($files{alltiming}, ">", "$odir/alltiming.txt") unless exists($files{alltiming}) ;
 
+  my %secbump; # this hash records if we've given the 30second minibrake a trial type
   for my $seqno (0..$NTRIAL-1) {
     my $trlseq=$trialSeqIDX[$seqno]->{seqno};
 
@@ -278,7 +279,9 @@ for my $deconIt (1..$NITER) {
      ## ATTENTION ONLY
      # add MINIBLOCKREST if we've finished with one type
      if( $seqno<$NTRIAL-1 and  $trialSeqIDX[$seqno]->{ttype} ne $trialSeqIDX[$seqno+1]->{ttype} ) {
+         next if $secbump{$trialSeqIDX[$seqno]->{ttype}};
          say "bumping time 30s $seqno $trlseq $trialSeqIDX[$seqno]->{ttype}  $trialSeqIDX[$seqno+1]->{ttype}";
+         $secbump{$trialSeqIDX[$seqno]->{ttype}} = 30;
          $timeused+=30 ;
      }
     }

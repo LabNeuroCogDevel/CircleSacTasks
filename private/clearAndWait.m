@@ -12,9 +12,9 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
 
  %% initialize
  global listenKeys;
- clearOnsetTime=Inf;
+ clearOnsetTime=-Inf;
  correct=-1;
- RT=Inf;
+ RT=-Inf;
 
 
  % eventually we'll want to clear the sreeen, so do the computation now
@@ -49,7 +49,7 @@ keyCode=zeros(256);
      
      % clear screen when we hit the 'when' time
      if( clearWhen ~= RTwindowEnd && ... we want to draw before the end
-         clearOnsetTime == Inf    && ... we haven't drawn already
+         clearOnsetTime == -Inf    && ... we haven't drawn already
          GetSecs() >= clearWhen )     ... its time to draw
              
          [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);

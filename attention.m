@@ -232,12 +232,27 @@ function subject = attention(varargin)
            subject.events(subject.curTrl).timing =  updateTiming(...
                   subject.events(subject.curTrl).timing, ...
                   initTime);
+          
+          % find the last time we displayed something
+          if subject.curTrl > startofblock
+              times=subject.trial(subject.curTrl-1).timing ;
+              if(isfield(times,'Response')),times=rmfield(times,'Response');end
+              times= struct2array(times) ;
+              times = [times.onset ];
+              lasttime=min(times(times>0));
+          else
+              lasttime=starttime;
+          end
+          
                               
           % get the event so we have
           % target position, color, and direction
           % as well as they trial type and timing
           e   = subject.events(subject.curTrl);
- 
+          %what will the wait be?
+          wait=e.timing.fix.ideal-lasttime;
+          fprintf('ITI: next fix is in %fs\n',wait);
+          subject.waitbefore(subject.curTrl)=wait;
           
           
           trl = attentionTrial(w, ...
@@ -247,24 +262,28 @@ function subject = attention(varargin)
               e.timing,...
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
-          
           % save subject, update position in run
           % subject.curTrl and subject.curBlk are updated
           subject=saveTrial(subject,trl,starttime);
           
           % update correct, so we can shrink annuals
           nineago=subject.curTrl-9;
-          last9 = max(startofblock,nineago):(subject.curTrl-1);   
+          last9 = max(startofblock,nineago):(subject.curTrl-1);
+          % issues: missed and catch trials are -1, counted twice
           last9Correct = sum([ subject.trial(last9).correct ] == 1);
       end
      
       
      %% wrap up
-
+     subject.endtime(thisBlk-1)=GetSecs();
      % save this block
      saveblockfname = [ subject.file '_blk' num2str(subject.curBlk-1) '_'  subject.runtime((end-4):end) ];
-     blockevents    = subject.events( startofblock:endofblock );
-     save(saveblockfname,'blockevents');
+     blockevents.events     = subject.events( startofblock:endofblock );
+     blockevents.trial      = subject.trial( startofblock:endofblock );
+     blockevents.waitbefore =  subject.waitbefore( startofblock:endofblock );
+     blockevents.starttime  = subject.starttime(thisBlk-1);
+     blockevents.endttime   = subject.endtime(thisBlk-1);
+     save(saveblockfname,'-struct', 'blockevents');
      
   
      % save everything

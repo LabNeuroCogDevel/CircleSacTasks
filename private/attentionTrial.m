@@ -8,7 +8,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       %% setup
       % default values in case of catch trial
       trial.correct   = -1;
-      trial.RT        = Inf;
+      trial.RT        = -Inf;
       trial.ColorIdxs = [0 0 0 0 0 0];
       trial.Direction = [0 0 0 0 0 0];
       trial.timing=timing;
@@ -64,7 +64,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       % but if we are in cumulative mode and had a resonalbe RT
       % we are stuck at the last screen shown until we start the next ITI
       if(CUMULATIVE)
-          if(timing.Response==Inf)
+          if(timing.Response==-Inf)
              timing.fixAfterRT.ideal = GetSecs();
           else
              timing.fixAfterRT.ideal = timing.Response;
