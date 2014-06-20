@@ -117,10 +117,11 @@
 function subject = attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME;
-     %       cue attend probe clear  
+   global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME modality;
+   %       cue attend probe clear  
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
+   totalfMRITime=390+20+30*2;
 
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
@@ -142,11 +143,23 @@ function subject = attention(varargin)
     function getEvents = setTEST(t,b)
         getEvents = generateAttentionEvents(t, b);
     end
+    function getEvents = setTESTfMRI(t,b,varargin)
+        trialsPerBlock=t;
+        totalfMRITime=0;
+        getEvents = readAttentionEvents(b,varargin{:});
+    end
     
    %% get imaging tech. ("modality" is global)
     eventTypes.fMRI = @() setfMRI;
     eventTypes.MEG  = @() setMEG;
-    eventTypes.TEST = @(t,b) setTEST(t,b);
+    % set test modality based on if we have a 'testfile' or not
+    testfileidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'testfile'), varargin));
+    if ~isempty(testfileidx)
+        eventTypes.TEST = @(t,b) setTESTfMRI(t,b,varargin{testfileidx+1});
+    else
+        eventTypes.TEST = @(t,b) setTEST(t,b);
+    end
+    
     getEvents = getModality(eventTypes, varargin{:});
     
 
@@ -157,63 +170,42 @@ function subject = attention(varargin)
     %  -- read 'block' argument if provided
     subject = getSubjectInfo('task','Attention', varargin{:});
    
+    
     %% initialze order of events/trials if needed
     if ~isfield(subject,'events') 
        subject.events = getEvents();
        subject.eventsInit = subject.events;
     end
     
+     checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
+         
+              
+      % display instructions
+    newInstructions = { 'Welcome to the Attention Game\n', ...
+                         'push the left button if the target opens on the left\n' ...
+                         'push the right button if the target is a C\n' ...
+                        };
+    betweenInstructions = { 'Welcome Back' };
+    endStructions       = {'Thanks For Playing'};
+      
+    thisBlk=subject.curBlk;
+    % reset the subject to this block
+    startofblock=(thisBlk-1)*trialsPerBlock+1;
+    endofblock  = thisBlk*trialsPerBlock;
+    subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
+    subject.curTrl=startofblock;
     
-    %% check trial lengths
-    ntrials = length(find([subject.events.block] == subject.curBlk));
-    if(ntrials ~= trialsPerBlock)
-        warning(['expected %d trials (inc catch), have %d -- changing\n' ...
-                'I hope you know what you are doing'],...
-                trialsPerBlock, ntrials );
-       trialsPerBlock=ntrials;
-    end
-
-    
-    fprintf('%d trials for each %d blocks\n', trialsPerBlock, ...
-            max([subject.events.block]));
-    
+   % some info to the command window
+    fprintf('Event Type: %s\n' , subject.events(subject.curTrl).type);
+      
     %% try running psychtoolbox
     try
 
       w = setupScreen();
 
-      
-      % until we run out of trials on this block
-      thisBlk=subject.curBlk;
-      
-      
-              
-      % display instructions
-      newInstructions = { 'Welcome to the Attention Game\n', ...
-                         'push the left button if the target opens on the left\n' ...
-                         'push the right button if the target is a C\n' ...
-                        };
-      betweenInstructions = { 'Welcome Back' };
-      endStructions       = {'Thanks For Playing'};
-      
-      
 
-
-
-      
-      % reset the subject to this block
-      startofblock=(thisBlk-1)*trialsPerBlock+1;
-      endofblock  = thisBlk*trialsPerBlock;
-      %subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
-      %subject.curTrl=startofblock;
-      
       % how many of the last 9 did we get correct? 0 at the start
       last9Correct=0;
-      
-      % some info to the command window
-      fprintf('Block: %d\nEvent Type: %s\n',...
-              thisBlk,                      ...
-              subject.events(subject.curTrl).type);
       
       
       % give the spcheal
@@ -224,7 +216,9 @@ function subject = attention(varargin)
       
       subject.starttime(thisBlk)=starttime;
       
-      while subject.events(subject.curTrl).block == thisBlk
+      % until we run out of trials on this block
+      %while subject.events(subject.curTrl).block == thisBlk
+      while subject.curTrl <= endofblock
           
            % update timing
            % initTime is right now (event) or when trial started
@@ -275,19 +269,22 @@ function subject = attention(varargin)
      
       
      %% wrap up
-     subject.endtime(thisBlk-1)=GetSecs();
+     % subject.curBlk-1 == thsiBlk
+     subject.endtime(thisBlk)=GetSecs();
      % save this block
-     saveblockfname = [ subject.file '_blk' num2str(subject.curBlk-1) '_'  subject.runtime((end-4):end) ];
-     blockevents.events     = subject.events( startofblock:endofblock );
-     blockevents.trial      = subject.trial( startofblock:endofblock );
-     blockevents.waitbefore =  subject.waitbefore( startofblock:endofblock );
-     blockevents.starttime  = subject.starttime(thisBlk-1);
-     blockevents.endttime   = subject.endtime(thisBlk-1);
-     save(saveblockfname,'-struct', 'blockevents');
+     saveBlock(subject,thisBlk,startofblock,endofblock);
      
   
      % save everything
      save(subject.file, '-struct', 'subject');
+     
+     % if fMRI, we should wait until we've been here for 400 secs
+     if strcmp(modality,'fMRI') 
+         fprintf('waiting %f, until the full %f @ %f\n', ...
+             totalfMRITime - (subject.endtime(thisBlk)- starttime), ...
+             totalfMRITime, starttime+totalfMRITime);
+         WaitSecs('UntilTime',starttime+ totalfMRITime)
+     end
      
      % end screen
      instructions(w,endStructions,endStructions,subject);

@@ -57,14 +57,22 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 
     %% 2. memory set
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
-    
-    colors(color.Mem.LEFT,:)
-    colors(color.Mem.RIGHT,:)
-    
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
     sendCode(ttls(2))
+    
+    % print what is on the display
+%     fprintf('POS\n');
+%     fprintf('Left\n');
+%     disp(lCirclePos);
+%     fprintf('Right\n');
+%     disp(rCirclePos)
+%     fprintf('MEMORY\n');
+%     fprintf('colors Left\n');
+%     disp(colors(color.Mem.LEFT,:))
+%     fprintf('colors right\n');
+%     disp(colors(color.Mem.RIGHT,:))
 
     %% 3. delay
     if(timing.delay.ideal<0); trial.timing  = timing; return; end
@@ -78,6 +86,13 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     timing.probe.onset = drawCircles(w, ovalcolors,ovalpos, timing.probe.ideal);%GetSecs()+1);
     sendCode(ttls(4))
 
+%     fprintf('PROBE\n');
+%     fprintf('colors Left\n');
+%     disp(colors(color.Resp.LEFT,:))
+%     fprintf('colors right\n');
+%     disp(colors(color.Resp.RIGHT,:))
+    
+    
     %% 5. check for keypress.
     [ timing.finish.onset, ...
       timing.Response,     ...

@@ -12,11 +12,19 @@ function subject = getSubjectInfo(varargin)
  hint.age   = '[0-9]+';
  hint.sex   =  'm|f';
  
+ % if we didn't use arguments, remind user we can
+ 
+ if  isempty(find(cellfun(@(x) ischar(x)&&strcmpi(x,'ID'), varargin),1)) 
+   fprintf('HINT: use  e.g. ... "ID person1 age 99 sex m" to enter info witout a prompt\n') 
+ end
+ 
  %% go through the field names we care about
  for field=fieldnames(hint)'
         
      fname=field{1};
-     subject.(fname)=[];
+     if ~isfield(subject,fname)
+       subject.(fname)=[];
+     end
      
     % we can provide subject info in the function call
     idx.(fname) = find(cellfun(@(x) ischar(x)&&strcmpi(x,fname),  varargin ))+1;
@@ -43,8 +51,12 @@ function subject = getSubjectInfo(varargin)
          subject.file= [datadir subject.id '_' subject.rundate];
          
          if exist( [subject.file '.mat'] ,'file')
-             fprintf('prompting\n')
-             resume=input(['resume from ' subject.file '? (Y|n) '],'s');
+             %if 'r' is in argument list, resume without prompting
+             if ~isempty( find(cellfun(@(x) ischar(x)&&strcmpi(x,'r'),  varargin ),1));
+                 resume='y';
+             else
+               resume=input(['resume from ' subject.file '? (Y|n) '],'s');
+             end
              
              if(strcmpi(resume,'n'))
                  oldname=[ subject.file '.mat' ];
@@ -52,7 +64,7 @@ function subject = getSubjectInfo(varargin)
                  copyfile(oldname, newname )
                  fprintf('copied %s -> %s\n', oldname, newname);
              else
-                     fprintf('loaded old\n');
+                 fprintf('loaded from previous block/run\n');
                  subject = load(subject.file);
                  subject.runtime= [ subject.runtime sprintf('%02d:%02d', date(4:5)); ];
                  % show current event 
@@ -78,6 +90,7 @@ function subject = getSubjectInfo(varargin)
  %% make sure we get what we asked for
  function checkInput(fname)
    if isempty(regexpi(subject.(fname),['^' hint.(fname) '$']))
+      fprintf('\t"%s" not like "%s"\n', subject.(fname), hint.(fname));
       subject.(fname) = [];
    end
  end

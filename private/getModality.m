@@ -21,6 +21,14 @@ function getEvents = getModality(eventTypes,varargin)
         end
         
     end
+        
+
+    %% how do we calculate timing: event or cumulative
+    if strcmp(modality,'fMRI')
+        CUMULATIVE=1;
+    else
+        CUMULATIVE=0;
+    end
     
     %% all of that above was useless if we specify a number of trials
     tpbidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'tpb'), varargin),1);
@@ -45,14 +53,7 @@ function getEvents = getModality(eventTypes,varargin)
         fieldnames(eventTypes)
         error('no events function for modality %s', modality);
     end
-    
 
-    %% how do we calculate timing: event or cumulative
-    if strcmp(modality,'fMRI')
-        CUMULATIVE=1;
-    else
-        CUMULATIVE=0;
-    end
         
     
     

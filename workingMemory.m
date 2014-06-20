@@ -83,7 +83,7 @@ function subject=workingMemory(varargin)
         getEvents = readWMEvents(blocks);
     end
     function getEvents = setMEG
-        trialsPerBlock=3;
+        trialsPerBlock=100;
         blocks=6;
         getEvents = generateWMEvents(trialsPerBlock, blocks); 
     end
@@ -98,15 +98,30 @@ function subject=workingMemory(varargin)
     getEvents = @() getModality(eventTypes, varargin{:});
     
     
-       
-    % setup keys such that the correct LEFT push is at LEFT index
-    KbName('UnifyKeyNames');
-    listenKeys(LEFT) = KbName('1!');
-    listenKeys(RIGHT)= KbName('2@');
-    listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
-    
+
     % get subject info
     subject = getSubjectInfo('task','WorkingMemory', varargin{:});
+    
+    % should we reverse the keys?
+    if ~isfield(subject,'reversekeys')
+        if find(cellfun(@(x) ischar(x)&&strcmpi(x,'reversekeys'),  varargin ))
+            subject.reversekeys=1;
+        elseif find(cellfun(@(x) ischar(x)&&strcmpi(x,'normalkeys'),  varargin ))
+            subject.reversekeys=0; 
+        elseif strcmpi( input('(n)ormal or (r)eversed keys?','s'), 'r' );
+             subject.reversekeys=1;
+        else
+             subject.reversekeys=0;
+        end
+    end
+    
+           
+    % setup keys such that the correct LEFT push is at LEFT index
+    KbName('UnifyKeyNames');
+    listenKeys = KbName({'1!', '2@'});
+    if(subject.reversekeys); listenKeys=fliplr(listenKeys), end;
+    %listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
+    
     
     % initialze order of events/trials
     % this is done differently for MEG and fMRI
@@ -115,52 +130,47 @@ function subject=workingMemory(varargin)
         subject.eventsInit = subject.events;
     end
     
-    %% check trial lengths
-    ntrials = length(find([subject.events.block] == subject.curBlk));
-    if(ntrials ~= trialsPerBlock)
-        warning(['expected %d trials (inc catch), have %d -- changing\n' ...
-                'I hope you know what you are doing'],...
-                trialsPerBlock, ntrials );
-       trialsPerBlock=ntrials;
-    end
+    checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
     
+    % until we run out of trials on this block
+    thisBlk=subject.curBlk;
+
+
+    % display instructions
+    newInstructions = { 'Welcome to the Working Memory Game\n', ...
+                         ['Attend to the instructed side\n' ...
+                         'Push ' num2str(listenKeys(1)) 'for nochange\n'...
+                         'Push ' num2str(listenKeys(2)) ' for change\n' ...
+                         ] ...
+                        };
+    betweenInstructions = { 'Welcome Back' }; 
+    endStructions       = {'Thanks For Playing'};
+
+
+    % reset the subject to this block
+    startofblock=(thisBlk-1)*trialsPerBlock+1;
+    endofblock  = thisBlk*trialsPerBlock;
+    subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
+    subject.curTrl=startofblock;
+     
+    % some info to the command window
+    fprintf('Block: %d/%d\n', thisBlk, max( [subject.events.block] ));
+
+    
+    %psychtoolbox bit
     try
          w = setupScreen();
          a = setupAudio();
-
-         % until we run out of trials on this block
-         thisBlk=subject.curBlk;
-
-         
-         % display instructions
-         newInstructions = { 'Welcome to the Working Memory Game\n', ...
-                             ['Attend to the instructed side\n' ...
-                             'Push 1 for change\n' ...
-                             'Push 2 for nochange\n'] ...
-                            };
-         betweenInstructions = { 'Welcome Back' }; 
-         endStructions       = {'Thanks For Playing'};
-         
-         
-         % reset the subject to this block
-         startofblock=(thisBlk-1)*trialsPerBlock+1;
-         endofblock  = thisBlk*trialsPerBlock;
-         subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
-         subject.curTrl=startofblock;
-         
-         
-         % some info to the command window
-         fprintf('Block: %d\n',thisBlk);
           
          % give the spcheal
          instructions(w,newInstructions,betweenInstructions,subject);
          
          % starttime is now
          starttime=startRun(w);
-         
+         subject.starttime(thisBlk) = starttime;
          % run the actual task
-         while subject.events(subject.curTrl).block == thisBlk
-
+         %while subject.events(subject.curTrl).block == thisBlk
+         while subject.curTrl <= endofblock
             
             % update timing
             % initTime is right now (event) or when trial started
@@ -168,9 +178,27 @@ function subject=workingMemory(varargin)
             subject.events(subject.curTrl).timing =  updateTiming(...
                   subject.events(subject.curTrl).timing, ...
                   initTime);
+            
+            % find the last time we displayed something
+            if subject.curTrl > startofblock
+              times=subject.trial(subject.curTrl-1).timing ;
+              if(isfield(times,'Response')),times=rmfield(times,'Response');end
+              if(isfield(times,'cue') && isfield(times.cue,'audioOnset') );
+                   times.cue=rmfield(times.cue,'audioOnset');end              
+              times= struct2array(times) ;
+              times = [times.onset ];
+              lasttime=min(times(times>0));
+            else
+              lasttime=starttime;
+            end
               
+            
             e   = subject.events(subject.curTrl);
-                        
+            
+            %what will the wait be?
+            wait=e.timing.fix.ideal-lasttime;
+            fprintf('ITI: next fix is in %fs\n',wait);
+            subject.waitbefore(subject.curTrl)=wait;
 
             % sreen,audio,load,hemichange,playcue, colors, positions
             trl = wmTrial(w,a, ...
@@ -184,12 +212,10 @@ function subject=workingMemory(varargin)
          end
             
      %% wrap up
- 
+     % subject.curBlk-1 == thsiBlk
+     subject.endtime(thisBlk)=GetSecs();
      % save this block
-     saveblockfname = [ subject.file '_blk' num2str(subject.curBlk-1) '_'  subject.runtime((end-4):end) ];
-     blockevents    = subject.events( startofblock:endofblock );
-     save(saveblockfname,'blockevents');
-     
+     saveBlock(subject,thisBlk,startofblock,endofblock);
   
      % save everything
      save(subject.file, '-struct', 'subject');

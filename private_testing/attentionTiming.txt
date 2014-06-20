@@ -1,0 +1,6 @@
+cue	0	atnd:flex	0.5	probe:incng	1	clear	1.5
+cue	4.25	atnd	-1	probe	-1	clear	-1
+cue	8.47	atnd:flex	8.97	probe:incng	9.47	clear	9.97
+cue	13.25	atnd	-1	probe	-1	clear	-1
+cue	15.64	atnd:flex	16.14	probe	-1	clear	-1
+cue	18.29	atnd:flex	18.79	probe:incng	19.29	clear	19.79

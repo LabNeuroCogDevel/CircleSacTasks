@@ -42,7 +42,7 @@ function     [events] = generateWMcolorPos(events)
                    isfield(events(t).Colors, 'Mem')      && ...
                    isfield(events(t).Colors.Mem, 'LEFT') && ...
                    colors1 == events(t).Colors.Mem.('LEFT') )
-               colors1=colorIdxs(1:loads(t));
+               colors1=colorIdxs(1:events(t).load);
             end
                    
             
@@ -51,12 +51,19 @@ function     [events] = generateWMcolorPos(events)
             %  oposite is directly opposite or +/- 1
             colorChange=mod( changeIdx(t)+ floor(nColors/2)-1 + Sample(-1:1), ...
                              nColors );
+            if colorChange==0, colorChange=nColors; end
             colors1(colors1==colorChange)=colorIdxs(events(t).load+1);
             
             
             % second display of colors starts out the same as the first
             events(t).Colors.Mem.(hemi)=colors1;
             events(t).Colors.Resp.(hemi)=colors1;
+            
+            % the colorChange logic was bad, this is just a check
+            if(any([colors1 colorChange]==0))
+                disp([colors1 colorChange])
+                error('bad colors on %s hemi event %d!\n',hemi,t);
+            end
             
             % but if there is a change and we're on the changing hemi
             % we switch changeIdx to colorchange
