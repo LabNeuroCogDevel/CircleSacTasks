@@ -69,7 +69,8 @@ the number of blocks, trials per block, and timing file(s) can be forced using t
 % run WM block 3 of 6 with 3 trials
 workingMemory tpb 3 nblocks 6 block 3
 % two blocks of the same timing, need tpb to enter TEST mode
-attention tpb 0 nblocks 2 testfile private_testing/attentionTiming.txt testfile private_testing/attentionTiming.txt 
+% use fMRI with testfile, otherwise CUMMULATIVE will not be set
+attention fMRI tpb 0 nblocks 2 testfile private_testing/attentionTiming.txt testfile private_testing/attentionTiming.txt 
 ```
 
 ## Navigating the code
