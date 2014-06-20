@@ -1,3 +1,5 @@
+![workingMemory](https://github.com/LabNeuroCogDevel/CircleSacTasks/blob/master/docs/attention.png?raw=true)
+![Attention](https://github.com/LabNeuroCogDevel/CircleSacTasks/blob/master/docs/workingMemory.png?raw=true)
 # Using
 
 Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial).
