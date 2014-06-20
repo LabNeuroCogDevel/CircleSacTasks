@@ -42,6 +42,9 @@ attention ID 0001WF r block 2
 |148| 160| 78  |
 |194| 144| 74  |
 
+# Timing
+
+Working Memory timing is generated with `timing/mk1d.pl`. Attention uses `timing/mk1dAttention.pl`. Picking the top 6 is done by `timing/getBestWorkingMemory.bash` and `timing/getBestAttentionTiming.bash`
 
 # Documentation 
 
@@ -50,9 +53,24 @@ see `docs/`
 * `docs/ccnmd 2013 application.pdf` `pg. 66` starts the description of the two tasks
 
 
-# Debuging
+# Debuging and Testing
+## Testing
+largely incomplete unit tests are in 
+
   * `MEGTest.m`
   * `PdgmTest.m`
+
+e.g. `res = run(MEGTest,'testWM')`
+
+## Debuging
+the number of blocks, trials per block, and timing file(s) can be forced using the arguments `nblocks`, `tpb`, and `testfile`.
+
+```matlab
+% run WM block 3 of 6 with 3 trials
+workingMemory tpb 3 nblocks 6 block 3
+% two blocks of the same timing, need tpb to enter TEST mode
+attention tpb 0 nblocks 2 testfile private_testing/attentionTiming.txt testfile private_testing/attentionTiming.txt 
+```
 
 ## Navigating the code
 ### Shared
