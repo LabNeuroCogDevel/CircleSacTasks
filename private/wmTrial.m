@@ -41,10 +41,10 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
    %% -1. correct key
    % correct key is 1 for no change, 2 for change
    %changes is 0 (none), LEFT, or RIGHT (3 for both)
-   correctKey=min(changes,1)+1;
+   correctKey=min(changes,1)+1; %0->1, 1 or 2 -> 2
    
    %fprintf('(LEFT %d RIGHT %d)\n',LEFT,RIGHT)
-   fprintf('playCue(%d=L): %d; change?: %d; correctkey: %d\n',LEFT,playCue,changes,correctKey);
+   fprintf('playCue(%d=L): %d; change(>0 Yes): %d; correctkey: %d (%d)\n',LEFT,playCue,changes,correctKey,listenKeys(correctKey));
    
 
     %% 0. fixation

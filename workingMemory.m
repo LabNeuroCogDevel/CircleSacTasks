@@ -119,7 +119,7 @@ function subject=workingMemory(varargin)
     % setup keys such that the correct LEFT push is at LEFT index
     KbName('UnifyKeyNames');
     listenKeys = KbName({'1!', '2@'});
-    if(subject.reversekeys); listenKeys=fliplr(listenKeys), end;
+    if(subject.reversekeys); listenKeys=fliplr(listenKeys); end;
     %listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
     
     
@@ -154,7 +154,7 @@ function subject=workingMemory(varargin)
     subject.curTrl=startofblock;
      
     % some info to the command window
-    fprintf('Block: %d/%d\n', thisBlk, max( [subject.events.block] ));
+    fprintf('Using Reversed Keys? %d\n',subject.reversekeys );
 
     
     %psychtoolbox bit
