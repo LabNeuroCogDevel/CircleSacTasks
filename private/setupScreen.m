@@ -30,8 +30,7 @@ function w=setupScreen()
      %wSize=Screen('Resolution', screennum);
      %screenResolution = [wSize.width wSize.height];
 
-     %screenResolution = [1024 780];
-     screenResolution = [800 600];
+     screenResolution = [1024 780];
 
      % Removes the blue screen flash and minimize extraneous warnings.
      % http://psychtoolbox.org/FaqWarningPrefs

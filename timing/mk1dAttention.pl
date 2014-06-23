@@ -14,13 +14,15 @@ my $nCatch=0;
 my @sumstable = ();
 
 # SETTINGS
-my $TOTALTIME=390;
-my $STARTTIME=0;
-my $TOTALSCANNER=$TOTALTIME + $STARTTIME + 30*2;
+my $TOTALTIME=378;
+my $STARTTIME=8;
+my $ENDTIME=12;
+my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME + 30*2;
 my $TR=1.5;
 my $MEANITI=3;
 my $MINITI=1;
 my $MAXITI=99; #no max
+#my $NITER=2;
 my $NITER=200;
 my $MINIBLOCK=30;
 my $TOTALTRIALS=72; #24+48;
@@ -125,6 +127,7 @@ my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 my $NTRIAL=$TOTALTRIALS;
 #my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial seq freqs
 
+say "TOTAL SCAN TIME = $TOTALSCANNER ->" . (sprintf("%d",$TOTALSCANNER/$TR+.5) * $TR)  if $VERBOSE;
 say "TOTAL TRIALSEQ  = " . (1+$#alltrials) if $VERBOSE;
 say "TOTAL TRIAL     = $NTRIAL"     if $VERBOSE;
 say "AVG   TRIAL TIME= $avgTrlTime" if $VERBOSE;
@@ -278,12 +281,6 @@ for my $deconIt (1..$NITER) {
 
      ## ATTENTION ONLY
      # add MINIBLOCKREST if we've finished with one type
-     if( $seqno<$NTRIAL-1 and  $trialSeqIDX[$seqno]->{ttype} ne $trialSeqIDX[$seqno+1]->{ttype} ) {
-         next if $secbump{$trialSeqIDX[$seqno]->{ttype}};
-         say "bumping time 30s $seqno $trlseq $trialSeqIDX[$seqno]->{ttype}  $trialSeqIDX[$seqno+1]->{ttype}";
-         $secbump{$trialSeqIDX[$seqno]->{ttype}} = 30;
-         $timeused+=30 ;
-     }
     }
 
     # finish catch trials with string of all -1
@@ -297,6 +294,14 @@ for my $deconIt (1..$NITER) {
     
     #say "$timeused ITI ($ITIs[$seqno])";
     $timeused+=$ITIs[$seqno];
+
+    # add 30 seconds to that for a breat
+    if( $seqno< $NTRIAL-1 and  $trialSeqIDX[$seqno]->{ttype} ne $trialSeqIDX[$seqno+1]->{ttype} ) {
+        next if $secbump{$trialSeqIDX[$seqno]->{ttype}};
+        say "bumping time 30s $seqno $trlseq $trialSeqIDX[$seqno]->{ttype}  $trialSeqIDX[$seqno+1]->{ttype}";
+        $secbump{$trialSeqIDX[$seqno]->{ttype}} = 30 - $ITIs[$seqno];
+        $timeused+=30 - $ITIs[$seqno];
+    }
     #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
   }
 
@@ -357,6 +362,7 @@ for my $deconIt (1..$NITER) {
   push @cmd, "-num_glt ". ($#testEq+1);
   push @cmd, "-gltsym 'SYM: $testEq[$_]->{eq}'  -glt_label ". ($_+1). " $testEq[$_]->{name}" for (0..$#testEq);
   
+  say join(" ",@cmd) ;
   open my $CMD, '-|', "3dDeconvolve ". join(" ",@cmd) ;#." 2>/dev/null";
   my $label="";
   my %results=();

@@ -247,11 +247,11 @@ function a = setupAudio()
     InitializePsychSound;
     a = PsychPortAudio('Open');
 
-
-    [y, freq] = audioread('sounds/left_druv.wav');
+    % use wavread to be work with R2011b at scanner
+    [y, freq] = wavread('sounds/left_druv.wav');
     lsound = [y';y'];
 
-    [y, freq] = audioread('sounds/right_druv.wav');
+    [y, freq] = wavread('sounds/right_druv.wav');
     rsound = [y';y'];
 
 end

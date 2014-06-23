@@ -74,7 +74,7 @@ classdef PdgmTest < matlab.unittest.TestCase
                  1 spcrsp;      ... right instruction
                 ];
             
-            scannerstart=KbName('6^');
+            scannerstart=KbName('=+');
 
             % there are 72 trials, but 1/3 are no reponse catch trials
             nTrials=72-24; 

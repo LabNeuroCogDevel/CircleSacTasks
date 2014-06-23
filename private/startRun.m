@@ -10,7 +10,7 @@ function [starttime]=startRun(w)
   % also will initialize DIOHANDLE for later use
 
   if(strcmpi(modality,'fMRI'))
-     fprintf('Wait for ^\n');
+     fprintf('Wait for =\n');
      DrawFormattedText(w, 'Get Ready! (waiting for scanner)', ...
             'center','center',[0 0 0]);
      Screen('Flip', w);
@@ -19,7 +19,7 @@ function [starttime]=startRun(w)
      % wait for carrot
      while(~scannerTR)
          [keyPressed, responseTime, keyCode] = KbCheck;
-         if keyPressed && keyCode(KbName('6^')  )
+         if keyPressed && keyCode(KbName('=+')  )
              scannerTR=1;
          end
      end
