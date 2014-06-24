@@ -4,10 +4,10 @@ function getEvents = getModality(eventTypes,varargin)
     % set the modality via arguments or by knowning the computer
     % if hostname/cli conflict or overlap, precidence is revers of 
     % modalityHosts field definitions
-    modalityHosts.MEG  = {'reese-loeff114'};
+    modalityHosts.MEG  = {'reese-loeff114','PUH1DMEG03'};
     modalityHosts.fMRI = {'reese-loeff114', 'loeff114'};
     modality='UNKNOWN';
-    [~,host] = system('hostname'); host=strtrim(host);
+    [returned,host] = system('hostname'); host=strtrim(host);
     for modal = fieldnames(modalityHosts)'     
         
         % if we know this host and we haven't set it yet

@@ -76,10 +76,12 @@ function subject = getSubjectInfo(varargin)
  end
 
 
- %% record seed
+ %% record seed -- not useful for matlab 2009 (MEG)
+ % http://www.walkingrandomly.com/?p=3537
+ % 2011+ rng shuffle => RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));
  % so everything will always be the same :)
- subject.seed = randi(9*10^5);
- rng(subject.seed);
+ %subject.seed = randi(9*10^5);
+ %rng(subject.seed);
  
 
  %% set subject.curBlk and subject.curTrl

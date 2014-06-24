@@ -10,8 +10,8 @@ function  sendCode( code )
        addline(DIOHANDLE,0:7,0,'out');
    end
    
-   putvalue(DIOHANDLE.line(1),code);
-   putvalue(DIOHANDLE.line(1),0);
+   putvalue(DIOHANDLE,code);
+   putvalue(DIOHANDLE,0);
  end
 
 end

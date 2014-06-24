@@ -19,7 +19,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       % 0. fix
       drawBorder(w,[0 0 0], .7);
       drawCross(w);
-      [~,timing.fix.onset] =  Screen('Flip',w,timing.fix.ideal); 
+      [junk,timing.fix.onset] =  Screen('Flip',w,timing.fix.ideal); 
       
       % 1. cue
       drawBorder(w,[0 0 0], 1);
@@ -71,7 +71,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
           end
           drawBorder(w,[0 0 0], .7);
           drawCross(w);
-          [~,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal); 
+          [junk,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal); 
       end
       
       
