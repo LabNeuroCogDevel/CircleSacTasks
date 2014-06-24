@@ -7,7 +7,8 @@
  * timing/accuracy of MEG triggers
 
  * finialize task instructions to subject
- ** and which button presses do what (two hands for attention task?)
+
+   * and which button presses do what (two hands for attention task?)
 
  * measure screens/distance, get degree size in pixels:
   
