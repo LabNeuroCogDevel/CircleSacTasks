@@ -3,8 +3,10 @@
  * add totalfMRI timing to WM
  
  * fix sound on WM for MEG
- 
- * get degree size in pixels:
+
+ * finialize task instructions to subject
+
+ * measure screens/distance, get degree size in pixels:
   
 > Alan Robinson  on PTB list
 
