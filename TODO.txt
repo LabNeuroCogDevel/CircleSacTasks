@@ -1,0 +1,12 @@
+ * add totalfMRI timing to WM
+ 
+ * get a nicely shaped attention cue 
+
+ * check timing on cue-fix (there seems to be some long times)
+
+ * write better tests
+   - are events being created optimally
+
+ * get actual/correct ITIs
+
+ * write 1D files
