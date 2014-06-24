@@ -4,6 +4,8 @@
  
  * fix sound on WM for MEG
 
+ * timing/accuracy of MEG triggers
+
  * finialize task instructions to subject
  ** and which button presses do what (two hands for attention task?)
 
