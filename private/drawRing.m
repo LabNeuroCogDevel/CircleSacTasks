@@ -170,11 +170,11 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
          %      );
        
          % draw oval or fill
-         OvalType='FrameOval';
-         if shouldFill; OvalType='FillOval'; end
+         OvalType='FrameOval'; penwidth=degsize.*.05;
+         if shouldFill; OvalType='FillOval'; penwidth=[]; end
          Screen(OvalType, w , colors(ColorIdxs(n),:),   ... color
               [ positions(n,:), positions(n,:)+crclSize ], ... position 
-              degsize.*.05                                 ... pen width
+              penwidth                                     ... pen width
              );
          
          % if this is the probe, we want to indicate direction
