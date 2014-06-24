@@ -1,20 +1,39 @@
-function events = readWMEvents(blocks)
-    global LEFT RIGHT TIMES
+function events = readWMEvents(blocks,varargin)
+    global LEFT RIGHT TIMES trialsPerBlock
     idxs={1 3 5 7};
     [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
     %         cue mem   delay response
     %durtimes = [ .5  .5     1     2];
     durtimes = TIMES;
     
+    if isempty(varargin)
+       filelist={'1','2','3','4','5','6'};
+       for i=1:length(filelist)
+          filelist{i}=['timing/workingMemory/best/' filelist{i} '.txt'];
+       end
+    else
+        filelist=varargin;
+    end
+    
+    filelist= repmat( Shuffle(filelist), 1, ceil(blocks/length(filelist)) );
+    
     events = [];
     for blocknum=1:blocks;
-        events= [ events getBlockEvents(blocknum) ];
+        thisblock= getBlockEvents(blocknum,filelist{blocknum});
+         % warn about weird trial lengths
+         if(length(thisblock)~=trialsPerBlock)
+             warning(['expected %d trials (inc catch), have %d -- changing\n' ...
+                      'I hope you know what you are doing'],...
+                    trialsPerBlock, length(thisblock) );
+                
+             trialsPerBlock=length(thisblock);
+         end
+        events=[ events thisblock ] ;
     end
       
     
 
-  function events = getBlockEvents(blocknum)
-    filename=['timing/workingMemory/best/' num2str(blocknum) '.txt'];
+  function events = getBlockEvents(blocknum,filename)
     fid = fopen(filename,'r');
 
     % make sure we can read files

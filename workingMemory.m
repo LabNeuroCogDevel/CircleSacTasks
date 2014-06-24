@@ -73,6 +73,10 @@ function subject=workingMemory(varargin)
     TIMES = [ .5  .5  .5  1  2];
     % MEG depends on this to set all timings
     % fMRI depeonds on this to set times after catch trial
+    
+    % total time we should spend in the MRI scanner
+    % used for additional fixation at end
+    totalfMRITime=234+8+20; % 24 full .5+.5+1+2 trials, 12 catch, 8 s start, 20 sec end 
 
     
     
@@ -90,15 +94,25 @@ function subject=workingMemory(varargin)
     function getEvents = setTEST(t,b)
         getEvents = generateWMEvents(t, b);
     end
+    function getEvents = setTESTfMRI(t,b,varargin)
+        trialsPerBlock=t;
+        totalfMRITime=0;
+        getEvents = readWMEvents(b,varargin{:});
+    end
     
     %% get imaging tech. ("modality" is global)
     eventTypes.fMRI = @() setfMRI();
     eventTypes.MEG  = @() setMEG();
-    eventTypes.TEST = @(t,b) setTEST(t,b);
+     
+    testfileidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'testfile'), varargin));
+    if ~isempty(testfileidx)
+        eventTypes.TEST = @(t,b) setTESTfMRI(t,b,varargin{testfileidx+1});
+    else
+        eventTypes.TEST = @(t,b) setTEST(t,b);
+    end
+    
     getEvents = @() getModality(eventTypes, varargin{:});
-    
-    
-
+ 
     % get subject info
     subject = getSubjectInfo('task','WorkingMemory', varargin{:});
     
@@ -196,7 +210,7 @@ function subject=workingMemory(varargin)
             e   = subject.events(subject.curTrl);
             
             %what will the wait be?
-            wait=e.timing.fix.ideal-lasttime;
+            wait=e.timing.cue.ideal-lasttime;
             fprintf('ITI: next fix is in %fs\n',wait);
             subject.waitbefore(subject.curTrl)=wait;
 
@@ -219,6 +233,16 @@ function subject=workingMemory(varargin)
   
      % save everything
      save(subject.file, '-struct', 'subject');
+     
+          
+     % if fMRI, we should wait until we've been here for 400 secs
+     if strcmp(modality,'fMRI') 
+         fprintf('waiting %f, until the full %f @ %f\n', ...
+             totalfMRITime - (subject.endtime(thisBlk)- starttime), ...
+             totalfMRITime, starttime+totalfMRITime);
+         WaitSecs('UntilTime',starttime+ totalfMRITime)
+     end
+       
      
      % end screen
      instructions(w,endStructions,endStructions,subject);   

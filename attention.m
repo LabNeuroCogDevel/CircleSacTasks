@@ -233,7 +233,7 @@ function subject = attention(varargin)
               if(isfield(times,'Response')),times=rmfield(times,'Response');end
               times= struct2array(times) ;
               times = [times.onset ];
-              lasttime=min(times(times>0));
+              lasttime=max(times(times>0));
           else
               lasttime=starttime;
           end
@@ -243,9 +243,10 @@ function subject = attention(varargin)
           % target position, color, and direction
           % as well as they trial type and timing
           e   = subject.events(subject.curTrl);
+          
           %what will the wait be?
-          wait=e.timing.fix.ideal-lasttime;
-          fprintf('ITI: next fix is in %fs\n',wait);
+          wait=e.timing.cue.ideal-lasttime;
+          fprintf('\nITI: next cue is in %fs\n',wait);
           subject.waitbefore(subject.curTrl)=wait;
           
           

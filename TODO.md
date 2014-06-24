@@ -1,7 +1,5 @@
 # TODO
 
- * add totalfMRI timing to WM
- 
  * fix sound on WM for MEG
 
  * timing/accuracy of MEG triggers
@@ -31,8 +29,6 @@
  * get a nicely shaped attention cue 
 
  * use putty or matlab scp to send mat to wallace after MEG?
-
- * report actual/correct ITIs
  
  * write better tests
    - are events being created optimally
