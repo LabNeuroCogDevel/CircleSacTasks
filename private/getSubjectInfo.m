@@ -48,7 +48,7 @@ function subject = getSubjectInfo(varargin)
          datadir= [ 'data/' subject.task '/' ];
          if ~exist(datadir,'dir'), mkdir(datadir), end
          
-         subject.file= [datadir subject.id '_' subject.rundate];
+         subject.file= [datadir subject.task '_' subject.id '_' subject.rundate];
          
          if exist( [subject.file '.mat'] ,'file')
              %if 'r' is in argument list, resume without prompting

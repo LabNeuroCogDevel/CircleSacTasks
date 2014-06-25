@@ -241,7 +241,16 @@ function subject=workingMemory(varargin)
             % update current position in block list
             subject=saveTrial(subject,trl,starttime);
          end
-            
+     %% did we end on a catch trial
+     % need to show that bit for the specified duration
+     % find the first -1, find the time of that event
+     wait=TIMES(find(cellfun(@(x) trial(subject.curTrl-1).timing.(x).ideal, {'cue','mem','delay','probe'})==-1,1));
+     sendcode(255);
+     drawBorder(w,[0 0 0], .7);
+     drawCross(w);
+     Screen('Flip',w,wait)
+     
+     
      %% wrap up
      % subject.curBlk-1 == thsiBlk
      subject.endtime(thisBlk)=GetSecs();
@@ -250,7 +259,9 @@ function subject=workingMemory(varargin)
   
      % save everything
      save(subject.file, '-struct', 'subject');
+  
      
+     % were we on a catch trial?
           
      % if fMRI, we should wait until we've been here for 400 secs
      if strcmp(modality,'fMRI') 

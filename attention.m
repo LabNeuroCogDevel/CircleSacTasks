@@ -273,6 +273,18 @@ function subject = attention(varargin)
           % issues: missed and catch trials are -1, counted twice
           last9Correct = sum([ subject.trial(last9).correct ] == 1);
       end
+  
+     
+     %% did we end on a catch trial
+     % need to show that bit for the specified duration
+     % find the first -1, find the time of that event
+     wait=TIMES(find(cellfun(@(x) trial(subject.curTrl-1).timing.(x).ideal, {'cue','attend','probe'})==-1,1));
+     sendcode(255);
+     drawBorder(w,[0 0 0], .7);
+     drawCross(w);
+     Screen('Flip',w,wait)
+     
+     
      
       
      %% wrap up

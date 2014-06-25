@@ -48,14 +48,17 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
    
 
     %% 0. fixation
+    drawBorder(w,[0 0 0], 1);
     timing.fix.onset = fixation(w,timing.fix.ideal);
 
 
     %% 1. cue
+    drawBorder(w,[0 0 0], .75);
     [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,timing.cue.ideal);%GetSecs()+1);
     sendCode(ttls(1))
 
     %% 2. memory set
+    drawBorder(w,[0 0 0], .5);
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
@@ -75,11 +78,13 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 %     disp(colors(color.Mem.RIGHT,:))
 
     %% 3. delay
+    drawBorder(w,[0 0 0], .25);
     if(timing.delay.ideal<0); trial.timing  = timing; return; end
     timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
     sendCode(ttls(3))
 
     %% 4. probe
+    drawBorder(w,[0 0 0], 0);
     if(timing.probe.ideal<0); trial.timing  = timing; return; end
     ovalcolors=cat(1,colors(color.Resp.LEFT,:),colors(color.Resp.RIGHT,:))';
     
@@ -94,10 +99,11 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     
     
     %% 5. check for keypress.
+    drawBorder(w,[0 0 0], 0);
     [ timing.finish.onset, ...
       timing.Response,     ...
       trial.correct   ]     =  clearAndWait(w,timing.finish.ideal,timing.finish.ideal,...
-                                          listenKeys(correctKey),@drawCross);
+                                          listenKeys(correctKey),@drawCrossBorder);
         
     trial.RT      = timing.Response-timing.probe.onset;                                  
     trial.timing  = timing;
@@ -173,6 +179,11 @@ function [StimulusOnsetTime, soundStartTime] = cue(w,a,playCue, when)
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end
 
+% border for clrear
+function drawCrossBorder(w)
+ drawBorder(w,[0 0 0], 0);
+ drawCross(w)
+end
 %% get trigger codes
 function triggers = getCodes(cueHemi,cLoad,changes)
 % changes is 0 no change, LEFT=LEFT, RIGHT=RIGHT, 3=both

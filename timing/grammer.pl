@@ -21,6 +21,7 @@ my $parser = qr{
  <rule: Freq>      =<Num>
  <rule: ITI>       <[Num]>+ % (,)
  <rule: Reps>      \<<Num>\>
+ <rule: RT>        "<Num>"
 }xms;
 
 #"snd [2]; mem (b {aa <2>,bb},a=1 [3] <10,10,30>); dly" =~ $parser;
@@ -32,13 +33,13 @@ my %inputed = %{$/{Tree}};
 
 
 # build the tree
-my $tree = Tree::Simple->new("root",Tree::Simple->ROOT);
+my $tree = Tree::Simple->new({id=>"root", name=>"root"},Tree::Simple->ROOT);
 my @head;
 push @head, $tree;
 for my $event (@{$inputed{Event}}) {
-   my $e = $event->{Name};
+   my $e = { id=> $event->{Name}, name=> $event->{Name}, freq=> 1, nrep=>'', 'dur'=>0 };
    @head = map {Tree::Simple->new($e, $_) } @head;
-   @head = addEvents(\@head,$e,@{$event->{Manips}->{Manip}}) if $event->{Manips};
+   @head = addEvents(\@head,$e->{name},@{$event->{Manips}->{Manip}}) if $event->{Manips};
 }
 #say Dumper($tree);
 
@@ -52,8 +53,8 @@ sub SeqTree {
  my $parent = shift;
  my $seq = shift;
  my $children = $parent->getAllChildren;
- my $name = $parent->getNodeValue();
- $seq .= " -> $name";
+ my $e = $parent->getNodeValue();
+ $seq .= " -> $e->{id}";
  my @seqs= ($seq);
 
  #return @seqs unless $children;
@@ -86,14 +87,18 @@ sub addEvents {
    my $name = $event->{Name};
    $name="$prefix:$name" if $prefix;
    say "$name";
+   my $e = { id=> $name, name=>$event->{Name}, freq=> 1, nrep=>'', 'dur'=>0 };
    # add to the tree
    #my $subtree = Tree::Simple->new($event->{Name}, $parent);
-   my @subtree = map {Tree::Simple->new($event->{Name}, $_)} @{$parent};
-
+   
+   my @subtree;
    # recurse through all manipulations
    if($event->{Manips}){
      my $subevents = $event->{Manips}->{Manip};
-     @subtree = map {addEvents([$_],$name,@$subevents) } @subtree;
+     #@subtree = map {addEvents([$_],$e->{id},@$subevents) } @{$parent};
+     @subtree = addEvents($parent,$e->{id},@$subevents) ;
+   } else {
+     @subtree = map {Tree::Simple->new($e, $_)} @{$parent};
    }
 
    push @ends, @subtree;

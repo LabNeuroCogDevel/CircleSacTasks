@@ -26,6 +26,8 @@
 > Do note that angular distance does not scale linearly with distance on the screen once you get out to above about 40 degree, then things get more complicated in that you have to calculate each directly by adapting Alan's formulae
  
  * photodiode "get ready screen" for MEG
+
+ * account for catch trials when shrinking annulas
  
  * use putty or matlab scp to send mat to wallace after MEG?
  
