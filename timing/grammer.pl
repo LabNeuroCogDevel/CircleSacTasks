@@ -11,37 +11,48 @@ my $parser = qr{
 
  <rule: Tree> <[Event]>* % (;)
 
- <rule: Event>     <Name> <Dur>? <Manips>?
- <rule: Name>      \w+
- <rule: Num>       \d+(\.\d+)?
- <rule: Dur>       \[ <Num> \] 
- <rule: Manips>    <blocktype> <[Manip]>+ % (,) (\<<ITI>\>)? [\)\}]
- <rule: Manip>     <Name> <Manips> | <Name> <Freq>? <Dur>? <Reps>?
+ <rule: Event>     <Name>  <Freq>?  <Dur>? <nReps>? <Manips>?
+ <rule: Name>      \w+|-
+ <rule: Num>       \d{0,}(\.\d+)?
+ <rule: Dur>       \[<Num>\] 
+ <rule: Manips>    <blocktype> <[Event]>+ % (,) (\<<ITI>\>)? [\)\}]
  <rule: blocktype> [\(\{]
  <rule: Freq>      =<Num>
  <rule: ITI>       <[Num]>+ % (,)
- <rule: Reps>      \<<Num>\>
+ <rule: nReps>     \<<Num>\>
  <rule: RT>        "<Num>"
 }xms;
 
 #"snd [2]; mem (b {aa <2>,bb},a=1 [3] <10,10,30>); dly" =~ $parser;
 #"snd [.5]; mem [3] {high,low}; dly [1]; test [2] {same,diff};" =~ $parser;
-"snd; mem {high,low}; dly {short,long {extra,normal}}; test;" =~ $parser;
+#"snd; mem {high,low};-;dly {short,long {extra,normal}};-; test;" =~ $parser;
+"cue [.5]  <5> ; mem [.5] {high <5> ,low <5> };- <2> ; dly [1] <3>;- <2>; test [2] <1>;" =~ $parser;
 say Dumper(%/);
 # prase input
 my %inputed = %{$/{Tree}};
 
 
-# build the tree
-my $tree = Tree::Simple->new({id=>"root", name=>"root"},Tree::Simple->ROOT);
 my @head;
+
+# build the tree
+my $tree = Tree::Simple->new({id=>"start", name=>"start"},Tree::Simple->ROOT);
 push @head, $tree;
+
+#my $tree;
+#push @head, Tree::Simple->ROOT;
 for my $event (@{$inputed{Event}}) {
-   my $e = { id=> $event->{Name}, name=> $event->{Name}, freq=> 1, nrep=>'', 'dur'=>0 };
-   @head = map {Tree::Simple->new($e, $_) } @head;
-   @head = addEvents(\@head,$e->{name},@{$event->{Manips}->{Manip}}) if $event->{Manips};
+   my $e = extractEvent($event);
+   # cath trials
+   if($event->{Name} eq "-") {
+     map {Tree::Simple->new($e, $_) } @head;
+   # event with manipulations
+   }elsif($event->{Manips}) {
+      @head = addEvents(\@head,$e->{name},@{$event->{Manips}->{Event}}) 
+   # just an event
+   } else {
+     @head = map {Tree::Simple->new($e, $_) } @head;
+   }
 }
-#say Dumper($tree);
 
 
 # parse tree: build sequences
@@ -49,12 +60,16 @@ my @seqs = SeqTree($tree,'');
 say "Seqs:";
 say join("\n",@seqs);
 
+
+###############################
+# 
+###############################
 sub SeqTree {
  my $parent = shift;
  my $seq = shift;
  my $children = $parent->getAllChildren;
  my $e = $parent->getNodeValue();
- $seq .= " -> $e->{id}";
+ $seq .= " -> $e->{id} ($e->{freq} $e->{nreps} $e->{dur})";
  my @seqs= ($seq);
 
  #return @seqs unless $children;
@@ -66,7 +81,16 @@ sub SeqTree {
 };
 
 
+sub extractEvent {
+ my $event=shift;
+ my $prefix=shift||"";
+ my $hashref = { id=> $prefix?"$prefix:$event->{Name}":$event->{Name},
+             name=> $event->{Name} 
+  };
 
+  $hashref->{lc($_)} = $event->{$_}?$event->{$_}->{Num}:"" for qw/Freq nReps Dur/;
+  return $hashref;
+};
 
 # event ; event [duration]; event {mani, mani}; event {mani [dur] <reps>, mani=ratio } 
 # Thoughts
@@ -87,14 +111,12 @@ sub addEvents {
    my $name = $event->{Name};
    $name="$prefix:$name" if $prefix;
    say "$name";
-   my $e = { id=> $name, name=>$event->{Name}, freq=> 1, nrep=>'', 'dur'=>0 };
-   # add to the tree
-   #my $subtree = Tree::Simple->new($event->{Name}, $parent);
+   my $e = extractEvent($event, $prefix);
    
    my @subtree;
    # recurse through all manipulations
    if($event->{Manips}){
-     my $subevents = $event->{Manips}->{Manip};
+     my $subevents = $event->{Manips}->{Event};
      #@subtree = map {addEvents([$_],$e->{id},@$subevents) } @{$parent};
      @subtree = addEvents($parent,$e->{id},@$subevents) ;
    } else {
