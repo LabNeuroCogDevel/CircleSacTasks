@@ -1,6 +1,7 @@
 # TODO
 
- * fix sound on WM for MEG
+ * fix sound on WM at MEG
+   - Installed matalb 2009a (linux 64) with most recent psychtoolbox: works fine
 
  * timing/accuracy of MEG triggers
 
@@ -26,8 +27,6 @@
  
  * photodiode "get ready screen" for MEG
  
- * get a nicely shaped attention cue 
-
  * use putty or matlab scp to send mat to wallace after MEG?
  
  * write better tests

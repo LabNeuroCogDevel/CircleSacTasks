@@ -130,11 +130,28 @@ function subject=workingMemory(varargin)
     end
     
            
-    % setup keys such that the correct LEFT push is at LEFT index
+    % setup keys such that the correct LEFT push is at LEFT index       
+    % what keys will we accept as correct/incorrect
     KbName('UnifyKeyNames');
-    listenKeys = KbName({'1!', '2@'});
-    if(subject.reversekeys); listenKeys=fliplr(listenKeys); end;
-    %listenKeys = [ listenKeys KbName('ESCAPE') KbName('space') ];
+    % left, right, RA input
+    if strcmpi(modality,'fMRI')    
+       listenKeys  = KbName({'7&','2@'});
+       leftorright={'left index finger', 'right index finger'};
+
+    elseif strcmpi(modality,'MEG')   
+       listenKeys = KbName({'1!','2@'});
+       leftorright={'index finger', 'middle finger'};
+
+    else
+       listenKeys = KbName({'1!','2@'});
+       leftorright={'1', '2'};
+    end
+    
+    % flip instructions for counterbalanced subjects
+    if subject.reversekeys
+        listenKeys=fliplr(listenKeys);
+        leftorright=fliplr(leftorright);
+    end
     
     
     % initialze order of events/trials
@@ -153,8 +170,8 @@ function subject=workingMemory(varargin)
     % display instructions
     newInstructions = { 'Welcome to the Working Memory Game\n', ...
                          ['Attend to the instructed side\n' ...
-                         'Push ' num2str(listenKeys(1)) 'for nochange\n'...
-                         'Push ' num2str(listenKeys(2)) ' for change\n' ...
+                         'Push ' leftorright{1} ' for nochange\n'...
+                         'Push ' leftorright{2} ' for change\n' ...
                          ] ...
                         };
     betweenInstructions = { 'Welcome Back' }; 

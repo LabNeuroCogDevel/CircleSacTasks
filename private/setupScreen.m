@@ -49,6 +49,8 @@ function w=setupScreen()
      % set font
      %Screen('TextFont', w, 'Arial');
      %Screen('TextSize', w, 22);
+     % older matlab+linux:
+     %Screen('TextFont', w, '-misc-fixed-bold-r-normal--13-100-100-100-c-70-iso8859-1');
     
      % Set process priority to max to minimize lag or sharing process time with other processes.
      Priority(MaxPriority(w));

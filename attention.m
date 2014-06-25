@@ -123,11 +123,6 @@ function subject = attention(varargin)
    CLEARTIME = 1.5; % additional time to response after clearing the screen
    totalfMRITime=390+20+30*2;
 
-   % what keys will we accept as correct/incorrect
-   KbName('UnifyKeyNames');
-   listenKeys = KbName({'1!','2@','space'});
-   % match direction 
-
     
     %% different trial structures for each modality
     function getEvents = setfMRI
@@ -162,6 +157,17 @@ function subject = attention(varargin)
     
     getEvents = getModality(eventTypes, varargin{:});
     
+    
+   % what keys will we accept as correct/incorrect
+   KbName('UnifyKeyNames');
+   % left, right, RA input
+   if strcmp(modality,'fMRI')    
+       listenKeys  = KbName({'7&','2@','space'});
+   elseif strcmp(modality,'MEG')   
+       listenKeys = KbName({'1!','2@','space'});
+   else
+       listenKeys = KbName({'1!','2@','space'});
+   end
 
     
     %% setup subject
@@ -182,8 +188,8 @@ function subject = attention(varargin)
               
       % display instructions
     newInstructions = { 'Welcome to the Attention Game\n', ...
-                         'push the left button if the target opens on the left\n' ...
-                         'push the right button if the target is a C\n' ...
+                         'use your left index finger if the target opens on the left\n' ...
+                         'use your right index finger if the target is a C\n' ...
                         };
     betweenInstructions = { 'Welcome Back' };
     endStructions       = {'Thanks For Playing'};

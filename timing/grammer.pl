@@ -1,27 +1,102 @@
 #!/usr/bin/env perl
-#
-# see http://blogs.perl.org/users/polettix/2012/04/parserecdescent-and-number-of-elements-read-on-the-fly.html
-#     http://search.cpan.org/~jtbraun/Parse-RecDescent-1.967009/lib/Parse/RecDescent.pm
-#
-use strict; use warnings; 
+use strict; use warnings;
 use 5.14.0;
-use Parse::RecDescent;
+use Regexp::Grammars;
 use Data::Dumper;
+use Tree::Simple;
+# TEST=mem-dly;TR=2;TOTALTIME=300;
+# snd[.5]; mem {1L=.33 [.3], 4L=.66 [.5] }; CATCH=1/6; dly[1.2]; 
+my $parser = qr{
+ <Tree>
 
-$::RD_HINT = 1;
-$::RD_TRACE = 1;
+ <rule: Tree> <[Event]>* % (;)
 
-my $grammer = <<'ENDGRAMMER';
-  name    : /\w+/
-  dur     : '[' /[\.\d]+/ ']'
-  blocked : '(' event(s /,/) ')'
-  randomed:  /{.+}/ 
-  event   : name | dur(?)
-  whole   : event(s /;/)
-ENDGRAMMER
+ <rule: Event>     <Name> <Dur>? <Manips>?
+ <rule: Name>      \w+
+ <rule: Num>       \d+(\.\d+)?
+ <rule: Dur>       \[ <Num> \] 
+ <rule: Manips>    <blocktype> <[Manip]>+ % (,) (\<<ITI>\>)? [\)\}]
+ <rule: Manip>     <Name> <Manips> | <Name> <Freq>? <Dur>? <Reps>?
+ <rule: blocktype> [\(\{]
+ <rule: Freq>      =<Num>
+ <rule: ITI>       <[Num]>+ % (,)
+ <rule: Reps>      \<<Num>\>
+}xms;
 
-my $parser=Parse::RecDescent->new($grammer);
-my $res = $parser->whole('mem; test [.3]; rsp [.4]');
-say Dumper($res);
-$res = $parser->event('test[.1]');
-say Dumper($res);
+#"snd [2]; mem (b {aa <2>,bb},a=1 [3] <10,10,30>); dly" =~ $parser;
+#"snd [.5]; mem [3] {high,low}; dly [1]; test [2] {same,diff};" =~ $parser;
+"snd; mem {high,low}; dly {short,long {extra,normal}}; test;" =~ $parser;
+say Dumper(%/);
+# prase input
+my %inputed = %{$/{Tree}};
+
+
+# build the tree
+my $tree = Tree::Simple->new("root",Tree::Simple->ROOT);
+my @head;
+push @head, $tree;
+for my $event (@{$inputed{Event}}) {
+   my $e = $event->{Name};
+   @head = map {Tree::Simple->new($e, $_) } @head;
+   @head = addEvents(\@head,$e,@{$event->{Manips}->{Manip}}) if $event->{Manips};
+}
+#say Dumper($tree);
+
+
+# parse tree: build sequences
+my @seqs = SeqTree($tree,'');
+say "Seqs:";
+say join("\n",@seqs);
+
+sub SeqTree {
+ my $parent = shift;
+ my $seq = shift;
+ my $children = $parent->getAllChildren;
+ my $name = $parent->getNodeValue();
+ $seq .= " -> $name";
+ my @seqs= ($seq);
+
+ #return @seqs unless $children;
+ if($#{$children}>=0){
+   @seqs = map {SeqTree($_,$seq)} @$children;
+ }
+ return @seqs;
+
+};
+
+
+
+
+# event ; event [duration]; event {mani, mani}; event {mani [dur] <reps>, mani=ratio } 
+# Thoughts
+# () are blocked, {} are random manipulations
+# if eventname =  Endblock, new tree
+# 
+
+
+
+sub addEvents {
+ # parent node and prefix
+ my $parent=shift;
+ my $prefix=shift;
+ 
+ my @ends;
+ # add each event to the tree recursively
+ for my $event (@_){
+   my $name = $event->{Name};
+   $name="$prefix:$name" if $prefix;
+   say "$name";
+   # add to the tree
+   #my $subtree = Tree::Simple->new($event->{Name}, $parent);
+   my @subtree = map {Tree::Simple->new($event->{Name}, $_)} @{$parent};
+
+   # recurse through all manipulations
+   if($event->{Manips}){
+     my $subevents = $event->{Manips}->{Manip};
+     @subtree = map {addEvents([$_],$name,@$subevents) } @subtree;
+   }
+
+   push @ends, @subtree;
+ }
+ return @ends;
+};
