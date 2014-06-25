@@ -58,5 +58,5 @@ function getEvents = getModality(eventTypes,varargin)
     
     
     %% print out
-    fprintf('MODALITY: %s\nCumulative?: %d\n',modality,CUMULATIVE);  
+    fprintf('MODALITY: "%s"\nCumulative?: %d\n',modality,CUMULATIVE);  
 end

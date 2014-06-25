@@ -264,7 +264,7 @@ function subject=workingMemory(varargin)
      % were we on a catch trial?
           
      % if fMRI, we should wait until we've been here for 400 secs
-     if strcmp(modality,'fMRI') 
+     if strcmpi(modality,'fMRI') 
          fprintf('waiting %f, until the full %f @ %f\n', ...
              totalfMRITime - (subject.endtime(thisBlk)- starttime), ...
              totalfMRITime, starttime+totalfMRITime);

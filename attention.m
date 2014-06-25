@@ -298,7 +298,8 @@ function subject = attention(varargin)
      save(subject.file, '-struct', 'subject');
      
      % if fMRI, we should wait until we've been here for 400 secs
-     if strcmp(modality,'fMRI') 
+     fprintf('checking "%s" for fMRI\n',modality);
+     if strcmpi(modality,'fMRI') 
          fprintf('waiting %f, until the full %f @ %f\n', ...
              totalfMRITime - (subject.endtime(thisBlk)- starttime), ...
              totalfMRITime, starttime+totalfMRITime);
