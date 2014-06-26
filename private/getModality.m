@@ -1,10 +1,37 @@
 function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
+    global degsize screenResolution;
+    % uses screen resolution, sets degsize
+   
+    %% measurenments
+    %" Do note that angular distance does not scale linearly with distance on
+    %  the screen once you get out to above about 40 degree, then things get
+    %  more complicated in that you have to calculate each directly by 
+    %  adapting Alan's formulae"
+    % fMRI
+    %   distance to mirror+eyes ~ 130 cm; 
+    %   1024 x 780 => 28.5 x 21.7; 
+    % hSize is width of project, 
+    % vDist is distnace to the project from eyes
+    measurements.fMRI.hSize = 28.5; 
+    measurements.fMRI.vDist = 130; 
+    % TEST
+    measurements.TEST.hSize = 28.5; 
+    measurements.TEST.vDist = 130; 
+    % MEG
+    %TODO: add these
+    measurements.MEG.hSize = 41; 
+    measurements.MEG.vDist = 57;
+    
+    
+    
+    
     % what modality are we using
     % set the modality via arguments or by knowning the computer
     % if hostname/cli conflict or overlap, precidence is revers of 
     % modalityHosts field definitions
     modalityHosts.MEG  = {'PUH1DMEG03'};
     modalityHosts.fMRI = {'reese-loeff114', 'Admin-PC'};
+    
     modality='UNKNOWN';
     [returned,host] = system('hostname'); host=strtrim(host);
     for modal = fieldnames(modalityHosts)'     
@@ -54,8 +81,13 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     end
 
         
-    
+    %% output degree size
+    hRes = screenResolution(1);
+    hSize = measurements.(modality).hSize;
+    vDist = measurements.(modality).vDist;
+    degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
+    degsize = 1/degPerPix;
     
     %% print out
-    fprintf('MODALITY: "%s"\nCumulative?: %d\n',modality,CUMULATIVE);  
+    fprintf('MODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',modality,CUMULATIVE,degsize);  
 end

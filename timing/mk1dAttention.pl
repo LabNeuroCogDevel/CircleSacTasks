@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict; use warnings;
 use 5.14.0; # use "say"
-use List::Util qw/shuffle reduce sum/;
+use List::Util qw/shuffle reduce sum max/;
 use List::MoreUtils qw/uniq zip/;
 my $VERBOSE=1;
 use Data::Dumper;
@@ -14,20 +14,21 @@ my $nCatch=0;
 my @sumstable = ();
 
 # SETTINGS
-my $TOTALTIME=378;
+my $TOTALTIME=378-72;
 my $STARTTIME=8;
 my $ENDTIME=12;
-my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME + 30*2;
+my $MINIBLOCK=10;
+my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME + $MINIBLOCK*2;
 my $TR=1.5;
-my $MEANITI=3;
+my $MEANITI=2;
 my $MINITI=1;
 my $MAXITI=99; #no max
 #my $NITER=2;
 my $NITER=200;
-my $MINIBLOCK=30;
 my $TOTALTRIALS=72; #24+48;
 #my $TESTS="";  #no tests
-my $TESTS="cue-atnd,atnd-probe,probe:cng-probe:incng";  #no tests
+#my $TESTS="cue-atnd,atnd-probe,probe:cng-probe:incng";  #no tests
+my $TESTS="atnd,atnd:flex-atnd:hab,atnd:hab-atnd:pop,atnd:flex-atnd:pop";  #no tests
 
 say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
 say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
@@ -203,8 +204,10 @@ $NTRIAL = $#trialSeqIDX +1;
 # sample from expodential
 #  subtract min from mean and add it back to the result
 #  cap at max ITI
+
 use Math::Random qw(random_exponential);
-my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
+#my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
+my $ITItime = $MEANITI * $TOTALTRIALS;
 
 
 open my $FHsums, ">", "$taskname/stimSums.txt" or die "cannot open output txt file";
@@ -298,9 +301,9 @@ for my $deconIt (1..$NITER) {
     # add 30 seconds to that for a breat
     if( $seqno< $NTRIAL-1 and  $trialSeqIDX[$seqno]->{ttype} ne $trialSeqIDX[$seqno+1]->{ttype} ) {
         next if $secbump{$trialSeqIDX[$seqno]->{ttype}};
-        say "bumping time 30s $seqno $trlseq $trialSeqIDX[$seqno]->{ttype}  $trialSeqIDX[$seqno+1]->{ttype}";
-        $secbump{$trialSeqIDX[$seqno]->{ttype}} = 30 - $ITIs[$seqno];
-        $timeused+=30 - $ITIs[$seqno];
+        say "bumping time ${MINIBLOCK}s $seqno $trlseq $trialSeqIDX[$seqno]->{ttype}  $trialSeqIDX[$seqno+1]->{ttype}";
+        $secbump{$trialSeqIDX[$seqno]->{ttype}} = $MINIBLOCK - $ITIs[$seqno];
+        $timeused+=$MINIBLOCK; # - $ITIs[$seqno];  # -- keep the ITI in addtion to the miniblock break
     }
     #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
   }

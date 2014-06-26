@@ -5,26 +5,13 @@
 
  * timing/accuracy of MEG triggers
 
+ * measure screens/distance for MEG
+
  * finialize task instructions to subject
 
    * and which button presses do what (two hands for attention task?)
 
- * measure screens/distance, get degree size in pixels:
-  
-> Alan Robinson  on PTB list
 
- ```matlab   
-    %width and dist measurements fall out so just be sure to use the same
-    %units for both (currently, inches)
-    hRes = 1920; hSize = 41; vDist = 57; % LG TV 46 pix per deg
-
-    degPerPix = 2*atand( (hSize/hRes) / (2*vDist))
-    pixPerDeg = 1/degPerPix
-```
-
-*N.B:*
-> Do note that angular distance does not scale linearly with distance on the screen once you get out to above about 40 degree, then things get more complicated in that you have to calculate each directly by adapting Alan's formulae
- 
  * photodiode "get ready screen" for MEG
 
  * account for catch trials when shrinking annulas

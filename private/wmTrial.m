@@ -80,7 +80,12 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     %% 3. delay
     drawBorder(w,[0 0 0], .25);
     if(timing.delay.ideal<0); trial.timing  = timing; return; end
-    timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
+    % this could be like any other fixation, but it's confusing
+    %timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
+    % so lets draw the circles again, but make them all gray
+    graycolors=ovalcolors;
+    graycolors(:)=100;
+    timing.delay.onset = drawCircles(w, graycolors ,ovalpos, timing.delay.ideal);% GetSecs()+.5);
     sendCode(ttls(3))
 
     %% 4. probe

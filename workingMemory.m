@@ -62,6 +62,7 @@ function subject=workingMemory(varargin)
     
     
     global    TIMES totalfMRITime listenKeys trialsPerBlock modality CUMULATIVE;
+    globalSettings();
     WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
     
     

@@ -16,5 +16,5 @@ function WMsettings()
 
     % total time we should spend in the MRI scanner
     % used for additional fixation at end
-    totalfMRITime=234+8+20; % 24 full .5+.5+1+2 trials, 12 catch, 8 s start, 20 sec end 
+    totalfMRITime=234+20; % 24 full .5+.5+1+2 trials, 12 catch, 8 s start, 12 sec end 
 end

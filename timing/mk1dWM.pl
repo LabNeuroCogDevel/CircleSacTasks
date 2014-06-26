@@ -24,7 +24,9 @@ my $MAXITI=99; #no max
 my $NITER=200;
 my $TOTALTRIALS=36;
 #my $TESTS="";  #no tests
-my $TESTS="mem-snd,mem-dly,dly-RSP,mem:L1 +mem:L4 -RSP"; # care about extracting response and memory
+
+# need dly for L1 and dly for L4 
+my $TESTS="mem, mem:L4 - mem:L1, dly"; # care about extracting response and memory
 
 say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
 say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
