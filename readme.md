@@ -72,14 +72,15 @@ When any of the arguments are not given, their value will be assigned by prompt.
 
 |Task      |runs| trials | full| catch|
 |----------|----| -------|-----|------|
-|WM        | 2  |     36 |  24 | 12   |
-|Attention | 3  |     48 |  24 | 24   |
+|Attention | 2  |     72 |  48 | 24   |
+|WM        | 3  |     36 |  24 | 12   |
 
 Additional timing:
 
 * `8s` fix before start
 * `12s` fix after finish. 
 * `3s` mean ITI
+* `2*30s` breaks within attention
 
 
 ### Generate
