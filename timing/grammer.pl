@@ -4,6 +4,7 @@ use 5.14.0;
 use Regexp::Grammars;
 use Data::Dumper;
 use Tree::Simple;
+use List::Util qw/shuffle reduce sum min/;
 # TEST=mem-dly;TR=2;TOTALTIME=300;
 # snd[.5]; mem {1L=.33 [.3], 4L=.66 [.5] }; CATCH=1/6; dly[1.2]; 
 my $parser = qr{
@@ -56,25 +57,39 @@ for my $event (@{$inputed{Event}}) {
 
 
 # parse tree: build sequences
-my @seqs = SeqTree($tree,'');
+my @seqs = SeqTree($tree,{seq=>'',nrep=>'',dur=>0,freq=>1});
 say "Seqs:";
-say join("\n",@seqs);
+say join("\n",Dumper(@seqs));
 
 
 ###############################
 # 
 ###############################
+
+#### tear each branch of the tree into a sequence of events (a trial)
+# recursive: parent of current branch, and the info from all chidlren (trial Info)
 sub SeqTree {
  my $parent = shift;
- my $seq = shift;
+ my $trialInfo = shift;
  my $children = $parent->getAllChildren;
  my $e = $parent->getNodeValue();
- $seq .= " -> $e->{id} ($e->{freq} $e->{nreps} $e->{dur})";
- my @seqs= ($seq);
+
+ # pretty print
+ my $seq = $trialInfo->{seq};
+ $seq .= ($seq?" -> ":"")  .  "$e->{id} ($e->{freq}% $e->{nreps}X $e->{dur}s)";
+
+ # get freq,dur,and reps at thsi point
+ my $freq =    ($e->{freq}||1    ) * ($trialInfo->{freq}||1   );
+ my $dur  =    ($e->{dur} ||0    ) + ($trialInfo->{freq}||0   );
+ my $nrep = min($e->{nrep}||9**99  ,  $trialInfo->{freq}||9*99);
+
+ my $thisevent={ seq=>$seq, nrep=>$nrep,dur=>$dur,freq=>$freq  };
+
+ my @seqs= ($thisevent);
 
  #return @seqs unless $children;
  if($#{$children}>=0){
-   @seqs = map {SeqTree($_,$seq)} @$children;
+   @seqs = map {SeqTree($_, $thisevent )} @$children;
  }
  return @seqs;
 
@@ -83,7 +98,15 @@ sub SeqTree {
 
 sub extractEvent {
  my $event=shift;
- my $prefix=shift||"";
+ my $parent=shift;
+ say Dumper($parent);
+ my $prefix=$parent?$parent->{id}||"":"";
+
+ my $freq =    ($event->{freq}||1    ) * ($parent->{freq}||1   );
+ my $dur  =    ($event->{dur} ||0    ) + ($parent->{freq}||0   );
+ my $nrep = min($event->{nrep}||9**99  ,  $parent->{freq}||9*99);
+
+
  my $hashref = { id=> $prefix?"$prefix:$event->{Name}":$event->{Name},
              name=> $event->{Name} 
   };
@@ -99,7 +122,9 @@ sub extractEvent {
 # 
 
 
-
+## recurse through events in the parsed grammer 
+# the parent and prefix are passed in
+# returned: list of exit nodes
 sub addEvents {
  # parent node and prefix
  my $parent=shift;
@@ -111,7 +136,7 @@ sub addEvents {
    my $name = $event->{Name};
    $name="$prefix:$name" if $prefix;
    say "$name";
-   my $e = extractEvent($event, $prefix);
+   my $e = extractEvent($event, $parent);
    
    my @subtree;
    # recurse through all manipulations
