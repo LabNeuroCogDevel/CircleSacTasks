@@ -42,7 +42,8 @@ keyCode=zeros(256);
              RT=responseTime;         
              
          elseif keyCode(KbName('escape'))
-             closedown()
+             closedown();
+             error('Early Exit');
          % no else, dont care if some other button was pushed
          end
      end
