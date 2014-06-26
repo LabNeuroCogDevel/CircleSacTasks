@@ -60,10 +60,11 @@
 % usage: workingMemory MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
 function subject=workingMemory(varargin)
     
-    %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
-    WMsettings() 
     
-    global    listenKeys trialsPerBlock modality CUMULATIVE;
+    global    TIMES totalfMRITime listenKeys trialsPerBlock modality CUMULATIVE;
+    WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
+    
+    
     
     
     %% different trial structures for each modality
