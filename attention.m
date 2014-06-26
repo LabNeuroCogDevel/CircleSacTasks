@@ -154,8 +154,10 @@ function subject = attention(varargin)
     else
         eventTypes.TEST = @(t,b) setTEST(t,b);
     end
-    
-    getEvents = getModality(eventTypes, varargin{:});
+
+    % get fMRI/MEG, cumulative/not cumulative, and how to get events
+    [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
+
     
     
    % what keys will we accept as correct/incorrect
@@ -278,11 +280,12 @@ function subject = attention(varargin)
      %% did we end on a catch trial
      % need to show that bit for the specified duration
      % find the first -1, find the time of that event
-     wait=TIMES(find(cellfun(@(x) trial(subject.curTrl-1).timing.(x).ideal, {'cue','attend','probe'})==-1,1));
-     sendcode(255);
+     wait=TIMES(find(cellfun(@(x) subject.trial(subject.curTrl-1).timing.(x).ideal, {'cue','attend','probe'})==-1,1));
+     sendCode(255);
      drawBorder(w,[0 0 0], .7);
      drawCross(w);
-     Screen('Flip',w,wait)
+     fprintf('Finished but maybe on a catch: waiting %.03f\n',wait);
+     Screen('Flip',w,GetSecs()+wait)
      
      
      

@@ -1,5 +1,4 @@
-function getEvents = getModality(eventTypes,varargin)
-    global modality CUMULATIVE;
+function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     % what modality are we using
     % set the modality via arguments or by knowning the computer
     % if hostname/cli conflict or overlap, precidence is revers of 

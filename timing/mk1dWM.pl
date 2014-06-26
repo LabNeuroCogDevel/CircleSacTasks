@@ -47,7 +47,8 @@ mkdir "$taskname" if ! -d "$taskname/";
  CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>1/6, duration=>0, nrep=>3      } ,
             {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0, nrep=>24     }  ],
 
- RSP  =>  [ {event=>"RSP", name=>"RSP",         occurRatio=>1,   duration=>2, nrep=>24     } ] 
+ RSP  =>  [ {event=>"RSP", name=>"RSP:change",  occurRatio=>1,   duration=>2, nrep=>6     },
+            {event=>"RSP", name=>"RSP:nochange",occurRatio=>1,   duration=>2, nrep=>6     }] 
 );
 
 

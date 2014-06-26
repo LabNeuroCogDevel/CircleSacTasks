@@ -59,25 +59,11 @@
 %% Working Memory task
 % usage: workingMemory MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
 function subject=workingMemory(varargin)
-    % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize  listenKeys LEFT RIGHT LOADS trialsPerBlock TIMES modality CUMULATIVE;
     
-    % useful paradigmn info
-    gridsize = [9 7];
-    LEFT = 1;
-    RIGHT = 2;
-    LOADS = [ 1 4 ];
+    %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
+    WMsettings() 
     
-    % fix cue memory delay probe finish
-    %TIMES = [ .5  .5  .3  1  2];
-    TIMES = [ .5  .5  .5  1  2];
-    % MEG depends on this to set all timings
-    % fMRI depeonds on this to set times after catch trial
-    
-    % total time we should spend in the MRI scanner
-    % used for additional fixation at end
-    totalfMRITime=234+8+20; % 24 full .5+.5+1+2 trials, 12 catch, 8 s start, 20 sec end 
-
+    global    listenKeys trialsPerBlock modality CUMULATIVE;
     
     
     %% different trial structures for each modality
@@ -110,8 +96,8 @@ function subject=workingMemory(varargin)
     else
         eventTypes.TEST = @(t,b) setTEST(t,b);
     end
-    
-    getEvents = @() getModality(eventTypes, varargin{:});
+    % set modality
+    [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
  
     % get subject info
     subject = getSubjectInfo('task','WorkingMemory', varargin{:});
@@ -143,6 +129,7 @@ function subject=workingMemory(varargin)
        leftorright={'index finger', 'middle finger'};
 
     else
+       fprintf('"%s" did not match MEG or fMRI\n',modality);
        listenKeys = KbName({'1!','2@'});
        leftorright={'1', '2'};
     end
@@ -244,11 +231,16 @@ function subject=workingMemory(varargin)
      %% did we end on a catch trial
      % need to show that bit for the specified duration
      % find the first -1, find the time of that event
-     wait=TIMES(find(cellfun(@(x) trial(subject.curTrl-1).timing.(x).ideal, {'cue','mem','delay','probe'})==-1,1));
-     sendcode(255);
+     catchpoints= {'cue','mem','delay','probe'};
+     lastcatch=cellfun(@(x) subject.trial(subject.curTrl-1).timing.(x).ideal,catchpoints);
+     catchidx=find(lastcatch==-1,1);
+     wait=TIMES(catchidx);
+     
+     sendCode(255);
      drawBorder(w,[0 0 0], .7);
      drawCross(w);
-     Screen('Flip',w,wait)
+     fprintf('Finished but maybe on a catch, add %.03fs\n',wait);
+     Screen('Flip',w,GetSecs()+wait)
      
      
      %% wrap up
