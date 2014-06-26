@@ -4,14 +4,7 @@
 
 # Using
 
-Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial).
-
-`workingMemory` can take an additional argument flag, `normalkeys` or `reversekeys`, to counterbalance the "same" and "different" key presses.
-When any of the arguments are not given, their value will be assigned by prompt.
-
-*NOTE:* `reversekeys` and `normalkeys` are only parsed for the first block. Even if they are specified differently for subsequent blocks, they will be ignored.
-
-
+## Example
 ```matlab
 %% examples
 % the simplest working memory invocation
@@ -27,6 +20,22 @@ attention ID 0001WF r block 1
 attention ID 0001WF r block 2
 ```
 
+## fMRI "Keys"
+
+| Key     | Value |
+| ------- | --- |
+| Scanner | `=` |
+| Left    | `7` |
+| Right   | `2` |
+
+## Options
+
+Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial).
+
+`workingMemory` can take an additional argument flag, `normalkeys` or `reversekeys`, to counterbalance the "same" and "different" key presses.
+When any of the arguments are not given, their value will be assigned by prompt.
+
+*NOTE:* `reversekeys` and `normalkeys` are only parsed for the first block. Even if they are specified differently for subsequent blocks, they will be ignored.
 
 
 # Colors
@@ -47,8 +56,34 @@ attention ID 0001WF r block 2
 |194| 144| 74  |
 
 # Timing
+## Att 
 
-Working Memory timing is generated with `timing/mk1d.pl`. Attention uses `timing/mk1dAttention.pl`. Picking the top 6 is done by `timing/getBestWorkingMemory.bash` and `timing/getBestAttentionTiming.bash`
+| fix | cue | att | probe | blank      |
+| --- | --- | --- | ----- | -----      |
+| ITI | .5  | .5  | .5    | 1.5 (RT)   |
+
+## WM
+
+| fix | cue | mem | delay | change |
+| --- | --- | --- | ----- | -----  |
+| ITI | .5  | .5  | 1     | 2 (RT) |
+
+## fMRI
+
+|Task      |runs| trials | full| catch|
+|----------|----| -------|-----|------|
+|WM        | 2  |     36 |  24 | 12   |
+|Attention | 3  |     48 |  24 | 24   |
+
+Additional timing:
+
+* `8s` fix before start
+* `12s` fix after finish. 
+* `3s` mean ITI
+
+
+### Generate
+Working Memory timing is generated with `timing/mk1dWM.pl`. Attention uses `timing/mk1dAttention.pl`. Picking the top 6 is done by `timing/getBestWorkingMemory.bash` and `timing/getBestAttentionTiming.bash`
 
 # Documentation 
 
