@@ -145,8 +145,8 @@ function subject = attention(varargin)
     end
     
    %% get imaging tech. ("modality" is global)
-    eventTypes.fMRI = @() setfMRI;
-    eventTypes.MEG  = @() setMEG;
+    eventTypes.fMRI = @() setfMRI();
+    eventTypes.MEG  = @() setMEG();
     % set test modality based on if we have a 'testfile' or not
     testfileidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'testfile'), varargin));
     if ~isempty(testfileidx)
@@ -158,7 +158,6 @@ function subject = attention(varargin)
     % get fMRI/MEG, cumulative/not cumulative, and how to get events
     [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
 
-    
     
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');

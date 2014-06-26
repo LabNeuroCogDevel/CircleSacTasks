@@ -47,7 +47,7 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %% based on modality, what function should we use to get events
     % generate or read in -- functions specified by eventTypes struct
     if isfield(eventTypes, modality)
-        getEvents = eventTypes.(modality)();
+        getEvents = eventTypes.(modality);
     else
         fieldnames(eventTypes)
         error('no events function for modality %s', modality);
