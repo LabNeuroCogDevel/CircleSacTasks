@@ -62,17 +62,19 @@ function subject=workingMemory(varargin)
     
     
     global    TIMES totalfMRITime listenKeys trialsPerBlock ...
-              longdelaytime modality CUMULATIVE;
+              longdelaytime modality CUMULATIVE trlCatch;
     globalSettings();
     WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
-    
+
     
     
     
     %% different trial structures for each modality
     function getEvents = setfMRI
-        trialsPerBlock=36; %24 full + 12 catch
-        blocks=3;
+        %trialsPerBlock=36; %24 full + 12 catch
+        %blocks=3
+        trialsPerBlock=48; %32 full 16 catch
+        blocks=2;
         getEvents = readWMEvents(blocks);
     end
     function getEvents = setMEG
@@ -192,7 +194,6 @@ function subject=workingMemory(varargin)
          % run the actual task
          %while subject.events(subject.curTrl).block == thisBlk
          while subject.curTrl <= endofblock
-            
             % update timing
             % initTime is right now (event) or when trial started
             initTime= (~CUMULATIVE) * GetSecs() +  CUMULATIVE*starttime;
@@ -226,29 +227,19 @@ function subject=workingMemory(varargin)
                   e.load, ...
                   e.changes, ...
                   e.playCue, e.Colors, e.pos, e.timing);
-            
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl,starttime);
+            
+            % for fMRI catch trials:
+            % all but last trial fixations onsets are adjusted to allow
+            % whatever the last frame/event before the catch (-1) to play
+            % thorugh
+            %
+            % see private/readWMEvents
+
          end
-     %% did we end on a catch trial
-     % need to show that bit for the specified duration
-     % find the first -1, find the time of that event
-     catchpoints= {'cue','mem','delay','probe'};
-     lastcatch=cellfun(@(x) subject.trial(subject.curTrl-1).timing.(x).ideal,catchpoints);
-     catchidx=find(lastcatch==-1,1);
-     wait=TIMES(catchidx);
-     % also have to check that this is not a long delay catch
-     if lastcatch==3 && subject.events(subject.curTrl-1).longdelay
-         wait=longdelaytime;
-     end
-     
-     sendCode(255);
-     drawBorder(w,[0 0 0], .7);
-     drawCross(w);
-     fprintf('Finished but maybe on a catch, add %.03fs\n',wait);
-     Screen('Flip',w,GetSecs()+wait)
-     
+
      
      %% wrap up
      % subject.curBlk-1 == thsiBlk
@@ -259,11 +250,21 @@ function subject=workingMemory(varargin)
      % save everything
      save(subject.file, '-struct', 'subject');
   
-     
-     % were we on a catch trial?
-          
-     % if fMRI, we should wait until we've been here for 400 secs
-     if strcmpi(modality,'fMRI') 
+     %% if fMRI, we should wait until we've been here for 400 secs
+     if strcmpi(modality,'fMRI')    
+         %% did we end on a catch trial
+         % need to show that bit for the specified duration
+         % find the first -1, find the time of that event
+         trlTiming  = subject.trial(subject.curTrl-1).timing;
+         trlTiming.longdelay.ideal = trlTiming.delay.ideal * ...
+                   subject.events(subject.curTrl-1).longdelay;
+         [when,wait, catchidx ] = catchTrialEnd(trlTiming);
+         if ~isempty(when)
+            fprintf('Finished on a catch, add %.03fs\n',wait);
+            catchFix(w,when); %TODO: RECORD THIS TIME?
+         end
+
+         %% wait with a fix cross until we hit the final time
          fprintf('waiting %f, until the full %f @ %f\n', ...
              totalfMRITime - (subject.endtime(thisBlk)- starttime), ...
              totalfMRITime, starttime+totalfMRITime);
@@ -271,7 +272,7 @@ function subject=workingMemory(varargin)
      end
        
      
-     % end screen
+     %% end screen
      instructions(w,endStructions,endStructions,subject);   
          
          
@@ -290,7 +291,35 @@ function subject=workingMemory(varargin)
     
 end
 
+function [when, wait, catchidx ]= catchTrialEnd(timing)
+     
+     global trlCatch; 
+     % in private/WMsettings()
+     %trlCatch.points= {'mem','longdelay','delay','probe'};
+     %trlCatch.resume= {'snd','mem'      ,'mem', 'delay'};
+     %trlCatch.times = [ longdelaytime TIMES(3:5)];
+     % or in attention.m
+     
+     when=[];
+     
+     % find our guy
+     lastcatch=cellfun(@(x) timing.(x).ideal,trlCatch.points);
+     catchidx=find(lastcatch==-1,1);
+     wait=trlCatch.times(catchidx);
+     % also have to check that this is not a long delay catch
+     if ~isempty(catchidx)
+        f=trlCatch.resume(catchidx);
+       when = wait + timing.(f{1}).ideal;
+     end
 
+end
+
+function onsettime = catchFix(w,when)
+     sendCode(255);
+     drawBorder(w,[0 0 0], .7);
+     drawCross(w);
+     [ VBL, onsettime ] = Screen('Flip',w,when);
+end
 
 %% setup audio
 function a = setupAudio()

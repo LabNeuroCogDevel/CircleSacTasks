@@ -4,19 +4,20 @@ function     [events] = generateWMcolorPos(events)
   % add color and position properties
   % abstracted to a function because both MEG (generated) and fMRI (read in)
   % use this logic
-    % because we are only going to change left or right, not both
-    changeIdx = arrayfun(@randi,[events.load]);
+  % because we are only going to change left or right, not both
+  changeIdx = arrayfun(@randi,[events.load]);
     
         
 
   % do this second so events looks nicer in matlab varable explorer
-    LEFTRIGHT={'LEFT','RIGHT'};
-    for t = 1:length(events);
+  LEFTRIGHT={'LEFT','RIGHT'};
+  for t = 1:length(events);
         for hemi=LEFTRIGHT;
             hemi=hemi{1};
             %% positions
             gridno=1:21;
             chosenPos=zeros(1,events(t).load);
+            % positions can not be directly above/below, left/right
             for pidx=1:events(t).load;
              % avable choices are the non-zero ones
              n=Sample( gridno(~~gridno) );
@@ -73,4 +74,4 @@ function     [events] = generateWMcolorPos(events)
             
             
         end
-    end
+  end

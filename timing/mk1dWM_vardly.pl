@@ -13,7 +13,13 @@ my @sumstable = ();
 
 # SETTINGS
 #
-my $TOTALTIME=254;
+my $TOTALTIME=336;
+#        48*3 + 16*(4+6)  + 8*1 + 4*(2 +4)  = 336
+#        48 total trials with 3s mean ITI
+#        32 full trials (16 of long dly (6s) 16 of short dly (4) )
+#        8  catches after mem (1s)
+#        4 of each catch (short 2s, long 4s)
+#        ----- WAS ---
 #        36*3 + 12*(4+6)  + 6*1 + 2*2 + 4*4  = 254
 #
 #        36*3s  [mean ITI]
@@ -29,7 +35,7 @@ my $MINITI=1;
 my $MAXITI=99; #no max
 #my $NITER=2;
 my $NITER=200;
-my $TOTALTRIALS=36;
+my $TOTALTRIALS=48;
 #my $TESTS="";  #no tests
 
 # need dly for L1 and dly for L4 
@@ -43,22 +49,22 @@ mkdir "$taskname" if ! -d "$taskname/";
 
 @seq = qw/ snd  mem CATCH1 dly CATCH2 RSP/;
 %events = (
- snd=> [ {event=>"snd", name=>"snd", occurRatio=>1, duration=>.5, nrep=>36   }  ],
+ snd=> [ {event=>"snd", name=>"snd", occurRatio=>1, duration=>.5, nrep=>48   }  ],
 
- mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>.5, nrep=>12} ,
-          {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>.5, nrep=>12} ] ,
+ mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>.5, nrep=>16} ,
+          {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>.5, nrep=>16} ] ,
 
- CATCH1=> [ {event=>"CATCH1", name=>"CATCH1",   occurRatio=>1/6, duration=>0, nrep=>3   } ,
-            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>30  }  ],
+ CATCH1=> [ {event=>"CATCH1", name=>"CATCH1",   occurRatio=>1/6, duration=>0, nrep=>4   } ,
+            {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>40  }  ],
 
- dly   => [ {event=>"dly", name=>"dly:short", occurRatio=>1, duration=>1, nrep=>15},
-            {event=>"dly", name=>"dly:long",  occurRatio=>1, duration=>3, nrep=>15}   ],
+ dly   => [ {event=>"dly", name=>"dly:short", occurRatio=>1, duration=>1, nrep=>16},
+            {event=>"dly", name=>"dly:long",  occurRatio=>1, duration=>3, nrep=>16}   ],
 
- CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>1/6, duration=>0, nrep=>3      } ,
-            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0, nrep=>24     }  ],
+ CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>1/6, duration=>0, nrep=>2      } ,
+            {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0, nrep=>36     }  ],
 
- RSP  =>  [ {event=>"RSP", name=>"RSP:change",  occurRatio=>1,   duration=>2, nrep=>3     },
-            {event=>"RSP", name=>"RSP:nochange",occurRatio=>1,   duration=>2, nrep=>3     }] 
+ RSP  =>  [ {event=>"RSP", name=>"RSP:change",  occurRatio=>1,   duration=>2, nrep=>4     },
+            {event=>"RSP", name=>"RSP:nochange",occurRatio=>1,   duration=>2, nrep=>4     }] 
 );
 
 
@@ -111,10 +117,12 @@ for my $trialseq (@allseq) {
  my $time = reduce {$a+$b} 0, map {$_->{duration}   } @$trialseq;
  my $nRep = reduce {$a>$b?$b:$a} 99, map {$_->{nrep}   } @$trialseq;
 
- # we need to break up the catch trials for short and long
- # was 3 for each, but insetad 2 for long, 1 for short
- $nRep -=2 if $name=~m/L(1|4).*short.*:catch/i;
- $nRep -=1 if $name=~m/L(1|4).*long.*:catch/i;
+ # EVERYTHING IS EQUAL AGAIN
+ # before some catch trials need to be truncated:
+ #  we need to break up the catch trials for short and long
+ #  was 3 for each, but insetad 2 for long, 1 for short
+ #$nRep -=2 if $name=~m/L(1|4).*short.*:catch/i;
+ #$nRep -=1 if $name=~m/L(1|4).*long.*:catch/i;
  push @alltrials, {dur=>$time, freq=>$freq, seq=>$trialseq, nRep=>$nRep, seqname=>$name};
 }
 

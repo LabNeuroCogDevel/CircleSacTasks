@@ -1,7 +1,8 @@
 function events = readWMEvents(blocks,varargin)
-    global LEFT RIGHT TIMES trialsPerBlock
+    global LEFT RIGHT TIMES trialsPerBlock longdelaytime;
     idxs={1 3 5 7};
     [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
+    idxsname = {'cue','mem','delay','probe'};
     %         cue mem   delay response
     %durtimes = [ .5  .5     1     2];
     durtimes = TIMES;
@@ -9,7 +10,7 @@ function events = readWMEvents(blocks,varargin)
     if isempty(varargin)
        filelist={'1','2','3','4','5','6'};
        for i=1:length(filelist)
-          filelist{i}=['timing/workingMemory/best/' filelist{i} '.txt'];
+          filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
        end
     else
         filelist=varargin;
@@ -83,8 +84,18 @@ function events = readWMEvents(blocks,varargin)
             if lastevent==1;
                 error('bad event list in %s: too many catch trials',filename)
             end
+            %% there are two delays but only in fMRI
+            % if we have long delay, uses it!
+            if delaylong(i-1)==1 && strcmpi(idxsname{lastevent},'delay')
+                addtime=longdelaytime;
+            else
+            %otherwise we aer just catching a normal trial
+                addtime=durtimes(lastevent);
+            end
             
-            events(i).timing.fix.ideal   = optime{idxs{lastevent}+1}(i-1) + durtimes(lastevent);
+            % move the onseto of fixaiton up so whatever we caught gets its
+            % time
+            events(i).timing.fix.ideal   = optime{idxs{lastevent}+1}(i-1) + addtime;
             
         else
             events(i).timing.fix.ideal=0;

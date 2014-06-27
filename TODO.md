@@ -10,7 +10,7 @@
 
  * finialize task instructions to subject
 
-   * and which button presses do what (two hands for attention task?)
+ * and which button presses do what (two hands for attention task?)
 
 
  * photodiode "get ready screen" for MEG

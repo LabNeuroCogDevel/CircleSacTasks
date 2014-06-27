@@ -58,8 +58,8 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     sendCode(ttls(1))
 
     %% 2. memory set
-    drawBorder(w,[0 0 0], .5);
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
+    drawBorder(w,[0 0 0], .5);
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
@@ -78,8 +78,8 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 %     disp(colors(color.Mem.RIGHT,:))
 
     %% 3. delay
-    drawBorder(w,[0 0 0], .25);
     if(timing.delay.ideal<0); trial.timing  = timing; return; end
+    drawBorder(w,[0 0 0], .25);
     % this could be like any other fixation, but it's confusing
     %timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
     % so lets draw the circles again, but make them all gray
@@ -89,8 +89,8 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     sendCode(ttls(3))
 
     %% 4. probe
+    if(timing.probe.ideal<0); trial.timing  = timing;  return; end
     drawBorder(w,[0 0 0], 0);
-    if(timing.probe.ideal<0); trial.timing  = timing; return; end
     ovalcolors=cat(1,colors(color.Resp.LEFT,:),colors(color.Resp.RIGHT,:))';
     
     timing.probe.onset = drawCircles(w, ovalcolors,ovalpos, timing.probe.ideal);%GetSecs()+1);
