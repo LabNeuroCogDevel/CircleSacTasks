@@ -1,9 +1,10 @@
 # TODO
+ * allow RA specified fMRI attention block type (e.g. h_f_p)
 
  * fix sound on WM at MEG
    - Installed matalb 2009a (linux 64) with most recent psychtoolbox: works fine
 
- * timing/accuracy of MEG triggers
+ * measure timing/accuracy of MEG triggers
 
  * measure screens/distance for MEG
 

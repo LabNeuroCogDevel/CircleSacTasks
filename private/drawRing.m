@@ -160,7 +160,7 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
            unspecifiedIDX =  setdiff(1:6,  posidxs(1:length(diridxs)) );
            unspef = Directions(unspecifiedIDX);
            % find the ones that should be changed w/in those that can be
-           changidxidx = find(unspef==bigger);
+           changidxidx = Shuffle(find(unspef==bigger));
            %change only half (so we stay balanced)
            unspef(changidxidx(1:ceil(nDiff/2))) = smaller;
            Directions(unspecifiedIDX)   = unspef;           

@@ -230,7 +230,7 @@ function subject = attention(varargin)
       % until we run out of trials on this block
       %while subject.events(subject.curTrl).block == thisBlk
       while subject.curTrl <= endofblock
-          
+           cprintf('blue','\n\nTRIAL: %d\n',subject.curTrl);
            % update timing
            % initTime is right now (event) or when trial started
            initTime= (~CUMULATIVE) * GetSecs() +  CUMULATIVE*starttime;

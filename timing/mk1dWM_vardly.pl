@@ -105,6 +105,8 @@ for my $trialseq (@allseq) {
  my $time = reduce {$a+$b} 0, map {$_->{duration}   } @$trialseq;
  my $nRep = reduce {$a>$b?$b:$a} 99, map {$_->{nrep}   } @$trialseq;
 
+ # we need to break up the catch trials for short and long
+ # was 3 for each, but insetad 2 for long, 1 for short
  $nRep -=2 if $name=~m/L(1|4).*short.*:catch/i;
  $nRep -=1 if $name=~m/L(1|4).*long.*:catch/i;
  say "$nRep $name";

@@ -62,6 +62,17 @@ keyCode=zeros(256);
     [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
  end
  
- fprintf('iscorrect: %d (want: %d; have: %d); time remeaining %.02f\n', ...
-         correct, correctKeys, find(keyCode), RTwindowEnd-RT )
+  fprintf('<strong>iscorrect: %d (want: %d; have: %d); time remeaining %.02f</strong>\n', ...
+          correct, correctKeys, find(keyCode), RTwindowEnd-RT )
+
+ %% give a nice colored output
+%  if correct==-1
+%      pcolor='Magenta';
+%  elseif correct==0
+%      pcolor='Red';
+%  else
+%      pcolor='Green';
+%  end
+%  cprintf(pcolor,'iscorrect: %d (want: %d; have: %d); time remeaining %.02f\n', ...
+%          correct, correctKeys, find(keyCode), RTwindowEnd-RT )
 end
