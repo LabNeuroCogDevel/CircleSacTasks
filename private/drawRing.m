@@ -220,5 +220,6 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
       when=GetSecs();
    end
    
+   % TODO: for testing add argument option to not draw
    [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end

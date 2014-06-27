@@ -13,7 +13,13 @@ my @sumstable = ();
 
 # SETTINGS
 #
-my $TOTALTIME=234;
+my $TOTALTIME=254;
+#        36*3 + 12*(4+6)  + 6*1 + 2*2 + 4*4  = 254
+#
+#        36*3s  [mean ITI]
+#      + 12(4s [short]  +6s [long]) [full] 
+#      + 6*1s [CATCH1] 
+#      + 2*2s [CATCH2 short] + 4*4s [CATCH2 long]
 my $STARTTIME=8;
 my $ENDTIME=12;
 my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME;
@@ -109,7 +115,6 @@ for my $trialseq (@allseq) {
  # was 3 for each, but insetad 2 for long, 1 for short
  $nRep -=2 if $name=~m/L(1|4).*short.*:catch/i;
  $nRep -=1 if $name=~m/L(1|4).*long.*:catch/i;
- say "$nRep $name";
  push @alltrials, {dur=>$time, freq=>$freq, seq=>$trialseq, nRep=>$nRep, seqname=>$name};
 }
 
@@ -255,7 +260,6 @@ for my $deconIt (1..$NITER) {
   # write sequence and timing to read into matlab
   open($files{alltiming}, ">", "$odir/alltiming.txt") unless exists($files{alltiming}) ;
 
-  my %secbump; # this hash records if we've given the 30second minibrake a trial type
   for my $seqno (0..$NTRIAL-1) {
     my $trlseq=$trialSeqIDX[$seqno]->{seqno};
 
@@ -263,19 +267,30 @@ for my $deconIt (1..$NITER) {
     my @eventSeqTime=();
 
     # write out times for each event to 1D
+    my $seqbranchname="";
     for my $seq (@eventseq) {
 
      # skip catches
      next if $seq->{event} =~ /^CATCH/;
 
+     # build branch name like snd::mem:L4.1D
+     $seqbranchname.=($seqbranchname?"::":"") . $seq->{name};
+
      push @eventSeqTime, [ $seq->{name},$timeused ];
   
      # open the file to write to if we need it
      open($files{$seq->{name}}, ">", "$odir/$seq->{name}.1D") unless exists($files{$seq->{name}}) ;
+
   
   
      # print to 1D file
      print { $files{$seq->{name}} } "$timeused ";
+
+     # write out to branch name too
+     if($seqbranchname ne $seq->{name}){ 
+       open($files{$seqbranchname}, ">", "$odir/$seqbranchname.1D") unless exists($files{$seqbranchname}) ;
+       print { $files{$seqbranchname} } "$timeused ";
+     }
   
      # also print to event type if name and event aren't the same
      if($seq->{event} ne $seq->{name} ) {
@@ -286,8 +301,6 @@ for my $deconIt (1..$NITER) {
      #say "$timeused $seq->{name} [$seq->{event}] ($seq->{duration})";
      $timeused+=$seq->{duration};
 
-     ## ATTENTION ONLY
-     # add MINIBLOCKREST if we've finished with one type
     }
 
     # finish catch trials with string of all -1
@@ -304,6 +317,9 @@ for my $deconIt (1..$NITER) {
 
     #say "$seqno, $trlseq, ",join("\t",map {$_->{name}}  @{$alltrials[$trlseq]->{seq} });
   }
+
+
+  # todo, build 1d file list from keys of %files
 
   say "final ITI gets a bump of ", $TOTALTIME - $timeused;
   
@@ -376,6 +392,8 @@ for my $deconIt (1..$NITER) {
   say $FHsums join("\t",$deconIt,@sums);
   push @sumstable, [@sums] 
 
+  
+  ## TODO: close all file handles?
 }
 
 
