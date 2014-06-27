@@ -53,9 +53,12 @@ function events = readWMEvents(blocks,varargin)
     % play cue is not specified
     playCue = Shuffle( repmat([LEFT RIGHT],1,ceil(length(memload)/2)  )  );
     
+    delaylong=strcmp('dly:long',optime{idx.delay});
     
-    zs=zeros(length(memload),1);
-    events = struct('playCue',zs,'load',zs,'changes',zs,'block',zs,'RT',[], 'Correct', []);
+    %zs=zeros(length(memload),1);
+    %events = struct('playCue',zs,'load',zs,'changes',zs,...
+    %                'block',zs,'RT',[], 'Correct', [], ...
+    %                'longdelay',delaylong);
                
     for i=1:length(memload);
         events(i).playCue = playCue(i);
@@ -64,6 +67,7 @@ function events = readWMEvents(blocks,varargin)
         events(i).block   = blocknum;
         events(i).RT      = []; 
         events(i).Correct = []; 
+        events(i).longdelay=delaylong(i);
         
         %% setup timing
         

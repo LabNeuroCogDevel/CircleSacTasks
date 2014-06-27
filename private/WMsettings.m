@@ -1,6 +1,6 @@
 function WMsettings()
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize   LEFT RIGHT LOADS  TIMES totalfMRITime;
+    global   gridsize   LEFT RIGHT LOADS  TIMES totalfMRITime longdelaytime;
 
     % useful paradigmn info
     gridsize = [9 7];
@@ -11,6 +11,7 @@ function WMsettings()
     % fix cue memory delay probe finish
     %TIMES = [ .5  .5  .3  1  2];
     TIMES = [ .5  .5  .5  1  2];
+    longdelaytime=2;
     % MEG depends on this to set all timings
     % fMRI depeonds on this to set times after catch trial
 

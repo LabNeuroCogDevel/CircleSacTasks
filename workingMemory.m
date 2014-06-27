@@ -61,7 +61,8 @@
 function subject=workingMemory(varargin)
     
     
-    global    TIMES totalfMRITime listenKeys trialsPerBlock modality CUMULATIVE;
+    global    TIMES totalfMRITime listenKeys trialsPerBlock ...
+              longdelaytime modality CUMULATIVE;
     globalSettings();
     WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
     
@@ -237,6 +238,10 @@ function subject=workingMemory(varargin)
      lastcatch=cellfun(@(x) subject.trial(subject.curTrl-1).timing.(x).ideal,catchpoints);
      catchidx=find(lastcatch==-1,1);
      wait=TIMES(catchidx);
+     % also have to check that this is not a long delay catch
+     if lastcatch==3 && subject.events(subject.curTrl-1).longdelay
+         wait=longdelaytime;
+     end
      
      sendCode(255);
      drawBorder(w,[0 0 0], .7);

@@ -72,6 +72,8 @@ function events = generateWMEvents(trialsPerBlock, blocks)
         events(i).timing  = timing; 
         events(i).RT      = []; 
         events(i).Correct = []; 
+        events(i).longdelay=0;
+
 
     end
     
