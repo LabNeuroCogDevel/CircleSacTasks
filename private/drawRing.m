@@ -144,6 +144,29 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
         diridxs=varargin{labeledDirIdx};
         % only set the direction of positions we have directions for
         Directions( posidxs(1:length(diridxs) ) ) = diridxs;
+        
+        % rebalance directions if needed and possible
+        nOnes=length(find(Directions==1));
+        nTwos=length(find(Directions==2));
+        nDiff= abs(nOnes-nTwos);
+        if nOnes ~= nTwos  && ...
+           nDiff < (6-length(posidxs))
+           
+           % get which way we need to change things
+           if nOnes>nTwos, bigger=1;smaller=2;
+           else            bigger=2;smaller=1; end
+           
+           % find who can be changed
+           unspecifiedIDX =  setdiff(1:6,  posidxs(1:length(diridxs)) );
+           unspef = Directions(unspecifiedIDX);
+           % find the ones that should be changed w/in those that can be
+           changidxidx = find(unspef==bigger);
+           %change only half (so we stay balanced)
+           unspef(changidxidx(1:ceil(nDiff/2))) = smaller;
+           Directions(unspecifiedIDX)   = unspef;           
+                      
+        end
+        
   end
   
 

@@ -122,7 +122,7 @@ function subject = attention(varargin)
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
    startdelay=8; enddelay=12; miniblockdelay=10;
-   totalfMRITime=378+startdelay+enddelay+miniblockdelay*2;
+   totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
    
    % set colors, resolution, paren function
    globalSettings();

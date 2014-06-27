@@ -14,7 +14,7 @@ my $nCatch=0;
 my @sumstable = ();
 
 # SETTINGS
-my $TOTALTIME=378-72;
+my $TOTALTIME=306; # (12*.5 + 12*1 + 8*6*3 + 72*2) 
 my $STARTTIME=8;
 my $ENDTIME=12;
 my $MINIBLOCK=10;
@@ -120,6 +120,7 @@ for my $trialseq (@allseq) {
 #  * distribution of ITIs
 
 # time that will be used by trials
+#my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 
 # number of trials
@@ -128,18 +129,25 @@ my $avgTrlTime =  reduce { $a + $b->{freq}*($b->{dur}+$MEANITI) } 0, @alltrials;
 my $NTRIAL=$TOTALTRIALS;
 #my $NTRIAL = $TOTALTIME / $avgTrlTime; # dont round here, round when we do trial seq freqs
 
-say "TOTAL SCAN TIME = $TOTALSCANNER ->" . (sprintf("%d",$TOTALSCANNER/$TR+.5) * $TR)  if $VERBOSE;
-say "TOTAL TRIALSEQ  = " . (1+$#alltrials) if $VERBOSE;
-say "TOTAL TRIAL     = $NTRIAL"     if $VERBOSE;
-say "AVG   TRIAL TIME= $avgTrlTime" if $VERBOSE;
-
 # create number of repetitions for each trial sequence
 # TODO: do we round or floor?
 $alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}+.5) for (0..$#alltrials);
 #$alltrials[$_]->{nRep} = sprintf("%d",$NTRIAL*$alltrials[$_]->{freq}) for (0..$#alltrials);
 
 my $usedTime =  reduce { $a + $b->{nRep}*($b->{dur}+$MEANITI) } 0, @alltrials;
-say "# will use $usedTime out of $TOTALTIME, leaving ", $TOTALTIME - $usedTime, "s in addition to the $MEANITI sec meaned ITI";
+
+
+#my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
+my $ITItime = $MEANITI * $TOTALTRIALS;
+say "ITItime = $ITItime ( $MEANITI * $TOTALTRIALS)";
+
+say "TOTAL SCAN TIME = $TOTALSCANNER ->" . (sprintf("%d",$TOTALSCANNER/$TR+.5) * $TR)  if $VERBOSE;
+say "TOTAL TRIALSEQ  = " . (1+$#alltrials) if $VERBOSE;
+say "TOTAL TRIAL     = $NTRIAL"     if $VERBOSE;
+say "AVG   TRIAL TIME= $avgTrlTime (ignored)" if $VERBOSE;
+say "# will use $usedTime sec out of totaltime ($TOTALTIME sec), leaving ", $TOTALTIME - $usedTime, "s in addition to the $MEANITI sec meaned ITI";
+
+
 
 # print out each trial sequence for visual varification
 say "$_->{nRep} ($_->{freq}*".sprintf("%.2f",$NTRIAL).") @ $_->{dur}s: ",
@@ -206,8 +214,6 @@ $NTRIAL = $#trialSeqIDX +1;
 #  cap at max ITI
 
 use Math::Random qw(random_exponential);
-#my $ITItime =  $TOTALTIME - reduce { $a + $b->{nRep}*$b->{dur} } 0, @alltrials;
-my $ITItime = $MEANITI * $TOTALTRIALS;
 
 
 open my $FHsums, ">", "$taskname/stimSums.txt" or die "cannot open output txt file";
@@ -227,15 +233,16 @@ for my $deconIt (1..$NITER) {
       push @trialSeqIDX, {seqno=>$_ ,ttype=>$ttype} for shuffle @{$trialSeqIDX{$ttype}} 
   }
 
-  my ($itcount,$ITIsum,@ITIs) = (0,99,0);
+  my ($itcount,$ITIsum,$ITIavg, @ITIs) = (0,99,0,0);
   until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
     @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);
     @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_} @ITIs;
     $ITIsum=sum(@ITIs);
+    $ITIavg=$ITIsum/($#ITIs+1);
     $itcount++;# near 50 iterations
     say "\tgenerating ITI, on  $itcount iteration: $ITIsum sum vs $ITItime time" if($itcount>500  && $itcount%50==0 && $VERBOSE);
   }
-  say "accounting for $ITIsum of $ITItime ITI time: ", sprintf("%.2f",$ITItime-$ITIsum), " ($itcount itrs)" if $VERBOSE;
+  say "accounting for $ITIsum of $ITItime ITI time (avg $ITIavg for ".($#ITIs+1)."): ", sprintf("%.2f",$ITItime-$ITIsum), " ($itcount itrs)" if $VERBOSE;
   #say join("\t",@ITIs) if $VERBOSE;
   
   
