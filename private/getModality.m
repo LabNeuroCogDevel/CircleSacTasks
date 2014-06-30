@@ -22,7 +22,8 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     measurements.MEG.hSize = 41; 
     measurements.MEG.vDist = 57;
     
-    
+    %measurements.practiceMEG = measurements.MEG;
+    %measurements.practicefMRI = measurements.fMRI;
     
     
     % what modality are we using
@@ -56,6 +57,9 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
         CUMULATIVE=0;
     end
     
+
+    
+    
     %% all of that above was useless if we specify a number of trials
     tpbidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'tpb'), varargin),1);
     if(~isempty(tpbidx))
@@ -70,7 +74,28 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
        eventTypes.TEST= eventTypes.TEST(trialsPerBlock,blocks);
     end
     
-
+    %% output degree size
+    % check we have measurements first
+    if ~isfield(measurements, modality)
+        error('need measurements for modality %s',modality)
+    end
+    % calculate N.B. only good until ~40 deg, then really no linear
+    hRes = screenResolution(1);
+    hSize = measurements.(modality).hSize;
+    vDist = measurements.(modality).vDist;
+    degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
+    degsize = 1/degPerPix;
+    
+    
+    %% maybe we want to practice instead of test
+    % did we pass in practice?
+    practiceidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'practice'), varargin),1);
+    if ~isempty(practiceidx)
+        modality = ['practice' modality  ];
+    end
+    
+    
+    
     %% based on modality, what function should we use to get events
     % generate or read in -- functions specified by eventTypes struct
     if isfield(eventTypes, modality)
@@ -81,12 +106,7 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     end
 
         
-    %% output degree size
-    hRes = screenResolution(1);
-    hSize = measurements.(modality).hSize;
-    vDist = measurements.(modality).vDist;
-    degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
-    degsize = 1/degPerPix;
+
     
     %% print out
     fprintf('MODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',modality,CUMULATIVE,degsize);  

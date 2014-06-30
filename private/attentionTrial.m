@@ -7,7 +7,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
  
       %% setup
       % default values in case of catch trial
-      trial.correct   = -1;
+      trial.correct   =  nan;
       trial.RT        = -Inf;
       trial.ColorIdxs = [0 0 0 0 0 0];
       trial.Direction = [0 0 0 0 0 0];

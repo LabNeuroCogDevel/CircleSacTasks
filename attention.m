@@ -127,38 +127,13 @@ function subject = attention(varargin)
    % set colors, resolution, paren function
    globalSettings();
 
+   %% different trial structures for each modality
+   %fMRI: 48 full + 24 catch for 2 blocks
+   eventTypes = getTrialFunc(@readAttentionEvents,73,2,        ...
+                             @generateAttentionEvents,75,6,   ...
+                            'timing/att.prac.txt',10, ...
+                             varargin{:});
     
-    %% different trial structures for each modality
-    function getEvents = setfMRI
-        trialsPerBlock=72; %48 full + 24 catch
-        blocks=2;
-        getEvents = readAttentionEvents(blocks);
-    end
-    function getEvents = setMEG
-        trialsPerBlock=75;
-        blocks=6;
-        getEvents = generateAttentionEvents(trialsPerBlock, blocks);  
-    end
-    function getEvents = setTEST(t,b)
-        getEvents = generateAttentionEvents(t, b);
-    end
-    function getEvents = setTESTfMRI(t,b,varargin)
-        trialsPerBlock=t;
-        totalfMRITime=0;
-        getEvents = readAttentionEvents(b,varargin{:});
-    end
-    
-   %% get imaging tech. ("modality" is global)
-    eventTypes.fMRI = @() setfMRI();
-    eventTypes.MEG  = @() setMEG();
-    % set test modality based on if we have a 'testfile' or not
-    testfileidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'testfile'), varargin));
-    if ~isempty(testfileidx)
-        eventTypes.TEST = @(t,b) setTESTfMRI(t,b,varargin{testfileidx+1});
-    else
-        eventTypes.TEST = @(t,b) setTEST(t,b);
-    end
-
     % get fMRI/MEG, cumulative/not cumulative, and how to get events
     [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
 
@@ -179,7 +154,7 @@ function subject = attention(varargin)
     % get subject info, possible resume from previously
     % also set subject.curTrl and subject.curBlk
     %  -- read 'block' argument if provided
-    subject = getSubjectInfo('task','Attention', varargin{:});
+    subject = getSubjectInfo('task','Attention','modality',modality, varargin{:});
    
     
     %% initialze order of events/trials if needed
@@ -302,6 +277,13 @@ function subject = attention(varargin)
   
      % save everything
      save(subject.file, '-struct', 'subject');
+     
+     % give a total correct, missed, wrong, catch
+     rsp = [subject.trial.correct];
+     fprintf('correct:   %d\n', length(find(rsp>=1)) );
+     fprintf('incorrect: %d\n', length(find(rsp==0 ) ) );
+     fprintf('missed:    %d\n', length(find(rsp<0 ) ) );
+     fprintf('catch:     %d\n', length(find(isnan(rsp) ) ) );
      
      % if fMRI, we should wait until we've been here for 400 secs
      fprintf('checking "%s" for fMRI\n',modality);

@@ -70,42 +70,18 @@ function subject=workingMemory(varargin)
     
     
     %% different trial structures for each modality
-    function getEvents = setfMRI
-        %trialsPerBlock=36; %24 full + 12 catch
-        %blocks=3
-        trialsPerBlock=48; %32 full 16 catch
-        blocks=2;
-        getEvents = readWMEvents(blocks);
-    end
-    function getEvents = setMEG
-        trialsPerBlock=100;
-        blocks=6;
-        getEvents = generateWMEvents(trialsPerBlock, blocks); 
-    end
-    function getEvents = setTEST(t,b)
-        getEvents = generateWMEvents(t, b);
-    end
-    function getEvents = setTESTfMRI(t,b,varargin)
-        trialsPerBlock=t;
-        totalfMRITime=0;
-        getEvents = readWMEvents(b,varargin{:});
-    end
+    % fMRI = 32 full 16 catch, for 2 blocks
+    eventTypes = getTrialFunc(@readWMEvents,48,2,      ...
+                              @generateWMEvents,100,6, ...
+                              'timing/wm.prac.txt',10, ...
+                              varargin{:});
     
     %% get imaging tech. ("modality" is global)
-    eventTypes.fMRI = @() setfMRI();
-    eventTypes.MEG  = @() setMEG();
-     
-    testfileidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'testfile'), varargin));
-    if ~isempty(testfileidx)
-        eventTypes.TEST = @(t,b) setTESTfMRI(t,b,varargin{testfileidx+1});
-    else
-        eventTypes.TEST = @(t,b) setTEST(t,b);
-    end
     % set modality
     [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
  
-    % get subject info
-    subject = getSubjectInfo('task','WorkingMemory', varargin{:});
+    %% get subject info
+    subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});
     
     % should we reverse the keys?
     if ~isfield(subject,'reversekeys')
@@ -249,6 +225,13 @@ function subject=workingMemory(varargin)
   
      % save everything
      save(subject.file, '-struct', 'subject');
+     
+     % give a total correct, missed, wrong, catch
+     rsp = [subject.trial.correct];
+     fprintf('correct:   %d\n', length(find(rsp>=1)) );
+     fprintf('incorrect: %d\n', length(find(rsp==0 ) ) );
+     fprintf('missed:    %d\n', length(find(rsp<0 ) ) );
+     fprintf('catch:     %d\n', length(find(isnan(rsp) ) ) );
   
      %% if fMRI, we should wait until we've been here for 400 secs
      if strcmpi(modality,'fMRI')    

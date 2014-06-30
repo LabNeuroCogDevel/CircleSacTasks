@@ -8,6 +8,7 @@ function subject = getSubjectInfo(varargin)
  
  %% hint/regexp for what inputs should be
  hint.task  = '.+';
+ hint.modality  = '.+';
  hint.id    = '.+';
  hint.age   = '[0-9]+';
  hint.sex   =  'm|f';
@@ -48,7 +49,7 @@ function subject = getSubjectInfo(varargin)
          datadir= [ 'data/' subject.task '/' ];
          if ~exist(datadir,'dir'), mkdir(datadir), end
          
-         subject.file= [datadir subject.task '_' subject.id '_' subject.rundate];
+         subject.file= [datadir subject.task '_' subject.id '_' subject.modality  '_' subject.rundate];
          
          if exist( [subject.file '.mat'] ,'file')
              %if 'r' is in argument list, resume without prompting
