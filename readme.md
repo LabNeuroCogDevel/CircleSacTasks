@@ -8,12 +8,15 @@
 ```matlab
 %% examples
 % the simplest working memory invocation
-workingMemory
+workingMemory practice
+workingMemory 
 % the most involved
 workingMemory MEG reversekeys ID subjID sex m age 99 r block 1
 
 
 %% intended flow
+attention ID 0001WF r practice
+% ... fill in sex and age
 attention ID 0001WF r block 1
 % ... fill in sex and age
 % push up to get previous line, change 1 to 2
