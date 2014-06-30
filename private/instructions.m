@@ -8,7 +8,7 @@ function instructions(w,newInstructions,betweenInstructions,subject)
     
     for instnum = 1:length(Instructions)
         DrawFormattedText(w, [ Instructions{instnum} ...
-                   '\nPress any key to continue'
+                   '\n\nPress any key to continue'
             ],'center','center',[0 0 0]);
         Screen('Flip', w);
         WaitSecs(1); % give a bit to release previous key
