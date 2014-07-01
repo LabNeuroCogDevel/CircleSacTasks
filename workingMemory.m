@@ -63,6 +63,8 @@ function subject=workingMemory(varargin)
     
     global    TIMES totalfMRITime listenKeys trialsPerBlock ...
               longdelaytime modality CUMULATIVE trlCatch;
+    global a; % audio channel for left and right audio cues
+
     globalSettings();
     WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
 
