@@ -141,11 +141,12 @@ function subject = attention(varargin)
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
    % left, right, RA input
-   if regexpi(modality,'fMRI')    
+   if regexpi(modality,'fMRI','once')    
        listenKeys  = KbName({'7&','2@','space'});
-   elseif strcmp(modality,'MEG')   
+   elseif regexpi(modality,'MEG','once')   
        listenKeys = KbName({'1!','2@','space'});
    else
+       fprintf('Unknown Modality, using MEG keys\n');
        listenKeys = KbName({'1!','2@','space'});
    end
 
@@ -179,7 +180,9 @@ function subject = attention(varargin)
     
    % some info to the command window
     fprintf('Event Type: %s\n' , subject.events(subject.curTrl).type);
-      
+    
+    for i=1:2, fprintf('%s is key %d\n', keylabels{i}, listenKeys(i)), end
+
     %% try running psychtoolbox
     try
 
