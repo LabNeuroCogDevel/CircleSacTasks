@@ -11,17 +11,19 @@ function [newInstructions,betweenInstructions,endStructions] = getWMInstructions
         PsychPortAudio('FillBuffer',a,lsound);
         PsychPortAudio('Start',a,1,GetSecs(),1);
     end
+
     function showcolors(w,colortype)
         global colors degsize gridsize;
         var = Screen('Rect',w);
         offset = (var([3,4]) - (gridsize.*degsize))/2;
         
-        % pic a position and color
+        % pick a position and color
         posArr=[generateCirclePosns(15, offset), ...
                 generateCirclePosns(10,offset,6) ];
         colorArr= [colors(2,:);...
                    colors(4,:) ]';
-               
+        
+        % change the colors from initial
         if strcmpi(colortype,'gray')
             colorArr(:)=100;
         elseif strcmpi(colortype,'second')

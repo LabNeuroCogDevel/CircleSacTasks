@@ -141,7 +141,7 @@ function subject = attention(varargin)
    % what keys will we accept as correct/incorrect
    KbName('UnifyKeyNames');
    % left, right, RA input
-   if strcmp(modality,'fMRI')    
+   if regexpi(modality,'fMRI')    
        listenKeys  = KbName({'7&','2@','space'});
    elseif strcmp(modality,'MEG')   
        listenKeys = KbName({'1!','2@','space'});
