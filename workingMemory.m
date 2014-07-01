@@ -149,7 +149,7 @@ function subject=workingMemory(varargin)
     % some info to the command window
     fprintf('Using Reversed Keys? %d\n',subject.reversekeys );
 
-    for i=1:2, fprintf('%s is key %d\n', leftorright{i}, lisenKeys(i)), end
+    for i=1:2, fprintf('%s is key %d\n', leftorright{i}, listenKeys(i)),end
     
     %psychtoolbox bit
     try
