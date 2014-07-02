@@ -1,0 +1,1096 @@
+MODALITY: "fMRI"
+Cumulative?: 1
+DegSize: 33.714654
+
+resume from data/Attention/Attention_scott_eyelab_fMRI_20140702? (Y|n) n
+copied data/Attention/Attention_scott_eyelab_fMRI_20140702.mat -> data/Attention/Attention_scott_eyelab_fMRI_20140702.mat.7357826721.1065
+HINT: use bOrder to specify block order. eg bOrder hfp:phf
+order: 
+1 timing/attention/best/phf.txt
+2 timing/attention/best/fph.txt
+3 timing/attention/best/hfp.txt
+4 timing/attention/best/pfh.txt
+5 timing/attention/best/hpf.txt
+6 timing/attention/best/fhp.txt
+
+HINT: use  e.g. ... "block 2" to make sure block 2 is run
+72 trials for each 2 blocks
+Block: 1/2
+Event Type: Popout
+left index finger is key 55
+right index finger is key 50
+Wait for =
+
+
+TRIAL: 1
+
+ITI: next cue is in 8.000000s
+timing 1	@time	offset	ideal	onset
+	fix	0.053	0.05	0.00	0.05
+	cue	8.017	0.02	8.00	8.02
+	attend	8.520	0.02	8.50	8.52
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 2
+
+ITI: next cue is in 3.430432s
+timing 2	@time	offset	ideal	onset
+	fix	9.006	0.01	9.00	9.01
+	cue	11.956	0.01	11.95	11.96
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 3
+
+ITI: next cue is in 1.583606s
+col: 6 6 6 2 6 6 
+dir: 1 1 2 2 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.31</strong>
+timing 3	@time	offset	ideal	onset
+	fix	12.459	0.01	12.45	12.46
+	cue	13.549	0.01	13.54	13.55
+	attend	14.052	0.01	14.04	14.05
+	probe	14.555	0.01	14.54	14.55
+	clear	15.058	0.02	15.04	15.06
+	fixAfterRT	15.259	0.02	15.23	15.26
+
+
+
+TRIAL: 4
+
+ITI: next cue is in 2.840876s
+col: 6 2 6 6 6 6 
+dir: 1 2 1 2 2 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.46</strong>
+timing 4	@time	offset	ideal	onset
+	fix	17.053	0.01	17.04	17.05
+	cue	18.109	0.01	18.10	18.11
+	attend	18.612	0.01	18.60	18.61
+	probe	19.115	0.02	19.10	19.12
+	clear	19.618	0.02	19.60	19.62
+	fixAfterRT	19.652	0.01	19.64	19.65
+
+
+
+TRIAL: 5
+
+ITI: next cue is in 6.208424s
+col: 6 6 6 2 6 6 
+dir: 1 1 2 2 2 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.48</strong>
+timing 5	@time	offset	ideal	onset
+	fix	21.613	0.01	21.60	21.61
+	cue	25.871	0.01	25.86	25.87
+	attend	26.374	0.01	26.36	26.37
+	probe	26.877	0.02	26.86	26.88
+	clear	27.380	0.02	27.36	27.38
+	fixAfterRT	27.397	0.02	27.38	27.40
+
+
+
+TRIAL: 6
+
+ITI: next cue is in 3.252933s
+col: 6 6 6 6 6 2 
+dir: 2 2 1 1 2 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.54</strong>
+timing 6	@time	offset	ideal	onset
+	fix	29.375	0.02	29.36	29.38
+	cue	30.666	0.02	30.65	30.67
+	attend	31.169	0.02	31.15	31.17
+	probe	31.655	0.01	31.65	31.66
+	clear	-Inf	-Inf	32.15	-Inf
+	fixAfterRT	32.125	0.01	32.11	32.12
+
+
+
+TRIAL: 7
+
+ITI: next cue is in 3.475179s
+col: 6 6 6 2 6 6 
+dir: 2 1 1 2 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.59</strong>
+timing 7	@time	offset	ideal	onset
+	fix	34.170	0.02	34.15	34.17
+	cue	35.612	0.01	35.60	35.61
+	attend	36.115	0.01	36.10	36.11
+	probe	36.618	0.02	36.60	36.62
+	clear	-Inf	-Inf	37.10	-Inf
+	fixAfterRT	37.037	0.02	37.01	37.04
+
+
+
+TRIAL: 8
+
+ITI: next cue is in 3.942999s
+col: 2 6 6 6 6 6 
+dir: 2 2 2 1 1 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.51</strong>
+timing 8	@time	offset	ideal	onset
+	fix	39.116	0.02	39.10	39.12
+	cue	40.994	0.01	40.98	40.99
+	attend	41.497	0.02	41.48	41.50
+	probe	41.999	0.02	41.98	42.00
+	clear	-Inf	-Inf	42.48	-Inf
+	fixAfterRT	42.486	0.01	42.47	42.49
+
+
+
+TRIAL: 9
+
+ITI: next cue is in 3.624354s
+timing 9	@time	offset	ideal	onset
+	fix	44.497	0.02	44.48	44.50
+	cue	46.124	0.01	46.11	46.12
+	attend	46.627	0.02	46.61	46.63
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 10
+
+ITI: next cue is in 3.143373s
+timing 10	@time	offset	ideal	onset
+	fix	47.130	0.02	47.11	47.13
+	cue	49.778	0.01	49.77	49.78
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 11
+
+ITI: next cue is in 2.011540s
+col: 6 6 2 6 6 6 
+dir: 1 2 2 1 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.55</strong>
+timing 11	@time	offset	ideal	onset
+	fix	50.281	0.01	50.27	50.28
+	cue	51.807	0.02	51.79	51.81
+	attend	52.310	0.02	52.29	52.31
+	probe	52.796	0.01	52.79	52.80
+	clear	-Inf	-Inf	53.29	-Inf
+	fixAfterRT	53.249	0.01	53.24	53.25
+
+
+
+TRIAL: 12
+
+ITI: next cue is in 3.891162s
+col: 6 6 2 6 6 6 
+dir: 1 2 2 2 1 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.38</strong>
+timing 12	@time	offset	ideal	onset
+	fix	55.311	0.02	55.29	55.31
+	cue	57.155	0.02	57.14	57.16
+	attend	57.658	0.02	57.64	57.66
+	probe	58.161	0.02	58.14	58.16
+	clear	58.647	0.01	58.64	58.65
+	fixAfterRT	58.765	0.01	58.76	58.76
+
+
+
+TRIAL: 13
+
+ITI: next cue is in 2.525442s
+col: 2 6 6 6 6 6 
+dir: 1 2 1 1 2 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.44</strong>
+timing 13	@time	offset	ideal	onset
+	fix	60.659	0.02	60.64	60.66
+	cue	61.296	0.01	61.29	61.30
+	attend	61.799	0.01	61.79	61.80
+	probe	62.302	0.01	62.29	62.30
+	clear	62.805	0.01	62.79	62.80
+	fixAfterRT	62.872	0.02	62.85	62.87
+
+
+
+TRIAL: 14
+
+ITI: next cue is in 4.377989s
+col: 6 6 2 6 6 6 
+dir: 1 2 1 1 2 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.63</strong>
+timing 14	@time	offset	ideal	onset
+	fix	64.800	0.01	64.79	64.80
+	cue	67.264	0.01	67.25	67.26
+	attend	67.767	0.02	67.75	67.77
+	probe	68.270	0.02	68.25	68.27
+	clear	-Inf	-Inf	68.75	-Inf
+	fixAfterRT	68.639	0.02	68.62	68.64
+
+
+
+TRIAL: 15
+
+ITI: next cue is in 3.080789s
+col: 2 6 6 6 6 6 
+dir: 1 1 2 1 2 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.51</strong>
+timing 15	@time	offset	ideal	onset
+	fix	70.768	0.02	70.75	70.77
+	cue	71.741	0.02	71.72	71.74
+	attend	72.227	0.01	72.22	72.23
+	probe	72.730	0.01	72.72	72.73
+	clear	-Inf	-Inf	73.22	-Inf
+	fixAfterRT	73.216	0.01	73.21	73.22
+
+
+
+TRIAL: 16
+
+ITI: next cue is in 2.943940s
+col: 6 6 6 2 6 6 
+dir: 1 1 1 2 2 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.64</strong>
+timing 16	@time	offset	ideal	onset
+	fix	75.228	0.01	75.22	75.23
+	cue	76.167	0.01	76.16	76.17
+	attend	76.670	0.01	76.66	76.67
+	probe	77.173	0.01	77.16	77.17
+	clear	-Inf	-Inf	77.66	-Inf
+	fixAfterRT	77.541	0.02	77.52	77.54
+
+
+
+TRIAL: 17
+
+ITI: next cue is in 2.748539s
+col: 6 2 6 6 6 6 
+dir: 2 2 1 1 2 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.58</strong>
+timing 17	@time	offset	ideal	onset
+	fix	79.671	0.01	79.66	79.67
+	cue	80.308	0.02	80.29	80.31
+	attend	80.811	0.02	80.79	80.81
+	probe	81.297	0.01	81.29	81.30
+	clear	-Inf	-Inf	81.79	-Inf
+	fixAfterRT	81.733	0.02	81.71	81.73
+
+
+
+TRIAL: 18
+
+ITI: next cue is in 2.977267s
+col: 6 6 6 6 6 2 
+dir: 1 1 2 2 1 2 
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 1.69</strong>
+timing 18	@time	offset	ideal	onset
+	fix	83.795	0.00	83.79	83.79
+	cue	84.717	0.01	84.71	84.72
+	attend	85.220	0.01	85.21	85.22
+	probe	85.723	0.01	85.71	85.72
+	clear	-Inf	-Inf	86.21	-Inf
+	fixAfterRT	86.041	0.02	86.02	86.04
+
+
+
+TRIAL: 19
+
+ITI: next cue is in 2.808635s
+col: 2 6 6 6 6 6 
+dir: 2 2 2 1 1 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.55</strong>
+timing 19	@time	offset	ideal	onset
+	fix	88.221	0.01	88.21	88.22
+	cue	88.858	0.01	88.85	88.86
+	attend	89.361	0.01	89.35	89.36
+	probe	89.864	0.01	89.85	89.86
+	clear	-Inf	-Inf	90.35	-Inf
+	fixAfterRT	90.316	0.01	90.30	90.32
+
+
+
+TRIAL: 20
+
+ITI: next cue is in 5.083529s
+timing 20	@time	offset	ideal	onset
+	fix	92.362	0.01	92.35	92.36
+	cue	95.413	0.01	95.40	95.41
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 21
+
+ITI: next cue is in 1.886940s
+timing 21	@time	offset	ideal	onset
+	fix	95.916	0.02	95.90	95.92
+	cue	97.308	0.01	97.30	97.31
+	attend	97.810	0.01	97.80	97.81
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 22
+
+ITI: next cue is in 2.269534s
+col: 6 6 6 6 2 6 
+dir: 2 2 1 2 1 1 
+<strong>iscorrect: 0 (want: 55; have: 50); time remeaining 1.79</strong>
+timing 22	@time	offset	ideal	onset
+	fix	98.313	0.01	98.30	98.31
+	cue	100.091	0.01	100.08	100.09
+	attend	100.593	0.01	100.58	100.59
+	probe	101.096	0.02	101.08	101.10
+	clear	-Inf	-Inf	101.58	-Inf
+	fixAfterRT	101.298	0.01	101.29	101.30
+
+
+
+TRIAL: 23
+
+ITI: next cue is in 4.582402s
+timing 23	@time	offset	ideal	onset
+	fix	103.594	0.01	103.58	103.59
+	cue	105.891	0.01	105.88	105.89
+	attend	106.394	0.01	106.38	106.39
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 24
+
+ITI: next cue is in 1.655807s
+timing 24	@time	offset	ideal	onset
+	fix	106.897	0.02	106.88	106.90
+	cue	108.071	0.02	108.05	108.07
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 25
+
+ITI: next cue is in 11.499290s
+timing 25	@time	offset	ideal	onset
+	fix	108.557	0.01	108.55	108.56
+	cue	119.588	0.02	119.57	119.59
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 26
+
+ITI: next cue is in 1.581668s
+timing 26	@time	offset	ideal	onset
+	fix	120.075	0.00	120.07	120.07
+	cue	121.181	0.01	121.17	121.18
+	attend	121.684	0.01	121.67	121.68
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 27
+
+ITI: next cue is in 2.256041s
+col: 3 8 6 7 4 5 
+dir: 2 1 2 1 1 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.71</strong>
+timing 27	@time	offset	ideal	onset
+	fix	122.187	0.02	122.17	122.19
+	cue	123.947	0.01	123.94	123.95
+	attend	124.450	0.01	124.44	124.45
+	probe	124.953	0.01	124.94	124.95
+	clear	-Inf	-Inf	125.44	-Inf
+	fixAfterRT	125.255	0.02	125.23	125.25
+
+
+
+TRIAL: 28
+
+ITI: next cue is in 3.425068s
+col: 1 8 5 7 4 3 
+dir: 1 1 2 2 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.80</strong>
+timing 28	@time	offset	ideal	onset
+	fix	127.451	0.01	127.44	127.45
+	cue	128.692	0.01	128.68	128.69
+	attend	129.195	0.01	129.18	129.19
+	probe	129.698	0.02	129.68	129.70
+	clear	-Inf	-Inf	130.18	-Inf
+	fixAfterRT	129.899	0.02	129.88	129.90
+
+
+
+TRIAL: 29
+
+ITI: next cue is in 2.831136s
+col: 2 8 6 7 3 1 
+dir: 2 2 2 1 1 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.60</strong>
+timing 29	@time	offset	ideal	onset
+	fix	132.196	0.02	132.18	132.20
+	cue	132.749	0.02	132.73	132.75
+	attend	133.235	0.01	133.23	133.24
+	probe	133.738	0.01	133.73	133.74
+	clear	-Inf	-Inf	134.23	-Inf
+	fixAfterRT	134.140	0.01	134.13	134.14
+
+
+
+TRIAL: 30
+
+ITI: next cue is in 2.809576s
+timing 30	@time	offset	ideal	onset
+	fix	136.236	0.01	136.23	136.24
+	cue	136.957	0.01	136.95	136.96
+	attend	137.460	0.01	137.45	137.46
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 31
+
+ITI: next cue is in 2.070081s
+timing 31	@time	offset	ideal	onset
+	fix	137.963	0.01	137.95	137.96
+	cue	139.539	0.01	139.53	139.54
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 32
+
+ITI: next cue is in 4.631210s
+col: 7 8 2 1 4 3 
+dir: 1 2 2 1 2 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.62</strong>
+timing 32	@time	offset	ideal	onset
+	fix	140.042	0.01	140.03	140.04
+	cue	144.183	0.01	144.17	144.18
+	attend	144.686	0.02	144.67	144.69
+	probe	145.189	0.02	145.17	145.19
+	clear	-Inf	-Inf	145.67	-Inf
+	fixAfterRT	145.574	0.02	145.55	145.57
+
+
+
+TRIAL: 33
+
+ITI: next cue is in 4.035777s
+col: 2 6 8 5 7 1 
+dir: 2 1 1 1 2 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.72</strong>
+timing 33	@time	offset	ideal	onset
+	fix	147.687	0.02	147.67	147.69
+	cue	149.615	0.00	149.61	149.61
+	attend	150.118	0.01	150.11	150.12
+	probe	150.621	0.01	150.61	150.62
+	clear	-Inf	-Inf	151.11	-Inf
+	fixAfterRT	150.906	0.02	150.89	150.91
+
+
+
+TRIAL: 34
+
+ITI: next cue is in 3.044479s
+col: 7 1 8 6 2 3 
+dir: 1 2 1 1 2 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.56</strong>
+timing 34	@time	offset	ideal	onset
+	fix	153.119	0.01	153.11	153.12
+	cue	153.957	0.01	153.95	153.96
+	attend	154.460	0.01	154.45	154.46
+	probe	154.963	0.01	154.95	154.96
+	clear	-Inf	-Inf	155.45	-Inf
+	fixAfterRT	155.399	0.01	155.39	155.40
+
+
+
+TRIAL: 35
+
+ITI: next cue is in 2.911440s
+timing 35	@time	offset	ideal	onset
+	fix	157.461	0.01	157.45	157.46
+	cue	158.316	0.01	158.31	158.32
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 36
+
+ITI: next cue is in 1.924303s
+col: 2 4 3 6 8 7 
+dir: 2 2 1 2 1 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.53</strong>
+timing 36	@time	offset	ideal	onset
+	fix	158.819	0.01	158.81	158.82
+	cue	160.260	0.02	160.24	160.26
+	attend	160.747	0.01	160.74	160.75
+	probe	161.250	0.01	161.24	161.25
+	clear	-Inf	-Inf	161.74	-Inf
+	fixAfterRT	161.736	0.02	161.71	161.74
+
+
+
+TRIAL: 37
+
+ITI: next cue is in 3.394220s
+col: 8 4 7 3 1 5 
+dir: 2 2 1 1 1 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.54</strong>
+timing 37	@time	offset	ideal	onset
+	fix	163.748	0.01	163.74	163.75
+	cue	165.139	0.01	165.13	165.14
+	attend	165.642	0.01	165.63	165.64
+	probe	166.145	0.01	166.13	166.14
+	clear	-Inf	-Inf	166.63	-Inf
+	fixAfterRT	166.614	0.02	166.59	166.61
+
+
+
+TRIAL: 38
+
+ITI: next cue is in 2.595571s
+col: 2 1 4 3 6 7 
+dir: 1 1 2 2 2 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.56</strong>
+timing 38	@time	offset	ideal	onset
+	fix	168.643	0.01	168.63	168.64
+	cue	169.230	0.02	169.21	169.23
+	attend	169.716	0.01	169.71	169.72
+	probe	170.219	0.01	170.21	170.22
+	clear	-Inf	-Inf	170.71	-Inf
+	fixAfterRT	170.672	0.02	170.65	170.67
+
+
+
+TRIAL: 39
+
+ITI: next cue is in 2.848430s
+col: 4 7 3 2 8 6 
+dir: 1 2 2 1 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.24</strong>
+timing 39	@time	offset	ideal	onset
+	fix	172.717	0.01	172.71	172.72
+	cue	173.538	0.02	173.52	173.54
+	attend	174.025	0.00	174.02	174.02
+	probe	174.528	0.01	174.52	174.53
+	clear	175.030	0.01	175.02	175.03
+	fixAfterRT	175.299	0.02	175.28	175.30
+
+
+
+TRIAL: 40
+
+ITI: next cue is in 3.741257s
+col: 7 5 1 4 6 8 
+dir: 1 2 1 2 1 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.68</strong>
+timing 40	@time	offset	ideal	onset
+	fix	177.026	0.01	177.02	177.03
+	cue	179.054	0.01	179.04	179.05
+	attend	179.557	0.02	179.54	179.56
+	probe	180.060	0.02	180.04	180.06
+	clear	-Inf	-Inf	180.54	-Inf
+	fixAfterRT	180.379	0.02	180.36	180.38
+
+
+
+TRIAL: 41
+
+ITI: next cue is in 2.751439s
+col: 4 7 2 8 6 3 
+dir: 1 2 2 1 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.77</strong>
+timing 41	@time	offset	ideal	onset
+	fix	182.558	0.02	182.54	182.56
+	cue	183.145	0.01	183.13	183.14
+	attend	183.648	0.02	183.63	183.65
+	probe	184.151	0.02	184.13	184.15
+	clear	-Inf	-Inf	184.63	-Inf
+	fixAfterRT	184.385	0.02	184.36	184.39
+
+
+
+TRIAL: 42
+
+ITI: next cue is in 2.794570s
+col: 6 2 7 1 4 5 
+dir: 1 1 2 2 2 1 
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 1.72</strong>
+timing 42	@time	offset	ideal	onset
+	fix	186.649	0.02	186.63	186.65
+	cue	187.185	0.01	187.18	187.19
+	attend	187.688	0.01	187.68	187.69
+	probe	188.191	0.01	188.18	188.19
+	clear	-Inf	-Inf	188.68	-Inf
+	fixAfterRT	188.476	0.02	188.46	188.48
+
+
+
+TRIAL: 43
+
+ITI: next cue is in 5.053891s
+timing 43	@time	offset	ideal	onset
+	fix	190.689	0.01	190.68	190.69
+	cue	193.539	0.01	193.53	193.54
+	attend	194.042	0.01	194.03	194.04
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 44
+
+ITI: next cue is in 2.627893s
+timing 44	@time	offset	ideal	onset
+	fix	194.545	0.02	194.53	194.55
+	cue	196.674	0.00	196.67	196.67
+	attend	197.177	0.01	197.17	197.18
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 45
+
+ITI: next cue is in 3.102814s
+col: 6 3 8 2 4 7 
+dir: 1 2 1 1 2 2 
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 1.91</strong>
+timing 45	@time	offset	ideal	onset
+	fix	197.680	0.01	197.67	197.68
+	cue	200.295	0.02	200.28	200.30
+	attend	200.798	0.02	200.78	200.80
+	probe	201.285	0.00	201.28	201.28
+	clear	-Inf	-Inf	201.78	-Inf
+	fixAfterRT	201.385	0.02	201.37	201.39
+
+
+
+TRIAL: 46
+
+ITI: next cue is in 3.334768s
+col: 7 2 4 6 1 8 
+dir: 2 1 2 1 2 1 
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 1.67</strong>
+timing 46	@time	offset	ideal	onset
+	fix	203.799	0.02	203.78	203.80
+	cue	204.738	0.02	204.72	204.74
+	attend	205.224	0.00	205.22	205.22
+	probe	205.727	0.01	205.72	205.73
+	clear	-Inf	-Inf	206.22	-Inf
+	fixAfterRT	206.063	0.01	206.05	206.06
+
+
+
+TRIAL: 47
+
+ITI: next cue is in 4.367319s
+col: 8 2 3 7 1 5 
+dir: 1 1 2 2 2 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.70</strong>
+timing 47	@time	offset	ideal	onset
+	fix	208.225	0.01	208.22	208.23
+	cue	210.438	0.01	210.43	210.44
+	attend	210.941	0.01	210.93	210.94
+	probe	211.444	0.01	211.43	211.44
+	clear	-Inf	-Inf	211.93	-Inf
+	fixAfterRT	211.746	0.02	211.73	211.75
+
+
+
+TRIAL: 48
+
+ITI: next cue is in 2.703916s
+timing 48	@time	offset	ideal	onset
+	fix	213.942	0.01	213.93	213.94
+	cue	214.462	0.01	214.45	214.46
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 49
+
+ITI: next cue is in 11.548008s
+col: 8 7 4 6 1 2 
+dir: 2 1 1 2 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.65</strong>
+timing 49	@time	offset	ideal	onset
+	fix	214.965	0.01	214.95	214.96
+	cue	226.030	0.02	226.01	226.03
+	attend	226.516	0.01	226.51	226.52
+	probe	227.019	0.01	227.01	227.02
+	clear	-Inf	-Inf	227.51	-Inf
+	fixAfterRT	227.371	0.01	227.36	227.37
+
+
+
+TRIAL: 50
+
+ITI: next cue is in 3.188879s
+timing 50	@time	offset	ideal	onset
+	fix	229.517	0.01	229.51	229.52
+	cue	230.573	0.01	230.56	230.57
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 51
+
+ITI: next cue is in 2.226750s
+timing 51	@time	offset	ideal	onset
+	fix	231.076	0.02	231.06	231.08
+	cue	232.820	0.02	232.80	232.82
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 52
+
+ITI: next cue is in 2.200221s
+col: 1 7 2 8 3 5 
+dir: 2 2 1 1 2 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.61</strong>
+timing 52	@time	offset	ideal	onset
+	fix	233.306	0.01	233.30	233.31
+	cue	235.033	0.01	235.02	235.03
+	attend	235.536	0.02	235.52	235.54
+	probe	236.039	0.02	236.02	236.04
+	clear	-Inf	-Inf	236.52	-Inf
+	fixAfterRT	236.424	0.01	236.41	236.42
+
+
+
+TRIAL: 53
+
+ITI: next cue is in 3.095721s
+col: 4 3 7 2 8 6 
+dir: 2 2 2 1 1 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.67</strong>
+timing 53	@time	offset	ideal	onset
+	fix	238.537	0.02	238.52	238.54
+	cue	239.526	0.01	239.52	239.53
+	attend	240.029	0.01	240.02	240.03
+	probe	240.532	0.01	240.52	240.53
+	clear	-Inf	-Inf	241.02	-Inf
+	fixAfterRT	240.867	0.02	240.85	240.87
+
+
+
+TRIAL: 54
+
+ITI: next cue is in 5.152974s
+col: 3 6 8 7 5 4 
+dir: 1 2 1 1 2 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.47</strong>
+timing 54	@time	offset	ideal	onset
+	fix	243.030	0.01	243.02	243.03
+	cue	246.031	0.01	246.02	246.03
+	attend	246.534	0.01	246.52	246.53
+	probe	247.037	0.02	247.02	247.04
+	clear	247.540	0.02	247.52	247.54
+	fixAfterRT	247.573	0.02	247.55	247.57
+
+
+
+TRIAL: 55
+
+ITI: next cue is in 4.256926s
+col: 5 4 3 6 7 8 
+dir: 1 2 1 2 2 1 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.57</strong>
+timing 55	@time	offset	ideal	onset
+	fix	249.535	0.01	249.52	249.53
+	cue	251.848	0.02	251.83	251.85
+	attend	252.334	0.00	252.33	252.33
+	probe	252.837	0.01	252.83	252.84
+	clear	-Inf	-Inf	253.33	-Inf
+	fixAfterRT	253.273	0.02	253.26	253.27
+
+
+
+TRIAL: 56
+
+ITI: next cue is in 2.686796s
+col: 4 6 1 5 2 3 
+dir: 1 1 2 1 2 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.64</strong>
+timing 56	@time	offset	ideal	onset
+	fix	255.335	0.01	255.33	255.34
+	cue	255.972	0.01	255.96	255.97
+	attend	256.475	0.02	256.46	256.48
+	probe	256.978	0.02	256.96	256.98
+	clear	-Inf	-Inf	257.46	-Inf
+	fixAfterRT	257.330	0.01	257.32	257.33
+
+
+
+TRIAL: 57
+
+ITI: next cue is in 5.449642s
+col: 3 2 4 8 7 6 
+dir: 2 2 1 2 1 1 
+<strong>iscorrect: 0 (want: 55; have: 50); time remeaining 1.67</strong>
+timing 57	@time	offset	ideal	onset
+	fix	259.476	0.02	259.46	259.48
+	cue	262.796	0.02	262.78	262.80
+	attend	263.299	0.02	263.28	263.30
+	probe	263.785	0.00	263.78	263.78
+	clear	-Inf	-Inf	264.28	-Inf
+	fixAfterRT	264.120	0.01	264.11	264.12
+
+
+
+TRIAL: 58
+
+ITI: next cue is in 3.439781s
+col: 4 1 5 3 2 8 
+dir: 2 1 2 2 1 1 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.48</strong>
+timing 58	@time	offset	ideal	onset
+	fix	266.300	0.02	266.28	266.30
+	cue	267.574	0.01	267.56	267.57
+	attend	268.077	0.02	268.06	268.08
+	probe	268.580	0.02	268.56	268.58
+	clear	269.066	0.01	269.06	269.07
+	fixAfterRT	269.083	0.01	269.08	269.08
+
+
+
+TRIAL: 59
+
+ITI: next cue is in 3.547313s
+timing 59	@time	offset	ideal	onset
+	fix	271.078	0.02	271.06	271.08
+	cue	272.637	0.01	272.63	272.64
+	attend	273.140	0.01	273.13	273.14
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 60
+
+ITI: next cue is in 2.860167s
+col: 6 4 5 2 8 3 
+dir: 1 2 1 2 2 1 
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 1.52</strong>
+timing 60	@time	offset	ideal	onset
+	fix	273.643	0.01	273.63	273.64
+	cue	276.007	0.01	276.00	276.01
+	attend	276.510	0.01	276.50	276.51
+	probe	277.013	0.01	277.00	277.01
+	clear	-Inf	-Inf	277.50	-Inf
+	fixAfterRT	277.499	0.02	277.48	277.50
+
+
+
+TRIAL: 61
+
+ITI: next cue is in 3.291240s
+timing 61	@time	offset	ideal	onset
+	fix	279.511	0.01	279.50	279.51
+	cue	280.801	0.01	280.79	280.80
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 62
+
+ITI: next cue is in 2.698511s
+col: 7 1 3 2 5 6 
+dir: 2 2 2 1 1 1 
+<strong>iscorrect: 0 (want: 55; have: 50); time remeaining 1.85</strong>
+timing 62	@time	offset	ideal	onset
+	fix	281.304	0.01	281.29	281.30
+	cue	283.517	0.02	283.50	283.52
+	attend	284.020	0.02	284.00	284.02
+	probe	284.507	0.01	284.50	284.51
+	clear	-Inf	-Inf	285.00	-Inf
+	fixAfterRT	284.657	0.01	284.65	284.66
+
+
+
+TRIAL: 63
+
+ITI: next cue is in 4.042536s
+timing 63	@time	offset	ideal	onset
+	fix	287.005	0.00	287.00	287.00
+	cue	288.715	0.01	288.70	288.71
+	attend	289.218	0.02	289.20	289.22
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 64
+
+ITI: next cue is in 2.052434s
+timing 64	@time	offset	ideal	onset
+	fix	289.721	0.02	289.70	289.72
+	cue	291.280	0.01	291.27	291.28
+	attend*	-705402.543	0.00	-705402.54	-705402.54
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 65
+
+ITI: next cue is in 3.760330s
+col: 1 6 8 7 5 4 
+dir: 2 1 2 2 1 1 
+<strong>iscorrect: 0 (want: 55; have: 50); time remeaining 1.73</strong>
+timing 65	@time	offset	ideal	onset
+	fix	291.783	0.01	291.77	291.78
+	cue	295.052	0.01	295.04	295.05
+	attend	295.555	0.01	295.54	295.55
+	probe	296.058	0.02	296.04	296.06
+	clear	-Inf	-Inf	296.54	-Inf
+	fixAfterRT	296.326	0.02	296.31	296.33
+
+
+
+TRIAL: 66
+
+ITI: next cue is in 3.484031s
+col: 8 4 1 7 3 6 
+dir: 2 1 1 2 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.57</strong>
+timing 66	@time	offset	ideal	onset
+	fix	298.556	0.02	298.54	298.56
+	cue	299.830	0.02	299.81	299.83
+	attend	300.316	0.01	300.31	300.32
+	probe	300.819	0.01	300.81	300.82
+	clear	-Inf	-Inf	301.31	-Inf
+	fixAfterRT	301.255	0.01	301.24	301.25
+
+
+
+TRIAL: 67
+
+ITI: next cue is in 4.755095s
+col: 6 3 4 2 7 5 
+dir: 1 2 1 2 1 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.50</strong>
+timing 67	@time	offset	ideal	onset
+	fix	303.317	0.01	303.31	303.32
+	cue	306.016	0.01	306.01	306.02
+	attend	306.519	0.01	306.51	306.52
+	probe	307.022	0.01	307.01	307.02
+	clear	307.525	0.02	307.51	307.53
+	fixAfterRT	307.542	0.03	307.51	307.54
+
+
+
+TRIAL: 68
+
+ITI: next cue is in 2.778193s
+timing 68	@time	offset	ideal	onset
+	fix	309.520	0.01	309.51	309.52
+	cue	310.325	0.00	310.32	310.32
+	attend	310.828	0.01	310.82	310.83
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+
+
+TRIAL: 69
+
+ITI: next cue is in 5.162233s
+col: 6 7 3 4 1 5 
+dir: 1 2 1 2 1 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.68</strong>
+timing 69	@time	offset	ideal	onset
+	fix	311.331	0.01	311.32	311.33
+	cue	316.008	0.02	315.99	316.01
+	attend	316.494	0.00	316.49	316.49
+	probe	316.997	0.01	316.99	317.00
+	clear	-Inf	-Inf	317.49	-Inf
+	fixAfterRT	317.333	0.02	317.31	317.33
+
+
+
+TRIAL: 70
+
+ITI: next cue is in 2.747362s
+col: 1 7 5 2 8 6 
+dir: 1 1 1 2 2 2 
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 1.55</strong>
+timing 70	@time	offset	ideal	onset
+	fix	319.495	0.01	319.49	319.50
+	cue	320.099	0.02	320.08	320.10
+	attend	320.585	0.01	320.58	320.59
+	probe	321.088	0.01	321.08	321.09
+	clear	-Inf	-Inf	321.58	-Inf
+	fixAfterRT	321.541	0.01	321.53	321.54
+
+
+
+TRIAL: 71
+
+ITI: next cue is in 2.719329s
+col: 6 4 3 5 2 7 
+dir: 2 1 1 1 2 2 
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 1.64</strong>
+timing 71	@time	offset	ideal	onset
+	fix	323.586	0.01	323.58	323.59
+	cue	324.273	0.01	324.26	324.27
+	attend	324.776	0.02	324.76	324.78
+	probe	325.279	0.02	325.26	325.28
+	clear	-Inf	-Inf	325.76	-Inf
+	fixAfterRT	325.631	0.01	325.62	325.63
+
+
+
+TRIAL: 72
+
+ITI: next cue is in 5.818650s
+timing 72	@time	offset	ideal	onset
+	fix	327.777	0.02	327.76	327.78
+	cue	331.466	0.02	331.45	331.47
+	attend	331.969	0.02	331.95	331.97
+	probe*	-705402.543	0.00	-705402.54	-705402.54
+	clear*	-705402.543	0.00	-705402.54	-705402.54
+
+Finished but maybe on a catch: waiting 0.500
+
+ans =
+
+   7.0573e+05
+
+correct:   39
+incorrect: 9
+missed:    0
+catch:     24
+checking "fMRI" for fMRI
+waiting 13.350390, until the full 346.000000 @ 705747.543356
+
+ans =
+
+   7.0575e+05
+
+PTB-INFO: Using specially modified PortAudio engine, based on offical version: PortAudio V19-devel WITH-DIM

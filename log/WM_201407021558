@@ -1,0 +1,549 @@
+MODALITY: "fMRI"
+Cumulative?: 1
+DegSize: 33.714654
+
+HINT: use bOrder to specify block order. eg bOrder hfp:phf
+HINT: use  e.g. ... "block 2" to make sure block 2 is run
+48 trials for each 2 blocks
+Block: 1/2
+Using Reversed Keys? 0
+LEFT index finger is key 55
+RIGHT index finger is key 50
+PTB-INFO: Using specially modified PortAudio engine, based on offical version: PortAudio V19-devel WITH-DIM
+
+Will use ASIO enhanced Portaudio driver DLL. See Psychtoolbox/PsychSound/PortAudioLICENSE.txt
+for the exact terms of use for this dll.
+
+
+Disclaimer: "ASIO is a trademark and software of Steinberg Media Technologies GmbH."
+PTB-Warning: Although using the ASIO enabled Psychtoolbox sound driver,
+PTB-Warning: could not find any ASIO capable soundcard in your system.
+PTB-Warning: If you think you should have an ASIO card, please check your
+PTB-Warning: system for properly installed and configured drivers and retry.
+PTB-Warning: Read "help InitializePsychSound" for more info about ASIO et al.
+PTB-INFO: New audio device with handle 0 opened as PortAudio stream:
+PTB-INFO: For 2 channels Playback: Audio subsystem is Windows DirectSound, Audio device name is Primary Sound Driver
+PTB-INFO: Real samplerate 44100.000000 Hz. Input latency 0.000000 msecs, Output latency 39.977324 msecs.
+Wait for =
+ITI: next fix is in 8.000000s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 1	@time	offset	ideal	onset
+	fix	0.017	0.02	0.00	0.02
+	cue	8.014	0.01	8.00	8.01
+	mem	8.517	0.02	8.50	8.52
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 10.912575s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 2	@time	offset	ideal	onset
+	fix	9.020	0.02	9.00	9.02
+	cue	10.948	0.02	10.93	10.95
+	mem	11.434	0.00	11.43	11.43
+	delay	11.937	0.01	11.93	11.94
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 11.079700s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 3	@time	offset	ideal	onset
+	fix	13.949	0.02	13.93	13.95
+	cue	20.119	0.02	20.10	20.12
+	mem	20.605	0.00	20.60	20.60
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 11.720779s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.20</strong>
+timing 4	@time	offset	ideal	onset
+	fix	21.108	0.01	21.10	21.11
+	cue	25.685	0.01	25.67	25.68
+	mem	26.188	0.02	26.17	26.19
+	delay	26.691	0.02	26.67	26.69
+	probe	27.680	0.01	27.67	27.68
+	finish	28.485	-0.19	28.67	28.48
+
+ITI: next fix is in 9.702085s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 5	@time	offset	ideal	onset
+	fix	28.686	0.02	28.67	28.69
+	cue	30.815	0.00	30.81	30.81
+	mem	31.318	0.01	31.31	31.32
+	delay	31.821	0.01	31.81	31.82
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 6.654252s
+playCue(1=L): 1; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.18</strong>
+timing 6	@time	offset	ideal	onset
+	fix	32.324	0.01	32.31	32.32
+	cue	35.358	0.02	35.34	35.36
+	mem	35.844	0.00	35.84	35.84
+	delay	36.347	0.01	36.34	36.35
+	probe	39.348	0.01	39.34	39.35
+	finish	40.170	-0.17	40.34	40.17
+
+ITI: next fix is in 13.496235s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: -1 (want: 50; have: ); time remeaining Inf</strong>
+timing 7	@time	offset	ideal	onset
+	fix	40.354	0.01	40.34	40.35
+	cue	45.836	0.02	45.82	45.84
+	mem	46.339	0.02	46.32	46.34
+	delay	46.826	0.01	46.82	46.83
+	probe	47.831	0.01	47.82	47.83
+	finish	48.837	0.02	48.82	48.84
+
+ITI: next fix is in 11.145743s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.52</strong>
+timing 8	@time	offset	ideal	onset
+	fix	48.972	0.15	48.82	48.97
+	cue	51.520	0.02	51.50	51.52
+	mem	52.006	0.01	52.00	52.01
+	delay	52.509	0.01	52.50	52.51
+	probe	55.510	0.01	55.50	55.51
+	finish	55.996	-0.50	56.50	56.00
+
+ITI: next fix is in 9.968497s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.32</strong>
+timing 9	@time	offset	ideal	onset
+	fix	56.516	0.02	56.50	56.52
+	cue	58.947	0.01	58.94	58.95
+	mem	59.450	0.01	59.44	59.45
+	delay	59.953	0.01	59.94	59.95
+	probe	60.959	0.02	60.94	60.96
+	finish	61.629	-0.31	61.94	61.63
+
+ITI: next fix is in 7.884195s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.52</strong>
+timing 10	@time	offset	ideal	onset
+	fix	61.948	0.01	61.94	61.95
+	cue	64.412	0.01	64.40	64.41
+	mem	64.915	0.02	64.90	64.92
+	delay	65.418	0.02	65.40	65.42
+	probe	68.419	0.02	68.40	68.42
+	finish	68.888	-0.51	69.40	68.89
+
+ITI: next fix is in 12.082305s
+playCue(1=L): 1; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.18</strong>
+timing 11	@time	offset	ideal	onset
+	fix	69.408	0.01	69.40	69.41
+	cue	74.035	0.01	74.03	74.04
+	mem	74.538	0.01	74.53	74.54
+	delay	75.041	0.01	75.03	75.04
+	probe	76.047	0.02	76.03	76.05
+	finish	76.869	-0.16	77.03	76.87
+
+ITI: next fix is in 10.831829s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 12	@time	offset	ideal	onset
+	fix	77.036	0.01	77.03	77.04
+	cue	80.255	0.02	80.24	80.26
+	mem	80.758	0.02	80.74	80.76
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 5.773722s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.24</strong>
+timing 13	@time	offset	ideal	onset
+	fix	81.244	0.00	81.24	81.24
+	cue	82.820	0.01	82.81	82.82
+	mem	83.323	0.01	83.31	83.32
+	delay	83.826	0.02	83.81	83.83
+	probe	84.815	0.01	84.81	84.82
+	finish	85.586	-0.22	85.81	85.59
+
+ITI: next fix is in 8.945678s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 14	@time	offset	ideal	onset
+	fix	85.821	0.01	85.81	85.82
+	cue	90.197	0.01	90.19	90.20
+	mem	90.700	0.01	90.69	90.70
+	delay	91.203	0.01	91.19	91.20
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 14.848816s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 15	@time	offset	ideal	onset
+	fix	93.198	0.01	93.19	93.20
+	cue	100.675	0.01	100.67	100.68
+	mem	101.178	0.01	101.17	101.18
+	delay	101.681	0.01	101.67	101.68
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 11.742173s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.36</strong>
+timing 16	@time	offset	ideal	onset
+	fix	102.184	0.01	102.17	102.18
+	cue	104.950	0.01	104.94	104.95
+	mem	105.453	0.01	105.44	105.45
+	delay	105.956	0.02	105.94	105.96
+	probe	106.945	0.01	106.94	106.95
+	finish	107.599	-0.34	107.94	107.60
+
+ITI: next fix is in 8.696073s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.29</strong>
+timing 17	@time	offset	ideal	onset
+	fix	107.951	0.01	107.94	107.95
+	cue	110.885	0.01	110.88	110.89
+	mem	111.388	0.01	111.38	111.39
+	delay	111.891	0.01	111.88	111.89
+	probe	114.892	0.01	114.88	114.89
+	finish	115.596	-0.28	115.88	115.60
+
+ITI: next fix is in 11.758885s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 0 (want: 55; have: 50); time remeaining 0.41</strong>
+timing 18	@time	offset	ideal	onset
+	fix	115.898	0.02	115.88	115.90
+	cue	119.720	0.01	119.71	119.72
+	mem	120.223	0.01	120.21	120.22
+	delay	120.726	0.02	120.71	120.73
+	probe	123.727	0.02	123.71	123.73
+	finish	124.314	-0.40	124.71	124.31
+
+ITI: next fix is in 11.402224s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.48</strong>
+timing 19	@time	offset	ideal	onset
+	fix	124.716	0.01	124.71	124.72
+	cue	127.315	0.01	127.30	127.31
+	mem	127.818	0.02	127.80	127.82
+	delay	128.321	0.02	128.30	128.32
+	probe	129.310	0.01	129.30	129.31
+	finish	129.830	-0.47	130.30	129.83
+
+ITI: next fix is in 8.703787s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 20	@time	offset	ideal	onset
+	fix	130.316	0.02	130.30	130.32
+	cue	133.434	0.01	133.42	133.43
+	mem	133.937	0.02	133.92	133.94
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 5.144244s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 0.37</strong>
+timing 21	@time	offset	ideal	onset
+	fix	134.440	0.02	134.42	134.44
+	cue	135.479	0.02	135.46	135.48
+	mem	135.966	0.01	135.96	135.97
+	delay	136.469	0.01	136.46	136.47
+	probe	139.469	0.01	139.46	139.47
+	finish	140.107	-0.35	140.46	140.11
+
+ITI: next fix is in 8.250031s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 0.25</strong>
+timing 22	@time	offset	ideal	onset
+	fix	140.475	0.02	140.46	140.48
+	cue	142.705	0.02	142.69	142.71
+	mem	143.208	0.02	143.19	143.21
+	delay	143.694	0.00	143.69	143.69
+	probe	146.695	0.01	146.69	146.70
+	finish	147.450	-0.24	147.69	147.45
+
+ITI: next fix is in 15.364604s
+playCue(1=L): 1; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: -1 (want: 50; have: ); time remeaining Inf</strong>
+timing 23	@time	offset	ideal	onset
+	fix	147.701	0.01	147.69	147.70
+	cue	155.849	0.01	155.84	155.85
+	mem	156.352	0.01	156.34	156.35
+	delay	156.855	0.01	156.84	156.85
+	probe	157.861	0.02	157.84	157.86
+	finish	158.850	0.01	158.84	158.85
+
+ITI: next fix is in 17.908840s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 0.35</strong>
+timing 24	@time	offset	ideal	onset
+	fix	159.018	0.18	158.84	159.02
+	cue	165.623	0.01	165.61	165.62
+	mem	166.126	0.02	166.11	166.13
+	delay	166.629	0.02	166.61	166.63
+	probe	169.630	0.02	169.61	169.63
+	finish	170.284	-0.33	170.61	170.28
+
+ITI: next fix is in 14.272397s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.49</strong>
+timing 25	@time	offset	ideal	onset
+	fix	170.619	0.01	170.61	170.62
+	cue	173.301	0.01	173.29	173.30
+	mem	173.804	0.01	173.79	173.80
+	delay	174.307	0.02	174.29	174.31
+	probe	177.308	0.02	177.29	177.31
+	finish	177.811	-0.48	178.29	177.81
+
+ITI: next fix is in 11.480953s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.13</strong>
+timing 26	@time	offset	ideal	onset
+	fix	178.297	0.01	178.29	178.30
+	cue	182.120	0.02	182.10	182.12
+	mem	182.606	0.01	182.60	182.61
+	delay	183.109	0.01	183.10	183.11
+	probe	184.115	0.01	184.10	184.11
+	finish	184.987	-0.11	185.10	184.99
+
+ITI: next fix is in 8.922544s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.46</strong>
+timing 27	@time	offset	ideal	onset
+	fix	185.154	0.05	185.10	185.15
+	cue	187.233	0.01	187.22	187.23
+	mem	187.736	0.02	187.72	187.74
+	delay	188.239	0.02	188.22	188.24
+	probe	191.240	0.02	191.22	191.24
+	finish	191.777	-0.44	192.22	191.78
+
+ITI: next fix is in 9.555614s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 28	@time	offset	ideal	onset
+	fix	192.229	0.01	192.22	192.23
+	cue	194.727	0.02	194.71	194.73
+	mem	195.230	0.02	195.21	195.23
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 7.680740s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.37</strong>
+timing 29	@time	offset	ideal	onset
+	fix	195.716	0.01	195.71	195.72
+	cue	199.924	0.01	199.91	199.92
+	mem	200.427	0.02	200.41	200.43
+	delay	200.930	0.02	200.91	200.93
+	probe	203.915	0.00	203.91	203.91
+	finish	204.552	-0.36	204.91	204.55
+
+ITI: next fix is in 11.703612s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 30	@time	offset	ideal	onset
+	fix	204.920	0.01	204.91	204.92
+	cue	207.435	0.02	207.42	207.44
+	mem	207.938	0.02	207.92	207.94
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 5.899571s
+playCue(1=L): 1; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 0.26</strong>
+timing 31	@time	offset	ideal	onset
+	fix	208.424	0.00	208.42	208.42
+	cue	210.839	0.02	210.82	210.84
+	mem	211.325	0.00	211.32	211.32
+	delay	211.828	0.01	211.82	211.83
+	probe	212.834	0.01	212.82	212.83
+	finish	213.571	-0.25	213.82	213.57
+
+ITI: next fix is in 10.415673s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.40</strong>
+timing 32	@time	offset	ideal	onset
+	fix	213.839	0.02	213.82	213.84
+	cue	218.852	0.01	218.84	218.85
+	mem	219.355	0.02	219.34	219.36
+	delay	219.858	0.02	219.84	219.86
+	probe	220.847	0.01	220.84	220.85
+	finish	221.451	-0.39	221.84	221.45
+
+ITI: next fix is in 11.510531s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.40</strong>
+timing 33	@time	offset	ideal	onset
+	fix	221.853	0.01	221.84	221.85
+	cue	225.357	0.01	225.35	225.36
+	mem	225.860	0.01	225.85	225.86
+	delay	226.363	0.01	226.35	226.36
+	probe	227.369	0.02	227.35	227.37
+	finish	227.972	-0.38	228.35	227.97
+
+ITI: next fix is in 8.756832s
+playCue(1=L): 1; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 0.59</strong>
+timing 34	@time	offset	ideal	onset
+	fix	228.358	0.01	228.35	228.36
+	cue	230.621	0.01	230.61	230.62
+	mem	231.124	0.01	231.11	231.12
+	delay	231.627	0.02	231.61	231.63
+	probe	234.628	0.02	234.61	234.63
+	finish	235.031	-0.58	235.61	235.03
+
+ITI: next fix is in 14.201963s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.43</strong>
+timing 35	@time	offset	ideal	onset
+	fix	235.617	0.01	235.61	235.62
+	cue	242.575	0.01	242.56	242.57
+	mem	243.078	0.02	243.06	243.08
+	delay	243.581	0.02	243.56	243.58
+	probe	244.570	0.01	244.56	244.57
+	finish	245.140	-0.42	245.56	245.14
+
+ITI: next fix is in 13.822679s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 0 (want: 50; have: 55); time remeaining 0.53</strong>
+timing 36	@time	offset	ideal	onset
+	fix	245.576	0.02	245.56	245.58
+	cue	249.449	0.01	249.44	249.45
+	mem	249.951	0.01	249.94	249.95
+	delay	250.454	0.01	250.44	250.45
+	probe	253.455	0.02	253.44	253.46
+	finish	253.925	-0.52	254.44	253.92
+
+ITI: next fix is in 11.234215s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 37	@time	offset	ideal	onset
+	fix	254.445	0.00	254.44	254.44
+	cue	256.825	0.02	256.81	256.83
+	mem	257.328	0.02	257.31	257.33
+	delay	257.814	0.00	257.81	257.81
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 9.445471s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.47</strong>
+timing 38	@time	offset	ideal	onset
+	fix	258.317	0.01	258.31	258.32
+	cue	263.900	0.01	263.89	263.90
+	mem	264.403	0.01	264.39	264.40
+	delay	264.906	0.02	264.89	264.91
+	probe	267.907	0.02	267.89	267.91
+	finish	268.443	-0.45	268.89	268.44
+
+ITI: next fix is in 17.462749s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.43</strong>
+timing 39	@time	offset	ideal	onset
+	fix	268.896	0.01	268.89	268.90
+	cue	275.786	0.01	275.78	275.79
+	mem	276.289	0.01	276.28	276.29
+	delay	276.792	0.01	276.78	276.79
+	probe	277.798	0.02	277.78	277.80
+	finish	278.368	-0.41	278.78	278.37
+
+ITI: next fix is in 12.413967s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 40	@time	offset	ideal	onset
+	fix	278.787	0.01	278.78	278.79
+	cue	281.319	0.01	281.31	281.32
+	mem	281.822	0.01	281.81	281.82
+	delay	282.325	0.01	282.31	282.32
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 8.962555s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 41	@time	offset	ideal	onset
+	fix	284.320	0.01	284.31	284.32
+	cue	287.757	0.01	287.75	287.76
+	mem	288.260	0.01	288.25	288.26
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 6.580068s
+playCue(1=L): 2; change(>0 Yes): 0; correctkey: 1 (55)
+timing 42	@time	offset	ideal	onset
+	fix	288.763	0.01	288.75	288.76
+	cue	290.909	0.01	290.90	290.91
+	mem	291.412	0.01	291.40	291.41
+	delay	291.915	0.01	291.90	291.91
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 11.947329s
+playCue(1=L): 1; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: -1 (want: 50; have: ); time remeaining Inf</strong>
+timing 43	@time	offset	ideal	onset
+	fix	293.910	0.01	293.90	293.91
+	cue	300.716	0.01	300.71	300.72
+	mem	301.219	0.01	301.21	301.22
+	delay	301.722	0.01	301.71	301.72
+	probe	304.723	0.01	304.71	304.72
+	finish	305.729	0.02	305.71	305.73
+
+ITI: next fix is in 15.240442s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.31</strong>
+timing 44	@time	offset	ideal	onset
+	fix	305.897	0.19	305.71	305.90
+	cue	309.166	0.02	309.15	309.17
+	mem	309.669	0.02	309.65	309.67
+	delay	310.155	0.00	310.15	310.15
+	probe	311.161	0.01	311.15	311.16
+	finish	311.848	-0.30	312.15	311.85
+
+ITI: next fix is in 11.913398s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 45	@time	offset	ideal	onset
+	fix	312.167	0.02	312.15	312.17
+	cue	317.817	0.01	317.81	317.82
+	mem	318.320	0.01	318.31	318.32
+	delay	318.822	0.01	318.81	318.82
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 9.423247s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+<strong>iscorrect: 1 (want: 55; have: 55); time remeaining 0.64</strong>
+timing 46	@time	offset	ideal	onset
+	fix	319.325	0.02	319.31	319.33
+	cue	321.605	0.02	321.59	321.61
+	mem	322.108	0.02	322.09	322.11
+	delay	322.595	0.00	322.59	322.59
+	probe	325.596	0.01	325.59	325.60
+	finish	325.964	-0.63	326.59	325.96
+
+ITI: next fix is in 13.764559s
+playCue(1=L): 1; change(>0 Yes): 0; correctkey: 1 (55)
+timing 47	@time	offset	ideal	onset
+	fix	326.602	0.01	326.59	326.60
+	cue	333.106	0.02	333.09	333.11
+	mem	333.609	0.02	333.59	333.61
+	delay*	-704855.249	0.00	-704855.25	-704855.25
+	probe*	-704855.249	0.00	-704855.25	-704855.25
+	finish	-704855.249	-704855.25	0.00	-704855.25
+
+ITI: next fix is in 8.658497s
+playCue(1=L): 2; change(>0 Yes): 1; correctkey: 2 (50)
+<strong>iscorrect: 1 (want: 50; have: 50); time remeaining 0.27</strong>
+timing 48	@time	offset	ideal	onset
+	fix	334.095	0.01	334.09	334.10
+	cue	335.269	0.01	335.26	335.27
+	mem	335.772	0.01	335.76	335.77
+	delay	336.275	0.01	336.26	336.27
+	probe	337.281	0.02	337.26	337.28
+	finish	338.002	-0.26	338.26	338.00
+
+correct:   22
+incorrect: 7
+missed:    3
+catch:     16
+waiting 17.831066, until the full 356.000000 @ 705210.249023
+
+ans =
+
+   7.0521e+05
+
