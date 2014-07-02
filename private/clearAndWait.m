@@ -17,10 +17,6 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
  RT=-Inf;
 
 
- % eventually we'll want to clear the sreeen, so do the computation now
- if ~isempty(clearFunc)
-   clearFunc(w);
- end
  
 keyCode=zeros(256);
  %% wait for a response or until we've gone past the RTwindow
@@ -48,6 +44,11 @@ keyCode=zeros(256);
          else
              fprintf('Wrong key: %d\n',find(keyCode))
          end
+     end
+     
+      % eventually we'll want to clear the sreeen, so do the computation now
+     if ~isempty(clearFunc)
+       clearFunc(w,correct);
      end
      
      % clear screen when we hit the 'when' time

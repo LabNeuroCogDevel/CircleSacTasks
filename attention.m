@@ -123,6 +123,7 @@ function subject = attention(varargin)
    CLEARTIME = 1.5; % additional time to response after clearing the screen
    startdelay=8; enddelay=12; miniblockdelay=10;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
+   
    datetime=sprintf('%02d',clock);
    diary(['log/attention_' datetime(1:12) ]);
    

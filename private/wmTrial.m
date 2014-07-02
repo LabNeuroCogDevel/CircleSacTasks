@@ -160,9 +160,17 @@ function [StimulusOnsetTime, soundStartTime] = cue(w,a,playCue, when)
 end
 
 % border for clrear
-function drawCrossBorder(w)
+function drawCrossBorder(w,correct)
+ 
+ if correct==1
+     color=[0 250 0];
+ elseif correct==0
+     color=[0 0 250];
+ else
+     color=[250 0 0];
+ end
  drawBorder(w,[0 0 0], 0);
- drawCross(w)
+ drawCross(w,color);
 end
 %% get trigger codes
 function triggers = getCodes(cueHemi,cLoad,changes)

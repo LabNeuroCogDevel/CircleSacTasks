@@ -65,6 +65,7 @@ function subject=workingMemory(varargin)
               longdelaytime modality CUMULATIVE trlCatch;
     global a; % audio channel for left and right audio cues
 
+    datetime=sprintf('%02d',clock);
     diary(['log/WM_' datetime(1:12) ]);
 
     globalSettings();
