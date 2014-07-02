@@ -12,8 +12,10 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %   1024 x 780 => 28.5 x 21.7; 
     % hSize is width of project, 
     % vDist is distnace to the project from eyes
-    measurements.fMRI.hSize = 28.5; 
-    measurements.fMRI.vDist = 130; 
+    % Admin-PC --> Admin_PC is fMRI
+    measurements.Admin_PC.hSize = 28.5; 
+    measurements.Admin_PC.vDist = 130; 
+    
     % TEST
     measurements.TEST.hSize = 28.5; 
     measurements.TEST.vDist = 130; 
@@ -26,16 +28,19 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %measurements.practicefMRI = measurements.fMRI;
     
     
+    measurements.upmc_56ce704785.hSize=41;
+    measurements.upmc_56ce704785.vDist=55;
     % what modality are we using
     % set the modality via arguments or by knowning the computer
     % if hostname/cli conflict or overlap, precidence is revers of 
     % modalityHosts field definitions
     modalityHosts.MEG  = {'PUH1DMEG03'};
-    modalityHosts.fMRI = {'reese-loeff114', 'Admin-PC'};
+    modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
+    testingHostnames = {'reese-loeff114'};
     
     modality='UNKNOWN';
     [returned,host] = system('hostname'); host=strtrim(host);
-    for modal = fieldnames(modalityHosts)'     
+    for modal = fieldnames(modalityHosts)'   % MEG and fMRI  
         
         % if we know this host and we haven't set it yet
         if  ismember(host,modalityHosts.(modal{1})) && strcmp(modality,'UNKNOWN')
@@ -74,17 +79,8 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
        eventTypes.TEST= eventTypes.TEST(trialsPerBlock,blocks);
     end
     
-    %% output degree size
-    % check we have measurements first
-    if ~isfield(measurements, modality)
-        error('need measurements for modality %s',modality)
-    end
-    % calculate N.B. only good until ~40 deg, then really no linear
-    hRes = screenResolution(1);
-    hSize = measurements.(modality).hSize;
-    vDist = measurements.(modality).vDist;
-    degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
-    degsize = 1/degPerPix;
+
+    
     
     
     %% maybe we want to practice instead of test
@@ -105,6 +101,27 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
         error('no events function for modality %s', modality);
     end
 
+    
+    %% if we are on a testing computer, dont do full screen
+    if  ~isempty(find(cellfun(@(x) ischar(x)&&strcmpi(x,host), testingHostnames),1))
+        screenResolution = [1024 780];
+    end
+    
+    %% output degree size
+    % cant deal with hypens, make _
+    host(host=='-')='_';
+    % check we have measurements first
+    if ~isfield(measurements, host)
+        error('need measurements for host %s',host)
+    end
+    
+    
+    % calculate N.B. only good until ~40 deg, then really no linear
+    hRes = screenResolution(1);
+    hSize = measurements.(host).hSize;
+    vDist = measurements.(host).vDist;
+    degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
+    degsize = 1/degPerPix;
         
 
     

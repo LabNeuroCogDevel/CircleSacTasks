@@ -25,8 +25,7 @@ function globalSettings()
 
      screennum=max(Screen('Screens'));
      
-     %wSize=Screen('Resolution', screennum);
-     %screenResolution = [wSize.width wSize.height];
+     wSize=Screen('Resolution', screennum);
+     screenResolution = [wSize.width wSize.height];
 
-     screenResolution = [1024 780];
 end

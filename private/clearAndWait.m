@@ -45,6 +45,8 @@ keyCode=zeros(256);
              closedown();
              error('Early Exit');
          % no else, dont care if some other button was pushed
+         else
+             fprintf('Wrong key: %d\n',find(keyCode))
          end
      end
      
