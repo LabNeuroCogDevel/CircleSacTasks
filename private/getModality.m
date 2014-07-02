@@ -1,4 +1,12 @@
 function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
+% getModailty -- set modailty (fMRI||MEG), cummulative (1||0)
+%                screenResolution, and degreeSize
+%    eventTypes is a struct with fields for each modality:
+%      TEST fMRI MEG, practicefMRI, practiceMEG
+%
+%    varargin is here because we might get "practice", or "tpb" and "nblocks"
+
+
     global degsize screenResolution;
     % uses screen resolution, sets degsize
    
@@ -12,32 +20,38 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %   1024 x 780 => 28.5 x 21.7; 
     % hSize is width of project, 
     % vDist is distnace to the project from eyes
+    
     % Admin-PC --> Admin_PC is fMRI
+    % deg size may force some WM dots off screen!
     measurements.Admin_PC.hSize = 28.5; 
     measurements.Admin_PC.vDist = 130; 
     
-    % TEST
-    measurements.TEST.hSize = 28.5; 
-    measurements.TEST.vDist = 130; 
+
     % MEG
-    %TODO: add these
-    measurements.MEG.hSize = 41; 
-    measurements.MEG.vDist = 57;
-    
-    %measurements.practiceMEG = measurements.MEG;
-    %measurements.practicefMRI = measurements.fMRI;
-    
-    
+    %TODO: ACTUALLY MEASSURE THIS 
+    measurements.PUH1DMEG03.hSize = 41; 
+    measurements.PUH1DMEG03.vDist = 57;
+       
+    % "new" eyetracking room
     measurements.upmc_56ce704785.hSize=41;
     measurements.upmc_56ce704785.vDist=55;
+    
+    % will's
+    measurements.reese_loeff114.hSize = 41;
+    measurements.reese_loeff114.vDist = 60;
+    measurements.reese_loeff114.screenResolution=[1600 1200];
+    
     % what modality are we using
     % set the modality via arguments or by knowning the computer
     % if hostname/cli conflict or overlap, precidence is revers of 
     % modalityHosts field definitions
+    %
+    %                        MEG computer
     modalityHosts.MEG  = {'PUH1DMEG03'};
+    %                     coded on this     eye track testing   MRCTR
     modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
-    testingHostnames = {'reese-loeff114'};
     
+    %% what modality are we using
     modality='UNKNOWN';
     [returned,host] = system('hostname'); host=strtrim(host);
     for modal = fieldnames(modalityHosts)'   % MEG and fMRI  
@@ -102,28 +116,35 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     end
 
     
-    %% if we are on a testing computer, dont do full screen
-    if  ~isempty(find(cellfun(@(x) ischar(x)&&strcmpi(x,host), testingHostnames),1))
-        screenResolution = [1024 780];
-    end
+    
     
     %% output degree size
     % cant deal with hypens, make _
     host(host=='-')='_';
     % check we have measurements first
     if ~isfield(measurements, host)
-        error('need measurements for host %s',host)
+        error('need measurements in private/getModality.m for host %s',host)
     end
     
+    %% resolution
+    % use the resolution of last monitor connected (usually only)
+    % or if we explcity have a setting, use that (testing computer)
+    if  isfield(measurements.(host),'screenResolution') 
+        screenResolution = measurements.(host).screenResolution;
+    else
+        screennum=max(Screen('Screens'));
+        wSize=Screen('Resolution', screennum);
+        screenResolution = [wSize.width wSize.height];
+    end
     
-    % calculate N.B. only good until ~40 deg, then really no linear
+    %% degree size
+    % N.B. only good until ~40 deg, then really no linear
     hRes = screenResolution(1);
     hSize = measurements.(host).hSize;
     vDist = measurements.(host).vDist;
     degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
     degsize = 1/degPerPix;
         
-
     
     %% print out
     fprintf('MODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',modality,CUMULATIVE,degsize);  

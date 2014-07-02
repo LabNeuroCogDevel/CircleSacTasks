@@ -1,5 +1,5 @@
 function globalSettings()
-    global colors screenResolution paren backgroundColor;
+    global colors paren backgroundColor;
     
     %50% white/black
     backgroundColor=[1 1 1].*256.*.5;
@@ -15,17 +15,5 @@ function globalSettings()
                 111, 188, 129;
                 165, 178, 88;
                 216, 161, 83;];
-
-
-
-     % Find out how many screens and use smallset screen number.
-     %screenResolution = [800 600];
-     
-
-
-     screennum=max(Screen('Screens'));
-     
-     wSize=Screen('Resolution', screennum);
-     screenResolution = [wSize.width wSize.height];
 
 end

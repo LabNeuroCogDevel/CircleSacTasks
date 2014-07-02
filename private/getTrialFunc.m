@@ -9,7 +9,13 @@ function eventTypes = getTrialFunc(readFunc,readNTrial, readNblock, ...
         %blocks=3
         trialsPerBlock=readNTrial; 
         blocks=readNblock;
-        getEvents = readFunc(blocks);
+        bOrderIdx=find(cellfun(@(x) ischar(x)&&strcmpi(x,'bOrder'), varargin));
+        if ~isempty(bOrderIdx)
+            bOrderIdx=bOrderIdx + [0 1];
+        else
+            fprintf('HINT: use bOrder to specify block order. eg bOrder hfp:phf\n')
+        end
+        getEvents = readFunc(blocks,varargin{bOrderIdx});
     end
     function getEvents = setMEG
         trialsPerBlock=genNTrial;

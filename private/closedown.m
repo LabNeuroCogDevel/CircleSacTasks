@@ -6,5 +6,6 @@ function closedown()
     PsychPortAudio('Close');
     Priority(0);
     sca;
+    diary off;
     close all;
 end

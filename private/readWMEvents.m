@@ -1,5 +1,5 @@
 function events = readWMEvents(blocks,varargin)
-    global LEFT RIGHT TIMES trialsPerBlock longdelaytime;
+    global LEFT RIGHT TIMES trialsPerBlock longdelaytime filelist;
     idxs={1 3 5 7};
     [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
     idxsname = {'cue','mem','delay','probe'};
@@ -12,11 +12,17 @@ function events = readWMEvents(blocks,varargin)
        for i=1:length(filelist)
           filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
        end
+       filelist= repmat( Shuffle(filelist), 1, ceil(blocks/length(filelist)) );
+
+    elseif strcmpi(varargin{1}, 'bOrder')
+        filelist=strsplit(varargin{2},':');
+        for i=1:length(filelist)
+          filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
+       end
     else
         filelist=varargin;
     end
     
-    filelist= repmat( Shuffle(filelist), 1, ceil(blocks/length(filelist)) );
     
     events = [];
     for blocknum=1:blocks;
@@ -46,7 +52,7 @@ function events = readWMEvents(blocks,varargin)
     
     % mem:L1 or mem:L4 --> 1 or 4
     memload= cellfun( @(x) str2double(x(end)), optime{idx.mem});
-    
+    %memload(memload==4)=3; % bea wants to have fewer on the hard
     % RSP:nochange, RSP:change, RSP (catch)
     % 0                1        0 (doesnt matter)
     memchange=strcmp('RSP:change',optime{idx.probe});

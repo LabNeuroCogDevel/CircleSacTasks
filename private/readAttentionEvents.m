@@ -1,5 +1,5 @@
 function events = readAttentionEvents(blocks,varargin)
-   global TIMES CLEARTIME trialsPerBlock
+   global TIMES CLEARTIME trialsPerBlock filelist
     % TIMES is a cue attend probe clear (all .5)
     % CLEARTIME is the time allowed for a response after the screen is
     % cleared
@@ -25,24 +25,31 @@ function events = readAttentionEvents(blocks,varargin)
     % get the files to read from
     % -- could be in the function call
     if isempty(varargin)
-       filelist={'h_p_f','h_f_p','p_h_f','p_f_h','f_h_p','f_p_h'};
+       %filelist={'h_p_f','h_f_p','p_h_f','p_f_h','f_h_p','f_p_h'};
+       filelist={'hpf','hfp','phf','pfh','fhp','fph'};
        for i=1:length(filelist)
           filelist{i}=['timing/attention/best/' filelist{i} '.txt'];
        end
+       filelist = Shuffle(filelist);
+
+    elseif strcmpi(varargin{1}, 'bOrder')
+        filelist=strsplit(varargin{2},':');
+        for i=1:length(filelist)
+          filelist{i}=['timing/attention/best/' filelist{i} '.txt'];
+        end 
     else
         filelist=varargin;
     end
     
-    orderfiles = Shuffle(filelist);
     %events.filelist= orderfiles;
-    fprintf('order: \n');for i=1:length(orderfiles), fprintf('%d %s\n',i, orderfiles{i});end; fprintf('\n');
+    fprintf('order: \n');for i=1:length(filelist), fprintf('%d %s\n',i, filelist{i});end; fprintf('\n');
     
     events = [];
     
     for blocknum=1:blocks;
         
          % get this block
-         thisblock=getBlockEvents(blocknum, orderfiles{blocknum} );
+         thisblock=getBlockEvents(blocknum, filelist{blocknum} );
          
          % warn about weird trial lengths
          if(length(thisblock)~=trialsPerBlock)

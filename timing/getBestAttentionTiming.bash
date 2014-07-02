@@ -11,7 +11,7 @@ done|
  perl -slane '$a=join("_",@F[0..2]); $b{$a}=$F[3] if !$b{$a} and $a=~/\w/; END{ print "$_ $b{$_}" for keys %b}' |
  while read row it; do
    echo cp stims/$it/alltiming.txt best/$row.txt
-   cp stims/$it/alltiming.txt best/$row.txt
+   cp stims/$it/alltiming.txt best/${row//_/}.txt
  done
 
 

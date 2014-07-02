@@ -117,19 +117,21 @@
 function subject = attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME modality;
+   global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME modality filelist;
    %       cue attend probe clear  
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
    startdelay=8; enddelay=12; miniblockdelay=10;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
+   datetime=sprintf('%02d',clock);
+   diary(['log/attention_' datetime(1:12) ]);
    
    % set colors, resolution, paren function
    globalSettings();
 
    %% different trial structures for each modality
    %fMRI: 48 full + 24 catch for 2 blocks
-   eventTypes = getTrialFunc(@readAttentionEvents,73,2,        ...
+   eventTypes = getTrialFunc(@readAttentionEvents,72,2,        ...
                              @generateAttentionEvents,75,6,   ...
                             'timing/att.prac.txt',10, ...
                              varargin{:});
@@ -162,6 +164,7 @@ function subject = attention(varargin)
     if ~isfield(subject,'events') 
        subject.events = getEvents();
        subject.eventsInit = subject.events;
+       subject.filelist  = filelist;
     end
     
      checkBlockAndTrial(subject,trialsPerBlock,varargin{:})

@@ -61,9 +61,11 @@
 function subject=workingMemory(varargin)
     
     
-    global    TIMES totalfMRITime listenKeys trialsPerBlock ...
+    global    TIMES totalfMRITime listenKeys trialsPerBlock filelist ...
               longdelaytime modality CUMULATIVE trlCatch;
     global a; % audio channel for left and right audio cues
+
+    diary(['log/WM_' datetime(1:12) ]);
 
     globalSettings();
     WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
@@ -129,6 +131,7 @@ function subject=workingMemory(varargin)
     if ~isfield(subject,'events') 
         subject.events = getEvents();
         subject.eventsInit = subject.events;
+        subject.filelist  = filelist;
     end
     
     checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
