@@ -84,7 +84,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
 end
 
 
-function drawCrossAndBorder(w)
+function drawCrossAndBorder(w,correct)
    %drawCross(w);
    global backgroundColor
    Screen('FillRect', w, backgroundColor )
