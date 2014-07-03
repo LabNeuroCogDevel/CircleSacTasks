@@ -13,8 +13,12 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       trial.Direction = [0 0 0 0 0 0];
       trial.timing=timing;
       
-      ITIcolor=[150 150 150];
-
+      ITIcolor=[255 255 255];
+      responseColors = [ ...
+         [250 0 0];    
+         [0 0 250];
+         [0 250 0];
+      ];
 
       
       %% run trial
@@ -72,7 +76,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
              timing.fixAfterRT.ideal = timing.Response;
           end
           drawBorder(w,[0 0 0], .7);
-          drawCross(w,ITIcolor);
+          drawCross(w,responseColors(trial.correct+2,:));
           [junk,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal); 
       end
       

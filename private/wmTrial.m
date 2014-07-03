@@ -12,7 +12,7 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     global LEFT RIGHT listenKeys TIMES colors;
     %% -1. get Codes
     ttls = getCodes(playCue,number,changes);
-   
+    
     %% set trial info
     trial.RT      = -Inf;  
     trial.correct = nan;
@@ -119,7 +119,11 @@ end
 
 %% 1. fixation
 function StimulusOnsetTime = fixation(w,when)
-    drawCross(w);
+
+    %color of fix cross
+    ITIcolor=[255 255 255];
+         
+    drawCross(w,ITIcolor);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end
 
