@@ -121,7 +121,7 @@ function subject = attention(varargin)
    %       cue attend probe clear  
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
-   startdelay=8; enddelay=12; miniblockdelay=10;
+   startdelay=8; enddelay=16; miniblockdelay=15;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
    
    datetime=sprintf('%02d',clock);

@@ -72,7 +72,7 @@ function events = readAttentionEvents(blocks,varargin)
         % make sure we can read files
         if(isempty(fid) || fid <0), error('could not find %s',filename), end
         % read in file (like string tab onsettime )
-        optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
+        optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
         fclose(fid);
 
 

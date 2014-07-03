@@ -5,7 +5,11 @@ function events = readWMEvents(blocks,varargin)
     idxsname = {'cue','mem','delay','probe'};
     %         cue mem   delay response
     %durtimes = [ .5  .5     1     2];
-    durtimes = TIMES;
+    % see WMsettings
+    % fix->cue->memory->delay->probe->finish
+    %    .5   .5      .5     1      2 
+    %TIMES = [ .5  .5  .1  1  2];
+    durtimes = TIMES(2:end);
     
     if isempty(varargin)
        filelist={'1','2','3','4','5','6'};
@@ -47,7 +51,7 @@ function events = readWMEvents(blocks,varargin)
     if(isempty(fid)), error('could not find %s',filename), end
 
     % read in file (like string tab onsettime )
-    optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
+    optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
     fclose(fid);
     
     % mem:L1 or mem:L4 --> 1 or 4

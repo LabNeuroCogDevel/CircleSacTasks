@@ -1,48 +1,48 @@
-snd	8	mem:L1	8.5	dly:long	9	RSP	-1
-snd	14.88	mem:L1	15.38	dly:short	15.88	RSP	-1
-snd	19.88	mem:L4	20.38	dly:short	20.88	RSP:change	21.88
-snd	25.38	mem:L1	25.88	dly:short	26.38	RSP:nochange	27.38
-snd	30.66	mem:L1	31.16	dly:long	31.66	RSP:change	34.66
-snd	38.25	mem:L4	38.75	dly:long	39.25	RSP	-1
-snd	43.84	mem:L1	44.34	dly	-1	RSP	-1
-snd	46.57	mem:L1	47.07	dly:short	47.57	RSP:change	48.57
-snd	56	mem:L4	56.5	dly:short	57	RSP:nochange	58
-snd	61.95	mem:L4	62.45	dly:long	62.95	RSP:change	65.95
-snd	68.95	mem:L1	69.45	dly:long	69.95	RSP:nochange	72.95
-snd	76.84	mem:L4	77.34	dly:short	77.84	RSP	-1
-snd	79.87	mem:L4	80.37	dly	-1	RSP	-1
-snd	83.24	mem:L4	83.74	dly:long	84.24	RSP:nochange	87.24
-snd	91.31	mem:L4	91.81	dly:long	92.31	RSP:nochange	95.31
-snd	99.84	mem:L4	100.34	dly:short	100.84	RSP:nochange	101.84
-snd	105.75	mem:L1	106.25	dly:short	106.75	RSP:change	107.75
-snd	113.02	mem:L1	113.52	dly	-1	RSP	-1
-snd	115.24	mem:L1	115.74	dly:long	116.24	RSP:change	119.24
-snd	123.26	mem:L1	123.76	dly:short	124.26	RSP:nochange	125.26
-snd	130.05	mem:L4	130.55	dly:long	131.05	RSP:change	134.05
-snd	141.17	mem:L4	141.67	dly	-1	RSP	-1
-snd	143.89	mem:L4	144.39	dly:short	144.89	RSP:change	145.89
-snd	150.02	mem:L1	150.52	dly:long	151.02	RSP:nochange	154.02
-snd	157.52	mem:L4	158.02	dly	-1	RSP	-1
-snd	160.47	mem:L4	160.97	dly:short	161.47	RSP:nochange	162.47
-snd	165.83	mem:L1	166.33	dly:short	166.83	RSP:change	167.83
-snd	173.06	mem:L1	173.56	dly	-1	RSP	-1
-snd	175.52	mem:L1	176.02	dly:short	176.52	RSP	-1
-snd	184.44	mem:L4	184.94	dly:long	185.44	RSP:nochange	188.44
-snd	194.2	mem:L4	194.7	dly:long	195.2	RSP:change	198.2
-snd	203.33	mem:L4	203.83	dly	-1	RSP	-1
-snd	208.4	mem:L1	208.9	dly:long	209.4	RSP:change	212.4
-snd	215.45	mem:L1	215.95	dly:short	216.45	RSP:nochange	217.45
-snd	224.02	mem:L1	224.52	dly	-1	RSP	-1
-snd	227.78	mem:L1	228.28	dly:long	228.78	RSP:change	231.78
-snd	242.68	mem:L4	243.18	dly:short	243.68	RSP:nochange	244.68
-snd	248.22	mem:L1	248.72	dly:short	249.22	RSP:nochange	250.22
-snd	253.72	mem:L1	254.22	dly:long	254.72	RSP:nochange	257.72
-snd	262.25	mem:L4	262.75	dly:long	263.25	RSP:change	266.25
-snd	270.72	mem:L1	271.22	dly:long	271.72	RSP	-1
-snd	283.5	mem:L4	284	dly:long	284.5	RSP:nochange	287.5
-snd	290.96	mem:L4	291.46	dly:short	291.96	RSP:change	292.96
-snd	301.08	mem:L1	301.58	dly:long	302.08	RSP:nochange	305.08
-snd	308.48	mem:L4	308.98	dly:long	309.48	RSP	-1
-snd	321.71	mem:L4	322.21	dly:short	322.71	RSP	-1
-snd	327.37	mem:L1	327.87	dly:short	328.37	RSP:change	329.37
-snd	333.44	mem:L4	333.94	dly:short	334.44	RSP:change	335.44
+snd	8	mem:L4	8.5	dly	-1	RSP	-1	ITI	3.19
+snd	12.69	mem:L4	13.19	dly:short	14.19	RSP	-1	ITI	2.95
+snd	18.14	mem:L4	18.64	dly:short	19.64	RSP:nochange	20.64	ITI	1.30
+snd	23.94	mem:L4	24.44	dly:short	25.44	RSP:change	26.44	ITI	1.69
+snd	30.13	mem:L1	30.63	dly	-1	RSP	-1	ITI	1.10
+snd	32.73	mem:L1	33.23	dly:long	34.23	RSP:nochange	37.23	ITI	1.60
+snd	40.83	mem:L4	41.33	dly:long	42.33	RSP:change	45.33	ITI	1.73
+snd	49.06	mem:L1	49.56	dly:short	50.56	RSP:nochange	51.56	ITI	2.01
+snd	55.57	mem:L1	56.07	dly:short	57.07	RSP:change	58.07	ITI	2.36
+snd	62.43	mem:L1	62.93	dly:short	63.93	RSP	-1	ITI	2.12
+snd	67.05	mem:L1	67.55	dly:long	68.55	RSP	-1	ITI	6.70
+snd	78.25	mem:L4	78.75	dly:long	79.75	RSP:nochange	82.75	ITI	3.14
+snd	87.89	mem:L1	88.39	dly:long	89.39	RSP:change	92.39	ITI	3.25
+snd	97.64	mem:L4	98.14	dly:long	99.14	RSP	-1	ITI	7.31
+snd	109.45	mem:L4	109.95	dly	-1	RSP	-1	ITI	1.64
+snd	112.59	mem:L1	113.09	dly:long	114.09	RSP:change	117.09	ITI	4.72
+snd	123.81	mem:L4	124.31	dly:long	125.31	RSP	-1	ITI	3.41
+snd	131.72	mem:L4	132.22	dly:short	133.22	RSP:nochange	134.22	ITI	1.65
+snd	137.87	mem:L1	138.37	dly:short	139.37	RSP:nochange	140.37	ITI	4.37
+snd	146.74	mem:L4	147.24	dly:short	148.24	RSP:change	149.24	ITI	5.03
+snd	156.27	mem:L1	156.77	dly:long	157.77	RSP:nochange	160.77	ITI	1.41
+snd	164.18	mem:L4	164.68	dly	-1	RSP	-1	ITI	1.02
+snd	166.7	mem:L4	167.2	dly:short	168.2	RSP:change	169.2	ITI	1.15
+snd	172.35	mem:L1	172.85	dly:long	173.85	RSP:change	176.85	ITI	2.87
+snd	181.72	mem:L4	182.22	dly:long	183.22	RSP:change	186.22	ITI	1.40
+snd	189.62	mem:L1	190.12	dly:long	191.12	RSP:nochange	194.12	ITI	2.72
+snd	198.84	mem:L4	199.34	dly:short	200.34	RSP:nochange	201.34	ITI	1.53
+snd	204.87	mem:L1	205.37	dly:short	206.37	RSP:change	207.37	ITI	1.17
+snd	210.54	mem:L4	211.04	dly:long	212.04	RSP:change	215.04	ITI	2.94
+snd	219.98	mem:L1	220.48	dly:short	221.48	RSP:nochange	222.48	ITI	1.73
+snd	226.21	mem:L1	226.71	dly:short	227.71	RSP:change	228.71	ITI	1.69
+snd	232.4	mem:L1	232.9	dly	-1	RSP	-1	ITI	2.19
+snd	236.09	mem:L1	236.59	dly:short	237.59	RSP	-1	ITI	4.19
+snd	242.78	mem:L4	243.28	dly:short	244.28	RSP	-1	ITI	2.67
+snd	247.95	mem:L4	248.45	dly:long	249.45	RSP:nochange	252.45	ITI	2.88
+snd	257.33	mem:L4	257.83	dly:long	258.83	RSP:nochange	261.83	ITI	2.01
+snd	265.84	mem:L1	266.34	dly	-1	RSP	-1	ITI	2.62
+snd	269.96	mem:L1	270.46	dly:long	271.46	RSP	-1	ITI	2.76
+snd	277.22	mem:L1	277.72	dly:long	278.72	RSP:nochange	281.72	ITI	2.06
+snd	285.78	mem:L1	286.28	dly:long	287.28	RSP:change	290.28	ITI	1.05
+snd	293.33	mem:L4	293.83	dly:long	294.83	RSP:nochange	297.83	ITI	1.30
+snd	301.13	mem:L4	301.63	dly:long	302.63	RSP:change	305.63	ITI	2.72
+snd	310.35	mem:L1	310.85	dly:short	311.85	RSP:nochange	312.85	ITI	1.14
+snd	315.99	mem:L1	316.49	dly	-1	RSP	-1	ITI	2.78
+snd	320.27	mem:L4	320.77	dly:short	321.77	RSP:nochange	322.77	ITI	4.14
+snd	328.91	mem:L1	329.41	dly:short	330.41	RSP:change	331.41	ITI	1.38
+snd	334.79	mem:L4	335.29	dly	-1	RSP	-1	ITI	1.66
+snd	337.95	mem:L4	338.45	dly:short	339.45	RSP:change	340.45	ITI	1.18

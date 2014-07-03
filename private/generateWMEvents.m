@@ -4,7 +4,7 @@ function events = generateWMEvents(trialsPerBlock, blocks)
 %   load (3 varations), 
 %   change (no change, left change, right change),
 %   cue (left or right)
-    global LEFT RIGHT LOADS %colors;
+    global LEFT RIGHT LOADS TIMES %colors;
     % LEFT = 1
     % RIGTH= 2
     % LOADS = [ 1 3 5];
@@ -19,7 +19,8 @@ function events = generateWMEvents(trialsPerBlock, blocks)
 
             % fix  cue memory delay probe
     %TIMES =[ .5  .5   .3     1     2];
-    times = [ .5  .5   .5     1     2];
+    %times = [ .5  .5   .5     1     2];
+    times=TIMES;
     timing.fix.ideal   = 0;
     timing.cue.ideal   = sum(times(1:1));
     timing.mem.ideal   = sum(times(1:2));

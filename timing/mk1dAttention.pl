@@ -16,8 +16,8 @@ my @sumstable = ();
 # SETTINGS
 my $TOTALTIME=306; # (12*.5 + 12*1 + 8*6*3 + 72*2) 
 my $STARTTIME=8;
-my $ENDTIME=12;
-my $MINIBLOCK=10;
+my $ENDTIME=16;
+my $MINIBLOCK=15;
 my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME + $MINIBLOCK*2;
 my $TR=1.5;
 my $MEANITI=2;
@@ -298,7 +298,7 @@ for my $deconIt (1..$NITER) {
     
     
     # write out this trial
-    print {$files{alltiming}} join("\t", map {$_->[0]."\t".$_->[1]} @eventSeqTime ), "\n";
+    print {$files{alltiming}} join("\t", map {$_->[0]."\t".$_->[1]} (@eventSeqTime, ["ITI",$ITIs[$seqno] ]) ), "\n";
 
 
     

@@ -1,72 +1,72 @@
-cue	8	atnd:flex	8.5	probe:incng	9	clear	9.5
-cue	12.93	atnd:flex	13.43	probe	-1	clear	-1
-cue	16.74	atnd:flex	17.24	probe:cng	17.74	clear	18.24
-cue	21.03	atnd:flex	21.53	probe:cng	22.03	clear	22.53
-cue	28.03	atnd	-1	probe	-1	clear	-1
-cue	29.82	atnd:flex	30.32	probe:cng	30.82	clear	31.32
-cue	34.45	atnd:flex	34.95	probe:incng	35.45	clear	35.95
-cue	38.75	atnd:flex	39.25	probe	-1	clear	-1
-cue	40.9	atnd:flex	41.4	probe	-1	clear	-1
-cue	45.99	atnd:flex	46.49	probe:cng	46.99	clear	47.49
-cue	54.32	atnd:flex	54.82	probe:incng	55.32	clear	55.82
-cue	58.84	atnd:flex	59.34	probe:incng	59.84	clear	60.34
-cue	63.55	atnd	-1	probe	-1	clear	-1
-cue	65.36	atnd:flex	65.86	probe:cng	66.36	clear	66.86
-cue	69.75	atnd:flex	70.25	probe:incng	70.75	clear	71.25
-cue	75.62	atnd:flex	76.12	probe:cng	76.62	clear	77.12
-cue	80.29	atnd:flex	80.79	probe:cng	81.29	clear	81.79
-cue	84.36	atnd:flex	84.86	probe:incng	85.36	clear	85.86
-cue	90.08	atnd:flex	90.58	probe:cng	91.08	clear	91.58
-cue	94.91	atnd:flex	95.41	probe	-1	clear	-1
-cue	97.19	atnd	-1	probe	-1	clear	-1
-cue	98.77	atnd	-1	probe	-1	clear	-1
-cue	100.91	atnd:flex	101.41	probe:incng	101.91	clear	102.41
-cue	106.52	atnd:flex	107.02	probe:incng	107.52	clear	108.02
-cue	120.93	atnd:hab	121.43	probe:cng	121.93	clear	122.43
-cue	124.98	atnd:hab	125.48	probe	-1	clear	-1
-cue	127.13	atnd:hab	127.63	probe:incng	128.13	clear	128.63
-cue	131.66	atnd	-1	probe	-1	clear	-1
-cue	134.21	atnd:hab	134.71	probe	-1	clear	-1
-cue	138.66	atnd:hab	139.16	probe:incng	139.66	clear	140.16
-cue	142.69	atnd:hab	143.19	probe:incng	143.69	clear	144.19
-cue	148.74	atnd:hab	149.24	probe:incng	149.74	clear	150.24
-cue	152.76	atnd	-1	probe	-1	clear	-1
-cue	155.17	atnd:hab	155.67	probe:cng	156.17	clear	156.67
-cue	159.32	atnd	-1	probe	-1	clear	-1
-cue	162.14	atnd:hab	162.64	probe:cng	163.14	clear	163.64
-cue	166.23	atnd:hab	166.73	probe:cng	167.23	clear	167.73
-cue	172.43	atnd:hab	172.93	probe:incng	173.43	clear	173.93
-cue	177.73	atnd:hab	178.23	probe:incng	178.73	clear	179.23
-cue	181.87	atnd:hab	182.37	probe:incng	182.87	clear	183.37
-cue	188.68	atnd:hab	189.18	probe:cng	189.68	clear	190.18
-cue	192.93	atnd:hab	193.43	probe	-1	clear	-1
-cue	195.57	atnd	-1	probe	-1	clear	-1
-cue	198.95	atnd:hab	199.45	probe	-1	clear	-1
-cue	201.79	atnd:hab	202.29	probe:cng	202.79	clear	203.29
-cue	207.36	atnd:hab	207.86	probe:cng	208.36	clear	208.86
-cue	213.34	atnd:hab	213.84	probe:incng	214.34	clear	214.84
-cue	218.29	atnd:hab	218.79	probe:cng	219.29	clear	219.79
-cue	233.17	atnd:pop	233.67	probe:incng	234.17	clear	234.67
-cue	239.55	atnd:pop	240.05	probe:incng	240.55	clear	241.05
-cue	243.97	atnd:pop	244.47	probe:incng	244.97	clear	245.47
-cue	250.45	atnd:pop	250.95	probe:cng	251.45	clear	251.95
-cue	255.32	atnd	-1	probe	-1	clear	-1
-cue	257.39	atnd:pop	257.89	probe:incng	258.39	clear	258.89
-cue	262.62	atnd:pop	263.12	probe:cng	263.62	clear	264.12
-cue	267.3	atnd:pop	267.8	probe:incng	268.3	clear	268.8
-cue	272.06	atnd:pop	272.56	probe:incng	273.06	clear	273.56
-cue	276.53	atnd:pop	277.03	probe:cng	277.53	clear	278.03
-cue	281.04	atnd:pop	281.54	probe:incng	282.04	clear	282.54
-cue	287.32	atnd:pop	287.82	probe:cng	288.32	clear	288.82
-cue	291.35	atnd:pop	291.85	probe:incng	292.35	clear	292.85
-cue	295.87	atnd:pop	296.37	probe:cng	296.87	clear	297.37
-cue	301.93	atnd:pop	302.43	probe:cng	302.93	clear	303.43
-cue	306.34	atnd:pop	306.84	probe:cng	307.34	clear	307.84
-cue	313.48	atnd:pop	313.98	probe	-1	clear	-1
-cue	315.61	atnd	-1	probe	-1	clear	-1
-cue	318.19	atnd:pop	318.69	probe	-1	clear	-1
-cue	320.3	atnd:pop	320.8	probe	-1	clear	-1
-cue	322.6	atnd	-1	probe	-1	clear	-1
-cue	324.57	atnd	-1	probe	-1	clear	-1
-cue	326.25	atnd:pop	326.75	probe:cng	327.25	clear	327.75
-cue	331.44	atnd:pop	331.94	probe	-1	clear	-1
+cue	8	atnd:flex	8.5	probe:cng	9	clear	9.5	ITI	4.35
+cue	15.35	atnd:flex	15.85	probe	-1	clear	-1	ITI	1.18
+cue	17.53	atnd:flex	18.03	probe:incng	18.53	clear	19.03	ITI	2.71
+cue	23.24	atnd:flex	23.74	probe:cng	24.24	clear	24.74	ITI	2.02
+cue	28.26	atnd:flex	28.76	probe:incng	29.26	clear	29.76	ITI	2.76
+cue	34.02	atnd:flex	34.52	probe:incng	35.02	clear	35.52	ITI	2.46
+cue	39.48	atnd:flex	39.98	probe:cng	40.48	clear	40.98	ITI	2.12
+cue	44.6	atnd:flex	45.1	probe:cng	45.6	clear	46.1	ITI	1.65
+cue	49.25	atnd:flex	49.75	probe:incng	50.25	clear	50.75	ITI	1.15
+cue	53.4	atnd:flex	53.9	probe:incng	54.4	clear	54.9	ITI	1.69
+cue	58.09	atnd:flex	58.59	probe:cng	59.09	clear	59.59	ITI	1.73
+cue	62.82	atnd:flex	63.32	probe	-1	clear	-1	ITI	2.05
+cue	65.87	atnd	-1	probe	-1	clear	-1	ITI	1.16
+cue	67.53	atnd:flex	68.03	probe	-1	clear	-1	ITI	1.20
+cue	69.73	atnd:flex	70.23	probe:cng	70.73	clear	71.23	ITI	1.21
+cue	73.94	atnd	-1	probe	-1	clear	-1	ITI	1.28
+cue	75.72	atnd:flex	76.22	probe	-1	clear	-1	ITI	2.32
+cue	79.04	atnd	-1	probe	-1	clear	-1	ITI	1.83
+cue	81.37	atnd:flex	81.87	probe:incng	82.37	clear	82.87	ITI	1.20
+cue	85.57	atnd:flex	86.07	probe:cng	86.57	clear	87.07	ITI	1.08
+cue	89.65	atnd:flex	90.15	probe:incng	90.65	clear	91.15	ITI	3.47
+cue	96.12	atnd	-1	probe	-1	clear	-1	ITI	1.26
+cue	97.88	atnd:flex	98.38	probe:incng	98.88	clear	99.38	ITI	1.80
+cue	102.68	atnd:flex	103.18	probe:cng	103.68	clear	104.18	ITI	2.42
+cue	123.1	atnd:hab	123.6	probe:incng	124.1	clear	124.6	ITI	4.42
+cue	130.52	atnd:hab	131.02	probe:incng	131.52	clear	132.02	ITI	1.41
+cue	134.93	atnd:hab	135.43	probe:cng	135.93	clear	136.43	ITI	1.78
+cue	139.71	atnd:hab	140.21	probe	-1	clear	-1	ITI	4.97
+cue	145.68	atnd:hab	146.18	probe:incng	146.68	clear	147.18	ITI	1.49
+cue	150.17	atnd:hab	150.67	probe:cng	151.17	clear	151.67	ITI	1.15
+cue	154.32	atnd:hab	154.82	probe:cng	155.32	clear	155.82	ITI	3.27
+cue	160.59	atnd:hab	161.09	probe	-1	clear	-1	ITI	2.34
+cue	163.93	atnd:hab	164.43	probe:cng	164.93	clear	165.43	ITI	1.25
+cue	168.18	atnd:hab	168.68	probe:cng	169.18	clear	169.68	ITI	2.04
+cue	173.22	atnd	-1	probe	-1	clear	-1	ITI	2.20
+cue	175.92	atnd:hab	176.42	probe:incng	176.92	clear	177.42	ITI	1.01
+cue	179.93	atnd:hab	180.43	probe:cng	180.93	clear	181.43	ITI	1.12
+cue	184.05	atnd	-1	probe	-1	clear	-1	ITI	1.88
+cue	186.43	atnd:hab	186.93	probe:incng	187.43	clear	187.93	ITI	2.02
+cue	191.45	atnd	-1	probe	-1	clear	-1	ITI	1.06
+cue	193.01	atnd:hab	193.51	probe:incng	194.01	clear	194.51	ITI	2.90
+cue	198.91	atnd:hab	199.41	probe:incng	199.91	clear	200.41	ITI	1.21
+cue	203.12	atnd:hab	203.62	probe:cng	204.12	clear	204.62	ITI	1.85
+cue	207.97	atnd:hab	208.47	probe	-1	clear	-1	ITI	1.16
+cue	210.13	atnd	-1	probe	-1	clear	-1	ITI	3.30
+cue	213.93	atnd:hab	214.43	probe:incng	214.93	clear	215.43	ITI	3.44
+cue	220.37	atnd:hab	220.87	probe:cng	221.37	clear	221.87	ITI	3.81
+cue	227.18	atnd:hab	227.68	probe	-1	clear	-1	ITI	4.77
+cue	247.95	atnd:pop	248.45	probe:cng	248.95	clear	249.45	ITI	3.36
+cue	254.31	atnd:pop	254.81	probe:incng	255.31	clear	255.81	ITI	1.24
+cue	258.55	atnd:pop	259.05	probe:incng	259.55	clear	260.05	ITI	1.04
+cue	262.59	atnd	-1	probe	-1	clear	-1	ITI	1.42
+cue	264.51	atnd:pop	265.01	probe:cng	265.51	clear	266.01	ITI	1.20
+cue	268.71	atnd:pop	269.21	probe:cng	269.71	clear	270.21	ITI	3.51
+cue	275.22	atnd:pop	275.72	probe:cng	276.22	clear	276.72	ITI	1.36
+cue	279.58	atnd:pop	280.08	probe:incng	280.58	clear	281.08	ITI	1.43
+cue	284.01	atnd:pop	284.51	probe:incng	285.01	clear	285.51	ITI	2.41
+cue	289.42	atnd:pop	289.92	probe	-1	clear	-1	ITI	1.80
+cue	292.22	atnd:pop	292.72	probe	-1	clear	-1	ITI	1.47
+cue	294.69	atnd:pop	295.19	probe:incng	295.69	clear	296.19	ITI	1.02
+cue	298.71	atnd:pop	299.21	probe	-1	clear	-1	ITI	1.07
+cue	300.78	atnd:pop	301.28	probe	-1	clear	-1	ITI	2.36
+cue	304.14	atnd	-1	probe	-1	clear	-1	ITI	1.32
+cue	305.96	atnd:pop	306.46	probe:cng	306.96	clear	307.46	ITI	1.03
+cue	309.99	atnd:pop	310.49	probe:cng	310.99	clear	311.49	ITI	1.28
+cue	314.27	atnd:pop	314.77	probe:incng	315.27	clear	315.77	ITI	1.81
+cue	319.08	atnd:pop	319.58	probe:cng	320.08	clear	320.58	ITI	1.06
+cue	323.14	atnd:pop	323.64	probe:incng	324.14	clear	324.64	ITI	2.16
+cue	328.3	atnd	-1	probe	-1	clear	-1	ITI	2.06
+cue	330.86	atnd	-1	probe	-1	clear	-1	ITI	2.14
+cue	333.5	atnd:pop	334	probe:incng	334.5	clear	335	ITI	2.81
+cue	339.31	atnd:pop	339.81	probe:cng	340.31	clear	340.81	ITI	1.57

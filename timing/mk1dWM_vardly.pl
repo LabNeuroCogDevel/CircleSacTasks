@@ -14,6 +14,8 @@ my @sumstable = ();
 # SETTINGS
 #
 my $TOTALTIME=336;
+#        48*2.5 + 16*(4.5+6.5)  + 8*1.5 + 4*(2.5 +4.5)  = 336
+#        --- WAS ---
 #        48*3 + 16*(4+6)  + 8*1 + 4*(2 +4)  = 336
 #        48 total trials with 3s mean ITI
 #        32 full trials (16 of long dly (6s) 16 of short dly (4) )
@@ -27,10 +29,10 @@ my $TOTALTIME=336;
 #      + 6*1s [CATCH1] 
 #      + 2*2s [CATCH2 short] + 4*4s [CATCH2 long]
 my $STARTTIME=8;
-my $ENDTIME=12;
+my $ENDTIME=16;
 my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME;
 my $TR=1.5;
-my $MEANITI=3;
+my $MEANITI=2.5;
 my $MINITI=1;
 my $MAXITI=99; #no max
 #my $NITER=2;
@@ -51,8 +53,8 @@ mkdir "$taskname" if ! -d "$taskname/";
 %events = (
  snd=> [ {event=>"snd", name=>"snd", occurRatio=>1, duration=>.5, nrep=>48   }  ],
 
- mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>.5, nrep=>16} ,
-          {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>.5, nrep=>16} ] ,
+ mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>1, nrep=>16} ,
+          {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>1, nrep=>16} ] ,
 
  CATCH1=> [ {event=>"CATCH1", name=>"CATCH1",   occurRatio=>1/6, duration=>0, nrep=>4   } ,
             {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>40  }  ],
@@ -316,7 +318,7 @@ for my $deconIt (1..$NITER) {
     
     
     # write out this trial
-    print {$files{alltiming}} join("\t", map {$_->[0]."\t".$_->[1]} @eventSeqTime ), "\n";
+    print {$files{alltiming}} join("\t", map {$_->[0]."\t".$_->[1]} (@eventSeqTime,['ITI',$ITIs[$seqno]]) ), "\n";
 
 
     
