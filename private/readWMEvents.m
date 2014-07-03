@@ -1,5 +1,5 @@
 function events = readWMEvents(blocks,varargin)
-    global LEFT RIGHT TIMES trialsPerBlock longdelaytime filelist;
+    global LEFT RIGHT TIMES trialsPerBlock longdelaytime filelist LOADS;
     idxs={1 3 5 7};
     [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
     idxsname = {'cue','mem','delay','probe'};
@@ -52,7 +52,7 @@ function events = readWMEvents(blocks,varargin)
     
     % mem:L1 or mem:L4 --> 1 or 4
     memload= cellfun( @(x) str2double(x(end)), optime{idx.mem});
-    %memload(memload==4)=3; % bea wants to have fewer on the hard
+    memload(memload==4)=LOADS(end); % bea wants to have fewer on the hard
     % RSP:nochange, RSP:change, RSP (catch)
     % 0                1        0 (doesnt matter)
     memchange=strcmp('RSP:change',optime{idx.probe});

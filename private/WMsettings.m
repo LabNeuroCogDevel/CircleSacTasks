@@ -6,7 +6,7 @@ function WMsettings()
     gridsize = [9 7];
     LEFT = 1;
     RIGHT = 2;
-    LOADS = [ 1 4 ];
+    LOADS = [ 1 3 ];
 
     % fix->cue->memory->delay->probe->finish
     %    .5   .5      .5     1      2 
