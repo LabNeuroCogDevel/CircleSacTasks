@@ -32,7 +32,7 @@ function     [events] = generateWMcolorPos(events)
              % zero everything used and around out
              gridno( [n area(area>0)] ) = 0;
             end
-            events(t).pos.(hemi)=chosenPos;
+            events(t).pos.(hemi)=chosenPos-1;
             
             %% color
             colorIdxs=randperm(nColors);
