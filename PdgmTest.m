@@ -55,7 +55,7 @@ classdef PdgmTest < matlab.unittest.TestCase
             % if we've run this before, we'll have a mat file that we dont
             % want -- remove it
             date=clock;
-            savefile=['data/Attention/test_' sprintf('%d%02d%02d',date(1:3)) '.mat'];
+            savefile=['data/Attention/Attention_test_fMRI_' sprintf('%d%02d%02d',date(1:3)) '.mat'];
             if exist(savefile,'file')>0
                   delete(savefile)
             end
@@ -68,18 +68,16 @@ classdef PdgmTest < matlab.unittest.TestCase
             
             % get through instructions
             spcrsp = KbName('space');
-            instructions = [
-                 1 spcrsp;      ... welcome
-                 1 spcrsp;      ... left instruction
-                 1 spcrsp;      ... right instruction
-                ];
+            % see getAttentionInstructions.m: 8 instruction screens
+            instructions = repmat([1 spcrsp],8,1); 
             
             scannerstart=KbName('=+');
 
             % there are 72 trials, but 1/3 are no reponse catch trials
             nTrials=72-24; 
             % fake some input
-            dirrsp   = Shuffle(repmat(KbName({'1!','2@'}),1,ceil(nTrials/2))');
+            responseKeys=KbName({'7&','2@'});
+            dirrsp   = Shuffle(repmat(responseKeys,1,ceil(nTrials/2))');
             RTjitter = rand(nTrials,1)*1.7; 
             responses = [ RTjitter dirrsp];
             % just use 0 for quickest
@@ -162,6 +160,126 @@ classdef PdgmTest < matlab.unittest.TestCase
          
 
         end
+        
+        
+        
+        %% MEG
+        %%%%%%%%%%%
+        function testWMfMRI(tc)
+
+            import matlab.unittest.constraints.IsTrue;
+            % path and overloading things
+            global  LastKBCheck KBcounter KBResponse inputCounter initInput speedincrease;
+
+            % if we've run this before, we'll have a mat file that we dont
+            % want -- remove it
+            date=clock;
+            savefile=['data/WorkingMemory/WorkingMemory_test_fMRI_' sprintf('%d%02d%02d',date(1:3)) '.mat'];
+            if exist(savefile,'file')>0
+                  delete(savefile)
+            end
+                         
+            
+            %% define keypress
+            % we'll take over KbCheck with our own wrapper
+            % and read from the global KBResponse and KBcounter
+            % to feed in keypresses
+            
+            % get through instructions
+            spcrsp = KbName('space');
+            % see getWMInstructions.m: 9 instructions screens
+            instructions = repmat([1 spcrsp],9,1);
+            
+            scannerstart=KbName('=+');
+
+            % there are 48 trials, but 1/3 are no reponse catch trials
+            nTrials=48-16; 
+            % fake some input
+            responseKeys=KbName({'7&','2@'});
+            dirrsp   = Shuffle(repmat(responseKeys,1,ceil(nTrials/2))');
+            RTjitter = rand(nTrials,1)*1.7; 
+            responses = [ RTjitter dirrsp];
+            % just use 0 for quickest
+            %responses = [ zeros(length(dirrsp),1) dirrsp ];
+
+            KBcounter=1;
+            KBResponse=[...
+               instructions;
+               0 scannerstart;
+               responses;
+               0 spcrsp; % thank you screen
+             ];
+            
+            testfiles={};
+
+            % num trials per block
+            tic;
+            [success, subject]=runWMMRI(1,2);
+            totaltime=toc;
+            
+            tc.verifyEqual(success,1);
+            % check subject
+            %tc.verifyEqual(subject.subj_id,tc.sid)
+
+            %%%%
+            %%%% Basic checks
+            %%%%
+            
+            %% 1. block has correct number of trials
+            %% 2. id, age, and sex match specified
+            %% 3. ideal-offset is not large
+            
+            %%%%
+            %%%% Target properties to check
+            %%%%
+            
+            %% 1. near equal dist of miniblock type
+            %% 2. near equal dist of target direction per miniblock
+            %% 3. near equal dist of target color per miniblock
+            %% 4. near equal dist of target position per miniblock
+            %% 5. near equal dist of typeXcolorXpositionXdirection
+            
+            
+            
+            % inputCounter=1; 
+            % initInput={'99', 'm'};
+
+            
+            
+            %% quicker, more specific way to test
+            %testfiles={'private_testing/attentionTiming.txt','private_testing/attentionTiming.txt'}
+            %for f = testfiles
+            % textscan
+            %end
+            %[~,newcount]=system([' perl -lne "END{print \$.}" ', testfile ]);
+            
+            
+            function [success, subject]=runWMMRI(block,nblocks,varargin)
+%                  try
+                     if ~isempty(varargin)
+                         files=[repmat({'testfile'},1,length(varargin));varargin{:}];
+                         files={'tbp','0',files{:}};
+                     else
+                         files={};
+                     end
+                    
+                    subject=workingMemory('fMRI','ID','test','normalkeys','sex','m','age','99',...
+                        'nblocks',num2str(nblocks),'block',num2str(block),...
+                        files{:} );
+                    
+                    success=1;
+%                  catch
+%                      subject=[];
+%                      success=0;
+%                      %sca;
+%                  end
+                
+            end
+         
+         
+
+        end
+        
     
   end
 end

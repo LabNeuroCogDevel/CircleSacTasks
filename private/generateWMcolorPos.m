@@ -1,9 +1,17 @@
 function     [events] = generateWMcolorPos(events)
+  % input events needs:
+  %  events(1:nTrial).load
+  %                  .changes  % 0 none, 1 | 2 changes (ignores left or right)
+  %                  .playCue  % 1 left, 2 right
+  %    for i=1:10; events(i).load=paren([1 4],randi(2)); events(i).changes=randi(2)-1; events(i).playCue=randi(2); end
+  %    ne = generateWMcolorPos(events); c=[ne.Colors]; m=[c.Mem]; find([m.LEFT]==[m.RIGHT])
+  
   nColors=8;
   % given events of a working memory trial
   % add color and position properties
   % abstracted to a function because both MEG (generated) and fMRI (read in)
   % use this logic
+  
   % because we are only going to change left or right, not both
   changeIdx = arrayfun(@randi,[events.load]);
     
@@ -39,11 +47,18 @@ function     [events] = generateWMcolorPos(events)
             colors1=colorIdxs(1:events(t).load);
             % make an earnest attempt at preventing both sides from being
             % the same... noticable when load is 1
-            while( isfield(events(t), 'Color')           && ...
-                   isfield(events(t).Colors, 'Mem')      && ...
-                   isfield(events(t).Colors.Mem, 'LEFT') && ...
-                   colors1 == events(t).Colors.Mem.('LEFT') )
+            sameColors = @(x,y) length(find(sort(x) == sort(y) ))  > events(t).load/2;
+            
+            try
+               samecolors =  sameColors(colors1,events(t).Colors.Mem.LEFT);
+            catch
+               samecolors = 0;
+            end
+            while samecolors
+               %fprintf('%d: LEFT IS RIGHT %d \n',t,colors1);
+               colorIdxs=randperm(nColors);
                colors1=colorIdxs(1:events(t).load);
+               samecolors =  sameColors(colors1,events(t).Colors.Mem.LEFT);
             end
                    
             

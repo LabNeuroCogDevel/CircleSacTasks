@@ -23,23 +23,23 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     
     % Admin-PC --> Admin_PC is fMRI
     % deg size may force some WM dots off screen!
-    measurements.Admin_PC.hSize = 28.5; 
-    measurements.Admin_PC.vDist = 130; 
+    hostInfo.Admin_PC.hSize = 28.5; 
+    hostInfo.Admin_PC.vDist = 130; 
     
 
     % MEG
     %TODO: ACTUALLY MEASSURE THIS 
-    measurements.PUH1DMEG03.hSize = 41; 
-    measurements.PUH1DMEG03.vDist = 57;
+    hostInfo.PUH1DMEG03.hSize = 41; 
+    hostInfo.PUH1DMEG03.vDist = 57;
        
     % "new" eyetracking room
-    measurements.upmc_56ce704785.hSize=41;
-    measurements.upmc_56ce704785.vDist=55;
+    hostInfo.upmc_56ce704785.hSize=41;
+    hostInfo.upmc_56ce704785.vDist=55;
     
     % will's
-    measurements.reese_loeff114.hSize = 41;
-    measurements.reese_loeff114.vDist = 60;
-    measurements.reese_loeff114.screenResolution=[1600 1200];
+    hostInfo.reese_loeff114.hSize = 41;
+    hostInfo.reese_loeff114.vDist = 60;
+    hostInfo.reese_loeff114.screenResolution=[1600 1200];
     
     % what modality are we using
     % set the modality via arguments or by knowning the computer
@@ -122,15 +122,15 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     % cant deal with hypens, make _
     host(host=='-')='_';
     % check we have measurements first
-    if ~isfield(measurements, host)
-        error('need measurements in private/getModality.m for host %s',host)
+    if ~isfield(hostInfo, host)
+        error('need hostInfo in private/getModality.m for host %s',host)
     end
     
     %% resolution
     % use the resolution of last monitor connected (usually only)
     % or if we explcity have a setting, use that (testing computer)
-    if  isfield(measurements.(host),'screenResolution') 
-        screenResolution = measurements.(host).screenResolution;
+    if  isfield(hostInfo.(host),'screenResolution') 
+        screenResolution = hostInfo.(host).screenResolution;
     else
         screennum=max(Screen('Screens'));
         wSize=Screen('Resolution', screennum);
@@ -140,8 +140,8 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %% degree size
     % N.B. only good until ~40 deg, then really no linear
     hRes = screenResolution(1);
-    hSize = measurements.(host).hSize;
-    vDist = measurements.(host).vDist;
+    hSize = hostInfo.(host).hSize;
+    vDist = hostInfo.(host).vDist;
     degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
     degsize = 1/degPerPix;
         

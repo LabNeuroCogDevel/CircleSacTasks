@@ -39,7 +39,16 @@ function [ varargout ] = KbCheck(device)
  end
  
 
- 
+ % if lastKBCheck > max wait time, reset lastKBCheck
+ % --- THIS IS SKETCHY ---
+ % we want to make sure we always way
+ MAXTIME=3; % if we're off by more than 3 seconds, we hit a catch trial and should actually wait longer
+ if seconds-LastKBCheck > MAXTIME && KBResponse(KBcounter,1) < MAXTIME
+   fprintf('KbCheck overwrite: comparison was @ %.2f (> %.2f s ago); should wait %.2fs from now (%.2f)\n', ...
+           LastKBCheck,MAXTIME, KBResponse(KBcounter,1),seconds  );
+   LastKBCheck=seconds;
+ end
+  
  if(seconds-LastKBCheck > KBResponse(KBcounter,1)) %/speedincrease )
    keyCode(KBResponse(KBcounter,2))=1;
    keyIsDown=1;
