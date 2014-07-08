@@ -45,11 +45,11 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
 
    %% show whats going on
    % position
-   fprintf('%02d ',       pos.LEFT); fprintf('\t'); fprintf('%02d ',         pos.RIGHT);fprintf('\n');
+   fprintf('%2d ',        pos.LEFT); fprintf('\t'); fprintf('%2d ',        pos.RIGHT);fprintf('\n');
    %colors
-   fprintf('%02d ',  color.Mem.LEFT); fprintf('\t'); fprintf('%02d ',  color.Mem.RIGHT);fprintf('\n');
+   fprintf('%2d ',  color.Mem.LEFT); fprintf('\t'); fprintf('%2d ',  color.Mem.RIGHT);fprintf('\n');
    % color change
-   fprintf('%02d ', color.Resp.LEFT); fprintf('\t'); fprintf('%02d ', color.Resp.RIGHT);fprintf('\n');
+   fprintf('%2d ', color.Resp.LEFT); fprintf('\t'); fprintf('%2d ', color.Resp.RIGHT);fprintf('\n');
 
    
    
@@ -69,6 +69,8 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     %% 2. memory set
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
     drawBorder(w,[0 0 0], .5);
+    %draw dots would give numbered dots, useful for debuging
+    %drawDots(0:20,0:20,ones(21,1)*9,ones(21,1)*9, w )
     ovalcolors=cat(1,colors(color.Mem.LEFT,:),colors(color.Mem.RIGHT,:))';
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
@@ -218,3 +220,25 @@ function triggers = getCodes(cueHemi,cLoad,changes)
                 + find(possibleChanges==changes); 
                 
 end
+
+
+
+    function drawDots(lPos,rPos,lColor,rColor,w)
+        global colors degsize gridsize;
+        colorswgray= [colors; 100 100 100];
+        var = Screen('Rect',w);
+        offset = (var([3,4]) - (gridsize.*degsize))/2;
+        lp = generateCirclePosns(lPos, offset);
+        rp = generateCirclePosns(rPos,offset,6);
+        % pick a position and color
+        posArr  = [ lp, rp ];
+        colorArr= [colorswgray(lColor,:);...
+                   colorswgray(rColor,:) ]';
+        
+        Screen('FillOval',w,colorArr,posArr);
+        
+        idx=[lPos rPos];
+        for i=1:size(posArr,2)
+            DrawFormattedText(w,num2str(idx(i)),posArr(1,i),posArr(2,i));
+        end
+    end

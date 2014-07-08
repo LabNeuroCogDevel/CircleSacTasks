@@ -27,7 +27,7 @@ function     [events, varargout] = generateWMcolorPos(events)
             hemi=hemi{1};
             
             % get positioins in the grid, bias using gridTotal
-            chosenPos = getWMgrid(7,3,events(t).load,gridTotal.(hemi));
+            chosenPos = getWMgrid(3,events(t).load,gridTotal.(hemi));
             
             % increase total
             gridTotal.(hemi)(chosenPos)=gridTotal.(hemi)(chosenPos)+1;
@@ -62,6 +62,11 @@ function     [events, varargout] = generateWMcolorPos(events)
             colorChangeOpts=mod( origColor + floor(nColors/2)-1 + [-1:1],nColors );
             colorChangeOpts(colorChangeOpts==0)=nColors;
             colorChange=RandSample(colorChangeOpts);
+            % I thought it'd be nice if any of the colors close to the
+            % opposite were NOT in original mem set, but there are not
+            % enough colors for this
+            % so go back to only replacing the choosen "opposite" color
+            colorChangeOpts=colorChange;
             
             % we can choose from the left over colors that are not
             % in the color change range
