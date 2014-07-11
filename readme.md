@@ -138,3 +138,8 @@ Run task with `attention.m`
 * `wmTrial.m`            runs an individual trial
 
 
+# Copying to Scanner
+
+```bash
+rsync  -rvhi  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timing/*/stims' --exclude '.git/' . /mnt/usb/CircleSacTasks/ 
+```
