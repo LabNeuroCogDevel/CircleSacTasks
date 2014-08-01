@@ -41,13 +41,18 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     hostInfo.reese_loeff114.vDist = 60;
     hostInfo.reese_loeff114.screenResolution=[1600 1200];
     
+    %Tim's
+    hostInfo.OACO4CNRL6.hSize = 20;
+    hostInfo.OACO4CNRL6.vDist = 30;
+    hostInfo.OACO4CNRL6.screenResolution=[800 600];
+    
     % what modality are we using
     % set the modality via arguments or by knowning the computer
     % if hostname/cli conflict or overlap, precidence is revers of 
     % modalityHosts field definitions
     %
-    %                        MEG computer
-    modalityHosts.MEG  = {'PUH1DMEG03'};
+    %                      MEG computer  Tim's
+    modalityHosts.MEG  = {'PUH1DMEG03','OACO4CNRL6'};
     %                     coded on this     eye track testing   MRCTR
     modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
     
