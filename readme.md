@@ -8,10 +8,12 @@
 ```matlab
 %% examples
 % the simplest working memory invocation
-workingMemory practice
 workingMemory 
-% the most involved
+% involved invocations
 workingMemory MEG reversekeys ID subjID sex m age 99 r block 1
+workingMemory fMRI normalkeys ID subjID sex m age 99 r block 2 bOrder 1:5:3:2:4:6
+% testing 
+workingMemory HOSTNAME Admin_PC reversekeys ID subjID sex m age 99 r block 1
 
 
 %% intended flow
@@ -33,7 +35,7 @@ attention ID 0001WF r block 2
 
 ## Options
 
-Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial).
+Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial). Alternatively, `HOSTNAME host` where host is e.g. `Admin_PC`, `PUH1DMEG03` can be used to get the settings used by that computer. There is also the option for `practice`, which will run a truncated version and save the output under a different name.
 
 `workingMemory` can take an additional argument flag, `normalkeys` or `reversekeys`, to counterbalance the "same" and "different" key presses.
 When any of the arguments are not given, their value will be assigned by prompt.
@@ -73,21 +75,58 @@ When any of the arguments are not given, their value will be assigned by prompt.
 
 ## fMRI
 
+WM fMRI also has a short (1s) andha long (3s) delay, both occuring in full trials 16 times each (4 catch trials with each).
+
+<!-- 
+ grep dly:long workingMemory_vardly/best/1.txt |grep  '\-1' -c 
+-->
+
 |Task      |runs| trials | full| catch|
 |----------|----| -------|-----|------|
 |Attention | 2  |     72 |  48 | 24   |
-|WM        | 3  |     36 |  24 | 12   |
+|WM        | 2  |     48 |  32 | 16   |
+
+
+<!--
+egrep 'my \$[A-Z]+=' timing/mk1d*.pl|sed 's/#.*//;/^[ \t]+$/d'
+-->
+
+### Attention
+
+```
+TOTALTIME=306;
+STARTTIME=8;
+ENDTIME=16;
+MINIBLOCK=15;
+TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME + $MINIBLOCK*2;
+TR=1.5;
+MEANITI=2;
+MINITI=1;
+TOTALTRIALS=72;
+```
+### WM
+```
+TOTALTIME=336;
+STARTTIME=8;
+ENDTIME=16;
+TR=1.5;
+MEANITI=2.5;
+MINITI=1;
+TOTALTRIALS=48;
+TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME;
+```
+
 
 Additional timing:
 
 * `8s` fix before start
 * `12s` fix after finish. 
-* `3s` mean ITI
-* `2*30s` breaks within attention
+* `2s` Attention `2.5s` WM mean ITI
+* `2*15s` breaks within attention
 
 
 ### Generate
-Working Memory timing is generated with `timing/mk1dWM.pl`. Attention uses `timing/mk1dAttention.pl`. Picking the top 6 is done by `timing/getBestWorkingMemory.bash` and `timing/getBestAttentionTiming.bash`
+Working Memory timing is generated with `timing/mk1dWM_vardly.pl`. Attention uses `timing/mk1dAttention.pl`. Picking the top 6 is done by `timing/getBestWorkingMemory.bash` and `timing/getBestAttentionTiming.bash`
 
 # Documentation 
 
