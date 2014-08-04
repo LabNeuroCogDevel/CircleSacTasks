@@ -1,0 +1,83 @@
+function [ thishostinfo ] = setHostInfo( varargin )
+%SETHOSTINFO Summary of this function goes here
+%   Detailed explanation goes here
+
+    KbName('UnifyKeyNames');
+    %% MEG
+    %TODO: ACTUALLY MEASSURE THIS 
+    hostInfo.PUH1DMEG03.hSize = 41; 
+    hostInfo.PUH1DMEG03.vDist = 57;
+    hostInfo.PUH1DMEG03.modality = 'MEG';
+    hostInfo.PUH1DMEG03.keys.attention = KbName({'1!','2@','space'});
+    hostInfo.PUH1DMEG03.keys.WM        = KbName({'1!','2@'});
+    %Tim's
+    hostInfo.OACO4CNRL6.hSize = 20;
+    hostInfo.OACO4CNRL6.vDist = 30;
+    hostInfo.OACO4CNRL6.screenResolution=[800 600];
+    hostInfo.upmc_56ce704785.modality = 'MEG';
+    hostInfo.OACO4CNRL6.keys.attention = KbName({'1!','2@','space'});
+    hostInfo.OACO4CNRL6.keys.WM        = KbName({'1!','2@'});   
+    
+    %% fMRI
+    % "new" eyetracking room
+    hostInfo.upmc_56ce704785.hSize=41;
+    hostInfo.upmc_56ce704785.vDist=55;
+    hostInfo.upmc_56ce704785.modality = 'fMRI';
+    hostInfo.upmc_56ce704785.keys.attention = KbName({'7&','2@','space'});
+    hostInfo.upmc_56ce704785.keys.WM        = KbName({'7&','2@'});
+    hostInfo.upmc_56ce704785.keys.WM.names  = {'7', '2'};
+    
+    % will's
+    hostInfo.reese_loeff114.hSize = 41;
+    hostInfo.reese_loeff114.vDist = 60;
+    hostInfo.reese_loeff114.screenResolution=[1600 1200];
+    hostInfo.reese_loeff114.modality = 'fMRI';
+    hostInfo.reese_loeff114.keys.attention = KbName({'7&','2@','space'});
+    hostInfo.reese_loeff114.keys.WM        = KbName({'7&','2@'});
+    hostInfo.reese_loeff114.keys.WM.names  = {'7', '2'};
+
+    
+    % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
+    % deg size may force some WM dots off screen!
+    hostInfo.Admin_PC.hSize = 28.5; 
+    hostInfo.Admin_PC.vDist = 130; 
+    hostInfo.Admin_PC.modality = 'fMRI';
+    hostInfo.Admin_PC.keys.attention = KbName({'7&','2@','space'});
+    hostInfo.Admin_PC.keys.WM        = KbName({'7&','2@'});
+    hostInfo.Admin_PC.keys.WM.names  = {'LEFT index finger', 'RIGHT index finger'};
+    
+    
+    % what modality are we using
+    % set the modality via arguments or by knowning the computer
+    % if hostname/cli conflict or overlap, precidence is revers of 
+    % modalityHosts field definitions
+    %
+    %                      MEG computer  Tim's
+    %modalityHosts.MEG  = {'PUH1DMEG03','OACO4CNRL6'};
+    %                     coded on this     eye track testing   MRCTR
+    %modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
+    
+    %% what computer are we on?
+
+    
+    % check for arguments to set hostname
+    hostnameIDX=find(cellfun(@(x) ischar(x)&&strcmpi(x,'HOSTNAME'), varargin),1);
+    if ~empty(hostnameIDX)
+        host=varargin{hostnameIDX+1};
+        fprintf('pretending to run @ %s\n',host);
+    else
+       [returned,host] = system('hostname'); host=strtrim(host);
+       % cant deal with hypens, make _
+       host(host=='-')='_';
+    end
+    
+    % is this host defined?
+    if ~isfield(hostInfo, host)
+        error(['need hostInfo for host %s, add to private/setHostInfo.m\n'...
+               'or add to function argumetns.eg. HOSTNAME Admin_PC ' ],host)
+    end
+    
+    thishostinfo=hostInfo.(host);
+    thishostinfo.name=host;
+end
+

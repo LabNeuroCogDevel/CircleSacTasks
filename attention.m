@@ -138,7 +138,7 @@ function subject = attention(varargin)
                              varargin{:});
     
     % get fMRI/MEG, cumulative/not cumulative, and how to get events
-    [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
+    [modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
 
     
    % what keys will we accept as correct/incorrect

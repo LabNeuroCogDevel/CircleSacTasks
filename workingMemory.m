@@ -83,7 +83,7 @@ function subject=workingMemory(varargin)
     
     %% get imaging tech. ("modality" is global)
     % set modality
-    [modality, CUMULATIVE ,getEvents] = getModality(eventTypes, varargin{:});
+    [modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
  
     %% get subject info
     subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});

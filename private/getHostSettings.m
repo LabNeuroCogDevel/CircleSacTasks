@@ -1,4 +1,4 @@
-function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
+function [modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin)
 % getModailty -- set modailty (fMRI||MEG), cummulative (1||0)
 %                screenResolution, and degreeSize
 %    eventTypes is a struct with fields for each modality:
@@ -20,59 +20,21 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %   1024 x 780 => 28.5 x 21.7; 
     % hSize is width of project, 
     % vDist is distnace to the project from eyes
-    
-    % Admin-PC --> Admin_PC is fMRI
-    % deg size may force some WM dots off screen!
-    hostInfo.Admin_PC.hSize = 28.5; 
-    hostInfo.Admin_PC.vDist = 130; 
-    
 
-    % MEG
-    %TODO: ACTUALLY MEASSURE THIS 
-    hostInfo.PUH1DMEG03.hSize = 41; 
-    hostInfo.PUH1DMEG03.vDist = 57;
-       
-    % "new" eyetracking room
-    hostInfo.upmc_56ce704785.hSize=41;
-    hostInfo.upmc_56ce704785.vDist=55;
-    
-    % will's
-    hostInfo.reese_loeff114.hSize = 41;
-    hostInfo.reese_loeff114.vDist = 60;
-    hostInfo.reese_loeff114.screenResolution=[1600 1200];
-    
-    %Tim's
-    hostInfo.OACO4CNRL6.hSize = 20;
-    hostInfo.OACO4CNRL6.vDist = 30;
-    hostInfo.OACO4CNRL6.screenResolution=[800 600];
-    
-    % what modality are we using
-    % set the modality via arguments or by knowning the computer
-    % if hostname/cli conflict or overlap, precidence is revers of 
-    % modalityHosts field definitions
-    %
-    %                      MEG computer  Tim's
-    modalityHosts.MEG  = {'PUH1DMEG03','OACO4CNRL6'};
-    %                     coded on this     eye track testing   MRCTR
-    modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
+    thishostinfo = setHostInfo(varargin);
     
     %% what modality are we using
-    modality='UNKNOWN';
-    [returned,host] = system('hostname'); host=strtrim(host);
-    for modal = fieldnames(modalityHosts)'   % MEG and fMRI  
-        
-        % if we know this host and we haven't set it yet
-        if  ismember(host,modalityHosts.(modal{1})) && strcmp(modality,'UNKNOWN')
-            modality=modal{1};
-        end
-        
-        % othwerise always do what we said to on the command line
-        if  ~isempty(find(cellfun(@(x) ischar(x)&&strcmpi(x,modal{1}), varargin),1))
-          modality=modal{1};
-        end
-        
+    % does the command line have anything to say?
+    modalIDX=find(cellfun(@(x) ischar(x)&&any(strcmpi(x,{'fMRI','MEG'})), varargin),1);
+    if  ~isempty(modalIDX)
+      modality=varargin{modalIDX};
+    % how about the host name?
+    elseif isfield(thishostinfo,'modality')
+        modality=thishostinfo.modality;
+    else
+        modality='UNKNOWN';
     end
-        
+
 
     %% how do we calculate timing: event or cumulative
     if strcmp(modality,'fMRI')
@@ -80,8 +42,6 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     else
         CUMULATIVE=0;
     end
-    
-
     
     
     %% all of that above was useless if we specify a number of trials
@@ -99,9 +59,6 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     end
     
 
-    
-    
-    
     %% maybe we want to practice instead of test
     % did we pass in practice?
     practiceidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'practice'), varargin),1);
@@ -120,22 +77,12 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
         error('no events function for modality %s', modality);
     end
 
-    
-    
-    
-    %% output degree size
-    % cant deal with hypens, make _
-    host(host=='-')='_';
-    % check we have measurements first
-    if ~isfield(hostInfo, host)
-        error('need hostInfo in private/getModality.m for host %s',host)
-    end
-    
+       
     %% resolution
     % use the resolution of last monitor connected (usually only)
     % or if we explcity have a setting, use that (testing computer)
-    if  isfield(hostInfo.(host),'screenResolution') 
-        screenResolution = hostInfo.(host).screenResolution;
+    if  isfield(thishostinfo,'screenResolution') 
+        screenResolution = thishostinfo.screenResolution;
     else
         screennum=max(Screen('Screens'));
         wSize=Screen('Resolution', screennum);
@@ -145,12 +92,12 @@ function [modality, CUMULATIVE, getEvents] = getModality(eventTypes,varargin)
     %% degree size
     % N.B. only good until ~40 deg, then really no linear
     hRes = screenResolution(1);
-    hSize = hostInfo.(host).hSize;
-    vDist = hostInfo.(host).vDist;
+    hSize = thishostinfo.hSize;
+    vDist = thishostinfo.vDist;
     degPerPix = 2*atand( (hSize/hRes) / (2*vDist));
     degsize = 1/degPerPix;
         
     
     %% print out
-    fprintf('MODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',modality,CUMULATIVE,degsize);  
+    fprintf('Host: %s\nMODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',host,modality,CUMULATIVE,degsize);  
 end
