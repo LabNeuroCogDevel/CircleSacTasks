@@ -1,6 +1,7 @@
 function [ thishostinfo ] = setHostInfo( varargin )
-%SETHOSTINFO Summary of this function goes here
-%   Detailed explanation goes here
+%SETHOSTINFO return the matching screensize, moadlity and keys
+%           from a structure of all known hosts running these paradigms
+% uses actual hostname or ('HOSTNAME','fakehostname'} in arguments
 
     KbName('UnifyKeyNames');
     %% MEG
@@ -10,6 +11,8 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.PUH1DMEG03.modality = 'MEG';
     hostInfo.PUH1DMEG03.keys.attention = KbName({'1!','2@','space'});
     hostInfo.PUH1DMEG03.keys.WM        = KbName({'1!','2@'});
+    hostInfo.PUH1DMEG03.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
+
     %Tim's
     hostInfo.OACO4CNRL6.hSize = 20;
     hostInfo.OACO4CNRL6.vDist = 30;
@@ -17,6 +20,8 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.upmc_56ce704785.modality = 'MEG';
     hostInfo.OACO4CNRL6.keys.attention = KbName({'1!','2@','space'});
     hostInfo.OACO4CNRL6.keys.WM        = KbName({'1!','2@'});   
+    hostInfo.OACO4CNRL6.keys.names  = {'number 1', 'number 2'};
+
     
     %% fMRI
     % "new" eyetracking room
@@ -25,7 +30,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.upmc_56ce704785.modality = 'fMRI';
     hostInfo.upmc_56ce704785.keys.attention = KbName({'7&','2@','space'});
     hostInfo.upmc_56ce704785.keys.WM        = KbName({'7&','2@'});
-    hostInfo.upmc_56ce704785.keys.WM.names  = {'7', '2'};
+    hostInfo.upmc_56ce704785.keys.names  = {'7', '2'};
     
     % will's
     hostInfo.reese_loeff114.hSize = 41;
@@ -34,7 +39,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.reese_loeff114.modality = 'fMRI';
     hostInfo.reese_loeff114.keys.attention = KbName({'7&','2@','space'});
     hostInfo.reese_loeff114.keys.WM        = KbName({'7&','2@'});
-    hostInfo.reese_loeff114.keys.WM.names  = {'7', '2'};
+    hostInfo.reese_loeff114.keys.names  = {'7', '2'};
 
     
     % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
@@ -44,7 +49,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.Admin_PC.modality = 'fMRI';
     hostInfo.Admin_PC.keys.attention = KbName({'7&','2@','space'});
     hostInfo.Admin_PC.keys.WM        = KbName({'7&','2@'});
-    hostInfo.Admin_PC.keys.WM.names  = {'LEFT index finger', 'RIGHT index finger'};
+    hostInfo.Admin_PC.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
     
     
     % what modality are we using
@@ -57,12 +62,10 @@ function [ thishostinfo ] = setHostInfo( varargin )
     %                     coded on this     eye track testing   MRCTR
     %modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
     
-    %% what computer are we on?
-
-    
+    %% what computer are we on or do we want to pretend we are on
     % check for arguments to set hostname
     hostnameIDX=find(cellfun(@(x) ischar(x)&&strcmpi(x,'HOSTNAME'), varargin),1);
-    if ~empty(hostnameIDX)
+    if ~isempty(hostnameIDX)
         host=varargin{hostnameIDX+1};
         fprintf('pretending to run @ %s\n',host);
     else

@@ -138,20 +138,11 @@ function subject = attention(varargin)
                              varargin{:});
     
     % get fMRI/MEG, cumulative/not cumulative, and how to get events
-    [modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
+    [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
 
     
    % what keys will we accept as correct/incorrect
-   KbName('UnifyKeyNames');
-   % left, right, RA input
-   if regexpi(modality,'fMRI','once')    
-       listenKeys  = KbName({'7&','2@','space'});
-   elseif regexpi(modality,'MEG','once')   
-       listenKeys = KbName({'1!','2@','space'});
-   else
-       fprintf('Unknown Modality, using MEG keys\n');
-       listenKeys = KbName({'1!','2@','space'});
-   end
+   listenKeys = hostinfo.keys.attention; % set in private/setHostInfo.m
 
     
     %% setup subject

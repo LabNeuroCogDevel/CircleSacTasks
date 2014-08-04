@@ -1,10 +1,11 @@
-function [modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin)
+function [thishostinfo, modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin)
 % getModailty -- set modailty (fMRI||MEG), cummulative (1||0)
 %                screenResolution, and degreeSize
 %    eventTypes is a struct with fields for each modality:
 %      TEST fMRI MEG, practicefMRI, practiceMEG
 %
 %    varargin is here because we might get "practice", or "tpb" and "nblocks"
+%    or pass HOSTNAME to setHostInfo
 
 
     global degsize screenResolution;
@@ -21,7 +22,9 @@ function [modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin
     % hSize is width of project, 
     % vDist is distnace to the project from eyes
 
-    thishostinfo = setHostInfo(varargin);
+    % setHostInfo looks into a struct of all known hosts and sets
+    % modality, keys, screensize
+    thishostinfo = setHostInfo(varargin{:});
     
     %% what modality are we using
     % does the command line have anything to say?
@@ -32,7 +35,8 @@ function [modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin
     elseif isfield(thishostinfo,'modality')
         modality=thishostinfo.modality;
     else
-        modality='UNKNOWN';
+        % should never get here if setHostInfo has proper structures
+        error('no default modality known for host!');
     end
 
 
@@ -99,5 +103,8 @@ function [modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin
         
     
     %% print out
-    fprintf('Host: %s\nMODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',host,modality,CUMULATIVE,degsize);  
+    fprintf('Host: %s\nMODALITY: "%s"\nCumulative?: %d\nDegSize: %f\n\n',thishostinfo.name,modality,CUMULATIVE,degsize);  
+    fprintf('Keys:\n');  
+    disp(thishostinfo.keys.attention)
+    disp(thishostinfo.keys.WM)
 end

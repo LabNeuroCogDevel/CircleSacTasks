@@ -83,11 +83,17 @@ function subject=workingMemory(varargin)
     
     %% get imaging tech. ("modality" is global)
     % set modality
-    [modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
+    [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
+        
  
     %% get subject info
     subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});
     
+    
+    
+    % setup keys such that the correct LEFT push is at LEFT index       
+    % what keys will we accept as correct/incorrect
+    listenKeys = hostinfo.keys.WM;
     % should we reverse the keys?
     if ~isfield(subject,'reversekeys')
         if find(cellfun(@(x) ischar(x)&&strcmpi(x,'reversekeys'),  varargin ))
@@ -99,31 +105,11 @@ function subject=workingMemory(varargin)
         else
              subject.reversekeys=0;
         end
-    end
-    
-           
-    % setup keys such that the correct LEFT push is at LEFT index       
-    % what keys will we accept as correct/incorrect
-    KbName('UnifyKeyNames');
-    % left, right, RA input
-    if regexpi(modality,'fMRI','once')    
-       listenKeys  = KbName({'7&','2@'});
-       leftorright={'LEFT index finger', 'RIGHT index finger'};
-
-    elseif regexpi(modality,'MEG','once')   
-       listenKeys = KbName({'1!','2@'});
-       leftorright={'INDEX finger', 'MIDDLE finger'};
-
-    else
-       fprintf('"%s" did not match MEG or fMRI\n',modality);
-       listenKeys = KbName({'1!','2@'});
-       leftorright={'1', '2'};
-    end
-    
+    end 
     % flip instructions for counterbalanced subjects
     if subject.reversekeys
         listenKeys=fliplr(listenKeys);
-        leftorright=fliplr(leftorright);
+        hostinfo.keys.names=fliplr(hostinfo.keys.names);
     end
     
     
@@ -142,7 +128,7 @@ function subject=workingMemory(varargin)
 
 
     % what are the key instructions
-    [newInstructions,betweenInstructions,endStructions] = getWMInstructions(leftorright);
+    [newInstructions,betweenInstructions,endStructions] = getWMInstructions(hostinfo.keys.names);
 
     % reset the subject to this block
     startofblock=(thisBlk-1)*trialsPerBlock+1;
@@ -153,7 +139,7 @@ function subject=workingMemory(varargin)
     % some info to the command window
     fprintf('Using Reversed Keys? %d\n',subject.reversekeys );
 
-    for i=1:2, fprintf('%s is key %d\n', leftorright{i}, listenKeys(i)),end
+    for i=1:2, fprintf('%s is key %d\n', hostinfo.keys.names{i}, listenKeys(i)),end
     
     %psychtoolbox bit
     try
