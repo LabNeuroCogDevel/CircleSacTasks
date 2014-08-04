@@ -50,18 +50,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.Admin_PC.keys.attention = KbName({'7&','2@','space'});
     hostInfo.Admin_PC.keys.WM        = KbName({'7&','2@'});
     hostInfo.Admin_PC.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
-    
-    
-    % what modality are we using
-    % set the modality via arguments or by knowning the computer
-    % if hostname/cli conflict or overlap, precidence is revers of 
-    % modalityHosts field definitions
-    %
-    %                      MEG computer  Tim's
-    %modalityHosts.MEG  = {'PUH1DMEG03','OACO4CNRL6'};
-    %                     coded on this     eye track testing   MRCTR
-    %modalityHosts.fMRI = {'reese-loeff114','upmc-56ce704785', 'Admin-PC'};
-    
+       
     %% what computer are we on or do we want to pretend we are on
     % check for arguments to set hostname
     hostnameIDX=find(cellfun(@(x) ischar(x)&&strcmpi(x,'HOSTNAME'), varargin),1);
