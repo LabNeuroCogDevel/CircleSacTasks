@@ -2,6 +2,13 @@
 ![workingMemory](https://raw.githubusercontent.com/LabNeuroCogDevel/CircleSacTasks/master/docs/workingMemory.gif)
 ![Attention](https://raw.githubusercontent.com/LabNeuroCogDevel/CircleSacTasks/master/docs/attention.gif)
 
+# TODO
+## MEG
+ * check for working sound. The WM left/right audio cues may not play well
+ * measure screen dimensions and distance to subject for degree size accuracy
+ * set button glove keys
+ * find working size changing border to activate photodiode
+
 # Using
 
 ## Example
@@ -25,13 +32,11 @@ attention ID 0001WF r block 1
 attention ID 0001WF r block 2
 ```
 
-## fMRI "Keys"
-
-| Key     | Value |
-| ------- | --- |
-| Scanner | `=` |
-| Left    | `7` |
-| Right   | `2` |
+## Keys/ButtonBox
+| Modality| Scanner| Left   | Right |
+| ------- | --     |  ---   |  ---  |
+| fMRI    |  `=`   |  `7`   | `2`   |
+| MEG     |  NA    |   ?    |  ?    | 
 
 ## Options
 
@@ -45,12 +50,16 @@ When any of the arguments are not given, their value will be assigned by prompt.
 
 # Feedback
 
+The white ITI cross is colored briefly to give feedback.
+
 | color | meaning   |
 | ----  | --------  |
 | green | correct   |
 | blue  | incorrect |
 | red   |no response|
 
+ * In *MEG* feedback, is display for only one screen flip. 
+ * In the *fMRI* presentation, the feedback cross is shown for the remander of the RT window.
 
 # Trials
 
@@ -63,6 +72,8 @@ see `eventTypes = ` line in [`attention.m`](https://github.com/LabNeuroCogDevel/
 |Attention | 6  |    75  |
 |WM        | 6  |    100 |
 
+One attention run includes only trials of one type (pop,hab, or flex).
+
 ## fMRI
 
 |Task      |runs| trials | full| catch|
@@ -71,9 +82,11 @@ see `eventTypes = ` line in [`attention.m`](https://github.com/LabNeuroCogDevel/
 |WM        | 2  |     48 |  32 | 16   |
 
 
+One attention run includes all pop,habit,and flex separate by miniblock breaks.
 
 
 # Timing
+ITI is .5 for MEG
 ## Att 
 
 | fix | cue | att | probe | blank      |
@@ -88,7 +101,7 @@ see `eventTypes = ` line in [`attention.m`](https://github.com/LabNeuroCogDevel/
 
 ## fMRI
 
-WM fMRI also has a short (1s) andha long (3s) delay, both occuring in full trials 16 times each (4 catch trials with each).
+WM fMRI also has a short (1s) and a long (3s) delay, both occuring in full trials 16 times each (4 catch trials with each).
 
 
 <!-- 
