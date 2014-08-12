@@ -43,22 +43,35 @@ When any of the arguments are not given, their value will be assigned by prompt.
 *NOTE:* `reversekeys` and `normalkeys` are only parsed for the first block. Even if they are specified differently for subsequent blocks, they will be ignored.
 
 
-# Colors
+# Feedback
 
-![colors](https://github.com/LabNeuroCogDevel/CircleSacTasks/blob/master/docs/colors.png?raw=true)
+| color | meaning   |
+| ----  | --------  |
+| green | correct   |
+| blue  | incorrect |
+| red   |no response|
 
- sampled via [chromajs](http://driven-by-data.net/about/chromajs/#/0) in [Hue Chroma Lightnes](http://vis4.net/labs/colorvis/embed.html?m=hcl&gradients=9) (cylindric transform of `CIE L*a*b`) with `Lumninocity=.89`
 
-| r | g  | b   |
-|---|----|-----|
-|221| 128| 104 |
-|216| 127| 148 |
-|175| 142| 183 |
-|113| 159| 188 |
-| 72| 168| 160 |
-| 99| 168| 115 |
-|148| 160| 78  |
-|194| 144| 74  |
+# Trials
+
+see `eventTypes = ` line in [`attention.m`](https://github.com/LabNeuroCogDevel/CircleSacTasks/blob/master/attention.m#L136) and [`workingMemory.m`](https://github.com/LabNeuroCogDevel/CircleSacTasks/blob/master/workingMemory.m#L79)
+
+## MEG
+
+|Task      |runs| trials |
+|----------|----| -------|
+|Attention | 6  |    75  |
+|WM        | 6  |    100 |
+
+## fMRI
+
+|Task      |runs| trials | full| catch|
+|----------|----| -------|-----|------|
+|Attention | 2  |     72 |  48 | 24   |
+|WM        | 2  |     48 |  32 | 16   |
+
+
+
 
 # Timing
 ## Att 
@@ -71,20 +84,17 @@ When any of the arguments are not given, their value will be assigned by prompt.
 
 | fix | cue | mem | delay | change |
 | --- | --- | --- | ----- | -----  |
-| ITI | .5  | .5  | 1     | 2 (RT) |
+| ITI | .5  | 1   | 1 (1 and 3 in fMRI)  | 2 (RT) |
 
 ## fMRI
 
 WM fMRI also has a short (1s) andha long (3s) delay, both occuring in full trials 16 times each (4 catch trials with each).
 
+
 <!-- 
  grep dly:long workingMemory_vardly/best/1.txt |grep  '\-1' -c 
 -->
 
-|Task      |runs| trials | full| catch|
-|----------|----| -------|-----|------|
-|Attention | 2  |     72 |  48 | 24   |
-|WM        | 2  |     48 |  32 | 16   |
 
 
 <!--
@@ -128,6 +138,22 @@ Additional timing:
 ### Generate
 Working Memory timing is generated with `timing/mk1dWM_vardly.pl`. Attention uses `timing/mk1dAttention.pl`. Picking the top 6 is done by `timing/getBestWorkingMemory.bash` and `timing/getBestAttentionTiming.bash`
 
+# Colors
+
+![colors](https://github.com/LabNeuroCogDevel/CircleSacTasks/blob/master/docs/colors.png?raw=true)
+
+ sampled via [chromajs](http://driven-by-data.net/about/chromajs/#/0) in [Hue Chroma Lightnes](http://vis4.net/labs/colorvis/embed.html?m=hcl&gradients=9) (cylindric transform of `CIE L*a*b`) with `Lumninocity=.89`
+
+| r | g  | b   |
+|---|----|-----|
+|221| 128| 104 |
+|216| 127| 148 |
+|175| 142| 183 |
+|113| 159| 188 |
+| 72| 168| 160 |
+| 99| 168| 115 |
+|148| 160| 78  |
+|194| 144| 74  |
 # Documentation 
 
 see `docs/`
