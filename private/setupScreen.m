@@ -18,10 +18,16 @@ function w=setupScreen()
      Screen('BlendFunction', w, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
      % set font
-     Screen('TextFont', w, 'Arial');
-     Screen('TextSize', w, 22);
-     % older matlab+linux:
-     %Screen('TextFont', w, '-misc-fixed-bold-r-normal--13-100-100-100-c-70-iso8859-1');
+     v=version();
+     v=str2double(v(1:3));
+     if(v>=8)
+         Screen('TextFont', w, 'Arial');
+         Screen('TextSize', w, 22);
+     else
+        % older matlab+linux:
+        %Screen('TextFont', w, '-misc-fixed-bold-r-normal--13-100-100-100-c-70-iso8859-1');
+        Screen('TextFont', w, '-misc-fixed-bold-r-normal--0-0-100-100-c-0-iso8859-16');
+     end
     
 
      % Set process priority to max to minimize lag or sharing process time with other processes.
