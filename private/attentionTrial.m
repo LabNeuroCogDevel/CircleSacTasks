@@ -69,18 +69,18 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       % we finished the trial
       % but if we are in cumulative mode and had a resonalbe RT
       % we are stuck at the last screen shown until we start the next ITI
-      if(CUMULATIVE)
-          if(timing.Response==-Inf)
-             timing.fixAfterRT.ideal = GetSecs();
-          else
-             timing.fixAfterRT.ideal = timing.Response;
-          end
-          drawBorder(w,[0 0 0], .7);
-          drawCross(w,responseColors(trial.correct+2,:));
-          [junk,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal); 
+    
+      if(timing.Response==-Inf)
+         timing.fixAfterRT.ideal = GetSecs();
+      else
+         timing.fixAfterRT.ideal = timing.Response;
       end
       
-      
+      %% give subject feedback on perfomance
+      drawBorder(w,[0 0 0], .7);
+      drawCross(w,responseColors(trial.correct+2,:));
+      [junk,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal);
+
       %% save outputs
       trial.timing=timing;
       trial.RT    = timing.Response - timing.probe.onset;

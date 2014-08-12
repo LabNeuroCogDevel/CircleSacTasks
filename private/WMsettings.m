@@ -12,7 +12,7 @@ function WMsettings()
     %    .5   .5      1    1      2 
     %TIMES = [ .5  .5  .3  1  2];
     TIMES = [ .5  .5  1  1  2];
-    longdelaytime=2;
+    longdelaytime=3; % this was 2 even after the change to 3, erronously?
     % MEG depends on this to set all timings
     % fMRI depeonds on this to set times after catch trial
 

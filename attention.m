@@ -132,6 +132,7 @@ function subject = attention(varargin)
 
    %% different trial structures for each modality
    %fMRI: 48 full + 24 catch for 2 blocks
+   %sets global trialsPerBlock and might remove totalfMRITime
    eventTypes = getTrialFunc(@readAttentionEvents,72,2,        ...
                              @generateAttentionEvents,75,6,   ...
                             'timing/att.prac.txt',10, ...
@@ -237,6 +238,7 @@ function subject = attention(varargin)
               e.timing,...
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
+          trl.ITI=wait;
           % save subject, update position in run
           % subject.curTrl and subject.curBlk are updated
           subject=saveTrial(subject,trl,starttime);
