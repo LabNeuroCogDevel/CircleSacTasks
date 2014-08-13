@@ -86,8 +86,8 @@ function subject=workingMemory(varargin)
     [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
         
  
-   % now we know our modality, do we want feedback?
-   wmfeedback=getFeedbackSetting(modality,varargin{:});
+    % now we know our modality, do we want feedback?
+    wmfeedback=getFeedbackSetting(modality,varargin{:});
    
     %% get subject info
     subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});
