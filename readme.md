@@ -40,7 +40,7 @@ attention ID 0001WF r block 2
 
 ## Options
 
-Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial). Alternatively, `HOSTNAME host` where host is e.g. `Admin_PC`, `PUH1DMEG03` can be used to get the settings used by that computer. There is also the option for `practice`, which will run a truncated version and save the output under a different name. Feedback can be set with either `nofeedback` and `feedback`. fMRI defaults to feedback, MEG defaults to nofeedback.
+Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial). Alternatively, `HOSTNAME host` where host is e.g. `Admin_PC`, `PUH1DMEG03` can be used to get the settings used by that computer. There is also the option for `practice`, which will run a truncated version and save the output under a different name. Feedback can be set with either `nofeedback` and `feedback`. Defaults to no feedback unless `practice`.
 
 `workingMemory` can take an additional argument flag, `normalkeys` or `reversekeys`, to counterbalance the "same" and "different" key presses.
 When any of the arguments are not given, their value will be assigned by prompt.

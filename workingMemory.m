@@ -87,7 +87,7 @@ function subject=workingMemory(varargin)
         
  
    % now we know our modality, do we want feedback?
-   feedback=getFeedbackSetting(modality,varargin{:});
+   wmfeedback=getFeedbackSetting(modality,varargin{:});
    
     %% get subject info
     subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});
@@ -165,6 +165,7 @@ function subject=workingMemory(varargin)
                   subject.events(subject.curTrl).timing, ...
                   initTime);
             
+            
             % find the last time we displayed something
             if subject.curTrl > startofblock
               times=subject.trial(subject.curTrl-1).timing ;
@@ -181,6 +182,13 @@ function subject=workingMemory(varargin)
             
             e   = subject.events(subject.curTrl);
             
+            % if we are not cumulative and we want feedback 
+            % build that into the ITI by delaying fix white cross
+            % there is no feedback on first trial, so skip that bit
+            %if ~CUMULATIVE && wmfeedback && subject.curTrl~=startofblock;
+            %  e.timing.fix.ideal=e.timing.fix.ideal-.1;
+            %end
+            
             %what will the wait be?
             wait=e.timing.cue.ideal-lasttime;
             fprintf('ITI: next fix is in %fs\n',wait);
@@ -190,7 +198,7 @@ function subject=workingMemory(varargin)
             trl = wmTrial(w,a, ...
                   e.load, ...
                   e.changes, ...
-                  e.playCue, e.Colors, e.pos, e.timing, feedback);
+                  e.playCue, e.Colors, e.pos, e.timing, wmfeedback);
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl,starttime);
