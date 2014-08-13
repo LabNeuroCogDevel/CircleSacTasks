@@ -176,7 +176,6 @@ end
 
 % border for clrear
 function drawCrossBorder(w,correct,wmfeedback)
- 
  if ~wmfeedback
      color=[255 255 255];
  elseif correct==1

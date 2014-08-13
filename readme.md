@@ -33,6 +33,7 @@ attention ID 0001WF r block 2
 ```
 
 ## Keys/ButtonBox
+
 | Modality| Scanner| Left   | Right |
 | ------- | --     |  ---   |  ---  |
 | fMRI    |  `=`   |  `7`   | `2`   |
@@ -221,3 +222,6 @@ Run task with `attention.m`
 ```bash
 rsync  -rvhi  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timing/*/stims' --exclude '.git/' . /mnt/usb/CircleSacTasks/ 
 ```
+
+# Timing vs Saving
+a mat file with largely redudant data is saved after every trial, leading to at times a .01 sec delay.

@@ -18,6 +18,7 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
 
 
  % eventually we'll want to clear the sreeen, so do the computation now
+ % defaults to a no response screen
  if ~isempty(clearFunc)
    clearFunc(w,correct,varargin{:});
  end
@@ -41,7 +42,7 @@ keyCode=zeros(256);
 
              RT=responseTime;         
              
-             % eventually we'll want to clear the sreeen, so do the computation now
+             % update clearFunc feeback to green or blue
              if ~isempty(clearFunc)
                clearFunc(w,correct,varargin{:});
              end

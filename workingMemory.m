@@ -150,7 +150,7 @@ function subject=workingMemory(varargin)
          a = setupAudio();
           
          % give the spcheal
-         instructions(w,newInstructions,betweenInstructions,subject);
+         instructions(w,newInstructions,betweenInstructions,subject,varargin{:});
          
          % starttime is now
          starttime=startRun(w);
@@ -158,6 +158,14 @@ function subject=workingMemory(varargin)
          % run the actual task
          %while subject.events(subject.curTrl).block == thisBlk
          while subject.curTrl <= endofblock
+            
+            % wm practice has no delay between trials (quick save?)
+            % so we'll add one so we can see feedback
+            % if we are not cumulitve, want feedback, and this is a
+            % practice
+            if(~CUMULATIVE && wmfeedback && regexpi(modality, 'practice') )
+                WaitSecs(.1);
+            end
             % update timing
             % initTime is right now (event) or when trial started
             initTime= (~CUMULATIVE) * GetSecs() +  CUMULATIVE*starttime;
@@ -181,19 +189,12 @@ function subject=workingMemory(varargin)
               
             
             e   = subject.events(subject.curTrl);
-            
-            % if we are not cumulative and we want feedback 
-            % build that into the ITI by delaying fix white cross
-            % there is no feedback on first trial, so skip that bit
-            %if ~CUMULATIVE && wmfeedback && subject.curTrl~=startofblock;
-            %  e.timing.fix.ideal=e.timing.fix.ideal-.1;
-            %end
-            
+  
             %what will the wait be?
             wait=e.timing.cue.ideal-lasttime;
             fprintf('ITI: next fix is in %fs\n',wait);
             subject.waitbefore(subject.curTrl)=wait;
-
+          
             % sreen,audio,load,hemichange,playcue, colors, positions
             trl = wmTrial(w,a, ...
                   e.load, ...

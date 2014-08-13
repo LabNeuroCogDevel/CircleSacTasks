@@ -8,6 +8,7 @@ function drawCross(w,varargin)
     if(length(varargin)==1)
         color=varargin{1};
     end
+    fprintf('draw %d %d %d cross @ %.3f\n',color,GetSecs())
     Screen('DrawLines',w,pos,crossw,color,center);   
 
    %pos = paren(Screen('Rect',w),[3,4])./2 -6;

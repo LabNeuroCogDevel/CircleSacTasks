@@ -192,7 +192,7 @@ function subject = attention(varargin)
       
       
       % give the spcheal
-      instructions(w,newInstructions,betweenInstructions,subject);
+      instructions(w,newInstructions,betweenInstructions,subject,varargin{:});
       
       % start time, wait for ^ if needed
       starttime = startRun(w);
