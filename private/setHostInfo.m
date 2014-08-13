@@ -37,10 +37,11 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.reese_loeff114.vDist = 60;
     hostInfo.reese_loeff114.screenResolution=[1600 1200];
     hostInfo.reese_loeff114.modality = 'fMRI';
-    hostInfo.reese_loeff114.keys.attention = KbName({'7&','2@','space'});
-    hostInfo.reese_loeff114.keys.WM        = KbName({'7&','2@'});
-    hostInfo.reese_loeff114.keys.names  = {'7', '2'};
+    hostInfo.reese_loeff114.keys.attention = KbName({'1!','2@','space'});
+    hostInfo.reese_loeff114.keys.WM        = KbName({'1!','2@'});
+    hostInfo.reese_loeff114.keys.names  = {'1', '2'};
 
+    hostInfo.yogert = hostInfo.OACO4CNRL6;
     
     % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
     % deg size may force some WM dots off screen!
