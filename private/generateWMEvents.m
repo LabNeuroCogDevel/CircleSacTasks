@@ -28,36 +28,35 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     timing.probe.ideal = sum(times(1:4));
     timing.finish.ideal  = sum(times(1:5));
     
+  
+    %% eaqual perms of load x sidecue (snd) x change
+    playCues=[LEFT RIGHT];
+    changeTypes=[0 1];
+    possibleComb = combvec(LOADS,playCues,changeTypes)';
+    % originally we allowed the side not cued to change
+    % but now we only want change on the sounded side (1/2 the time)
+    % so if there is change, the change value should match the side
+    possibleComb(:,3)= possibleComb(:,2).*possibleComb(:,3);
+    %Load playCue change(side) 
+    %1     1      0
+    %4     1      0
+    %1     2      0
+    %4     2      0
+    %1     1      1
+    %4     1      1
+    %1     2      2
+    %4     2      2
+    numrepsneeded=ceil(trialsPerBlock/size(possibleComb,1));
+    fullRun=zeros(trialsPerBlock.*blocks,3);
+    for b=1:blocks
+      possibles = repmat(possibleComb,numrepsneeded, 1);
+      blockCombidx = Shuffle(1:size(possibles,1));
+      fullblock = possibles(blockCombidx(1:trialsPerBlock),:);
+      fullRun(   ( (b-1)*trialsPerBlock + 1):( b*trialsPerBlock ),: ) = ...
+          fullblock;
+    end
     
-    
-    %% sound cue (attend to which hemisphere)
-    playCue = Shuffle( repmat([LEFT RIGHT],1,ceil(nTrl/2)              )  );
-    
-    %% LOAD 
-    % if blocks were one load only
-    %     % repeat each load the number of trials in a block
-    %     loadTrial=repmat(LOADS(:).',trialsPerBlock,1);
-    %     % choose a load for each block, shuffle the load chosen for each block
-    %     loads=loadTrial( Shuffle(mod(1:blocks,length(LOADS))+1), :    );
-    %     % serialize matrix
-    %     loads=loads(:);
-    
-    nLoad = length(LOADS);
-    nPlyCue = length(playCue);
-    %nColors = 8; %size(colors,1);
 
-    loads = Shuffle(repmat(LOADS,1,ceil(nTrl/nLoad)));
-
-    %% on what hemisphere does a chage happen
-    % -1 other side, 0 no change, 1 same side
-    % matched to the lenght of playCue
-    % TODO -- or not: add both change
-    %posblChanges=[ -1 0 1 ];
-    posblChanges=[ 0 1 ]; % only same or different, no opposite change
-    chngType =  repmat(posblChanges,1,ceil(nPlyCue/length(posblChanges)));
-    changes=playCue .* chngType(1:nPlyCue);
-    cIdx=changes<0;
-    changes(cIdx)= mod( changes(cIdx),2)+1;
     
     %% create structure
     % in >= Matlab2013, events looks like a table in variable explorer
@@ -66,9 +65,12 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     events = struct('playCue',zs,'load',zs,'changes',zs,'block',zs,'RT',[], 'Correct', []);
    
     for i=1:nTrl;
-        events(i).playCue = playCue(i);
-        events(i).load    = loads(i);
-        events(i).changes = changes(i);
+
+        
+        events(i).load    = fullRun(i,1);
+        events(i).playCue = fullRun(i,2);
+        events(i).changes = fullRun(i,3);
+        
         events(i).block   = blockrep(i);
         events(i).timing  = timing; 
         events(i).RT      = []; 
@@ -86,7 +88,11 @@ function events = generateWMEvents(trialsPerBlock, blocks)
     
     events = generateWMcolorPos(events);
     
-    
+    %% check
+    % [a,b,c] = unique([ [events.playCue]; [events.changes]; [events.load] ]','rows');
+    % counts=histc(c,1:8);
+    % [counts a]
+    % all([events.playCue]==[events.changes]|[events.changes]==0)
     
 
 end
