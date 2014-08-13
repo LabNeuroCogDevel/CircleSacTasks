@@ -34,10 +34,10 @@ attention ID 0001WF r block 2
 
 ## Keys/ButtonBox
 
-| Modality| Scanner| Left   | Right |
-| ------- | --     |  ---   |  ---  |
-| fMRI    |  `=`   |  `7`   | `2`   |
-| MEG     |  NA    |   ?    |  ?    | 
+| Modality| Scanner | Left   | Right |
+| ------- | ------- | ------ | ----- |
+| fMRI    |  `=`    |  `7`   | `2`   |
+| MEG     |  NA     |   ?    |  ?    | 
 
 ## Options
 
