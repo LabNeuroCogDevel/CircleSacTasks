@@ -86,6 +86,9 @@ function subject=workingMemory(varargin)
     [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
         
  
+   % now we know our modality, do we want feedback?
+   feedback=getFeedbackSetting(modality,varargin{:});
+   
     %% get subject info
     subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});
     
@@ -187,7 +190,7 @@ function subject=workingMemory(varargin)
             trl = wmTrial(w,a, ...
                   e.load, ...
                   e.changes, ...
-                  e.playCue, e.Colors, e.pos, e.timing);
+                  e.playCue, e.Colors, e.pos, e.timing, feedback);
             % save subject info into mat
             % update current position in block list
             subject=saveTrial(subject,trl,starttime);

@@ -2,7 +2,7 @@
 % JS 20140528 -- Initial
 % WF 21040529 -- pull out bits that are shared with attention, modify timing
 
-function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
+function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing,wmfeedback)
 % wmTrial -- play a trial of working memory task
 %  use screen 'w' and audiodev 'a'
 %  show 'number' of circles
@@ -119,7 +119,7 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing)
     [ timing.finish.onset, ...
       timing.Response,     ...
       trial.correct   ]     =  clearAndWait(w,timing.finish.ideal,timing.finish.ideal,...
-                                          listenKeys(correctKey),@drawCrossBorder);
+                                          listenKeys(correctKey),@drawCrossBorder,wmfeedback);
         
     trial.RT      = timing.Response-timing.probe.onset;                                  
     trial.timing  = timing;
@@ -175,9 +175,11 @@ function [StimulusOnsetTime, soundStartTime] = cue(w,a,playCue, when)
 end
 
 % border for clrear
-function drawCrossBorder(w,correct)
+function drawCrossBorder(w,correct,wmfeedback)
  
- if correct==1
+ if ~wmfeedback
+     color=[255 255 255];
+ elseif correct==1
      color=[0 250 0];
  elseif correct==0
      color=[0 0 250];

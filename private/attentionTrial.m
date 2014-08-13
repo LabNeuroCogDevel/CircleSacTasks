@@ -1,4 +1,4 @@
-function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
+function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,feedback,varargin)
 %  attentionTrial -- run an attention trial
 % for popout, provide colorIDX as [targetColorIDX restColorIDX] and
 % varargin as 'Popout'
@@ -77,10 +77,15 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,varargin)
       end
       
       %% give subject feedback on perfomance
-      drawBorder(w,[0 0 0], .7);
-      drawCross(w,responseColors(trial.correct+2,:));
-      [junk,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal);
-
+      if(feedback)
+          drawBorder(w,[0 0 0], .7);
+          drawCross(w,responseColors(trial.correct+2,:));
+          [junk,timing.fixAfterRT.onset ] =  Screen('Flip',w,timing.fixAfterRT.ideal);
+      else
+          % debug printing wants this feild to exist
+          timing.fixAfterRT.onset=0;
+          timing.fixAfterRT.ideal=0;
+      end
       %% save outputs
       trial.timing=timing;
       trial.RT    = timing.Response - timing.probe.onset;

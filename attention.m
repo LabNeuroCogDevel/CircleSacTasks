@@ -141,6 +141,8 @@ function subject = attention(varargin)
     % get fMRI/MEG, cumulative/not cumulative, and how to get events
     [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
 
+   % now we know our modality, do we want feedback?
+   feedback=getFeedbackSetting(modality,varargin{:});
     
    % what keys will we accept as correct/incorrect
    listenKeys = hostinfo.keys.attention; % set in private/setHostInfo.m
@@ -235,7 +237,7 @@ function subject = attention(varargin)
               e.trgtpos, ...
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
-              e.timing,...
+              e.timing, feedback,...
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
           trl.ITI=wait;

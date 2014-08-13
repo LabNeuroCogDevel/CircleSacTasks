@@ -1,4 +1,4 @@
-function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,correctKeys,clearFunc)
+function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,correctKeys,clearFunc,varargin)
 % clearAndWait -- list for listenKeys, clear screen with clearFunc
 %    returns 
 %       time of clear
@@ -19,7 +19,7 @@ function [ clearOnsetTime, RT, correct ] = clearAndWait(w,clearWhen,RTwindowEnd,
 
  % eventually we'll want to clear the sreeen, so do the computation now
  if ~isempty(clearFunc)
-   clearFunc(w,correct);
+   clearFunc(w,correct,varargin{:});
  end
  
 keyCode=zeros(256);
@@ -43,7 +43,7 @@ keyCode=zeros(256);
              
              % eventually we'll want to clear the sreeen, so do the computation now
              if ~isempty(clearFunc)
-               clearFunc(w,correct);
+               clearFunc(w,correct,varargin{:});
              end
              
          elseif keyCode(KbName('escape'))
