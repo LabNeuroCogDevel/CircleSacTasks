@@ -4,7 +4,7 @@ function drawBorder(w, borderColor, intensity,varargin )
  % only do this for MEG
  if(~strcmp(modality,'MEG')), return, end
  
- width=50;
+ width=75;
  screen=Screen('Rect',w);
  if(~isempty(varargin)); width=varargin{1}; end
  
