@@ -52,4 +52,6 @@ function eventTypes = getTrialFunc(readFunc,readNTrial, readNblock, ...
     else
         eventTypes.TEST = @(t,b) setTEST(t,b);
     end
+    
+    fprintf('in getEvents: set trialsPerBlock to %d\n',trialsPerBlock);
 end

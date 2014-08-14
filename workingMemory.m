@@ -76,16 +76,16 @@ function subject=workingMemory(varargin)
     
     %% different trial structures for each modality
     % fMRI = 32 full 16 catch, for 2 blocks
-    eventTypes = getTrialFunc(@readWMEvents,48,2,      ...
-                              @generateWMEvents,72,4, ...
-                              'timing/wm.prac.txt',10, ...
-                              varargin{:});
-    
+    numTrlRun.MEG         = { 72,4,@generateWMEvents};
+    numTrlRun.fMRI        = { 48,2,@readWMEvents};
+    numTrlRun.practiceMEG = { 9, 1,@generateWMEvents};
+    numTrlRun.practicefMRI ={ 10,1,@(x,y) readWMEvents(x,y,'timing/wm.prac.txt')};
     %% get imaging tech. ("modality" is global)
     % set modality
-    [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
+    [hostinfo, modality, CUMULATIVE] = getHostSettings(varargin{:});
         
- 
+    trialsPerBlock = numTrlRun.(modality){1};
+    
     % now we know our modality, do we want feedback?
     wmfeedback=getFeedbackSetting(modality,varargin{:});
    
@@ -119,7 +119,7 @@ function subject=workingMemory(varargin)
     % initialze order of events/trials
     % this is done differently for MEG and fMRI
     if ~isfield(subject,'events') 
-        subject.events = getEvents();
+        subject.events = numTrlRun.(modality){3}(numTrlRun.(modality){1:2});
         subject.eventsInit = subject.events;
         subject.filelist  = filelist;
     end
@@ -154,6 +154,7 @@ function subject=workingMemory(varargin)
          
          % starttime is now
          starttime=startRun(w);
+         %starttime=GetSecs();
          subject.starttime(thisBlk) = starttime;
          % run the actual task
          %while subject.events(subject.curTrl).block == thisBlk

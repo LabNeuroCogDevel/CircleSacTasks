@@ -155,18 +155,27 @@ end
 
 %% 2. cue.
 function [StimulusOnsetTime, soundStartTime] = cue(w,a,playCue, when)
-    global LEFT RIGHT lsound rsound;
+    global LEFT RIGHT lsound rsound modality;
     if playCue
         PsychPortAudio('DeleteBuffer');
         if playCue==LEFT
             PsychPortAudio('FillBuffer',a,lsound);
+            y=lsound;
             %sounddata=[sound;zeros(size(sound))];
         else
             PsychPortAudio('FillBuffer',a,rsound);
+            y=rsound;
         end
         % start playback of 'a', 1 repetition, at 'when' time, wait for
         % start and return estimated start timestamp
-        soundStartTime=PsychPortAudio('Start',a,1,when,1);
+        %https://docs.psychtoolbox.org/SND
+        %ugly ugly hack to get sound to work
+        if regexpi(modality,'MEG') 
+            soundStartTime=GetSecs();
+            Snd('Play',resample(y(1,:),1,2));
+        else
+           soundStartTime=PsychPortAudio('Start',a,1,when,1);
+        end
     else
         soundStartTime=-1;
     end
@@ -196,6 +205,16 @@ function triggers = getCodes(cueHemi,cLoad,changes)
   global LEFT RIGHT LOADS;
   % triggers for (1) cue (2) array (3) delay (4) probe 
  
+  % cue 
+  % left right
+  %  1    2
+  % load
+  % two   four
+  % 3 5   6  8
+  % delay
+  % probe
+  
+  
   % cue
   if(cueHemi==LEFT); triggers(1) = 1; 
   else               triggers(1) = 2; end

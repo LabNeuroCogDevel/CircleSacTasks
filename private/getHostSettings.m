@@ -1,4 +1,4 @@
-function [thishostinfo, modality, CUMULATIVE, getEvents] = getHostSettings(eventTypes,varargin)
+function [thishostinfo, modality, CUMULATIVE] = getHostSettings(varargin)
 % getModailty -- set modailty (fMRI||MEG), cummulative (1||0)
 %                screenResolution, and degreeSize
 %    eventTypes is a struct with fields for each modality:
@@ -74,12 +74,12 @@ function [thishostinfo, modality, CUMULATIVE, getEvents] = getHostSettings(event
     
     %% based on modality, what function should we use to get events
     % generate or read in -- functions specified by eventTypes struct
-    if isfield(eventTypes, modality)
-        getEvents = eventTypes.(modality);
-    else
-        fieldnames(eventTypes)
-        error('no events function for modality %s', modality);
-    end
+    %if isfield(eventTypes, modality)
+    %    getEvents = eventTypes.(modality);
+    %else
+    %    fieldnames(eventTypes)
+    %    error('no events function for modality %s', modality);
+    %end
 
        
     %% resolution

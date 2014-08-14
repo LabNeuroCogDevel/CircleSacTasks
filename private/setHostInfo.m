@@ -6,11 +6,12 @@ function [ thishostinfo ] = setHostInfo( varargin )
     KbName('UnifyKeyNames');
     %% MEG
     %TODO: ACTUALLY MEASSURE THIS 
-    hostInfo.PUH1DMEG03.hSize = 41; 
-    hostInfo.PUH1DMEG03.vDist = 57;
+    hostInfo.PUH1DMEG03.hSize = 56; 
+    hostInfo.PUH1DMEG03.vDist = 145;
     hostInfo.PUH1DMEG03.modality = 'MEG';
-    hostInfo.PUH1DMEG03.keys.attention = KbName({'1!','2@','space'});
-    hostInfo.PUH1DMEG03.keys.WM        = KbName({'1!','2@'});
+    %hostInfo.PUH1DMEG03.screenResolution=[800 600];
+    hostInfo.PUH1DMEG03.keys.attention = KbName({'7&','2@','space'});
+    hostInfo.PUH1DMEG03.keys.WM        = KbName({'7&','2@'});
     hostInfo.PUH1DMEG03.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
 
     %Tim's

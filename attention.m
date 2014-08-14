@@ -6,7 +6,7 @@
 % first-episode psychosis patients and matched controls performing tasks that require attention and working 
 % memory. We will employ a concurrent multimodal imaging approach combining fMRI, for high spatial 
 % resolution, with MEG and EEG (M/EEG), for high temporal resolution. We will be attentive to patterns of 
-% activation throughout the cortex but will focus, in accordance with the Center’s goals, on V1, PPC and DLPFC. 
+% activation throughout the cortex but will focus, in accordance with the Center's goals, on V1, PPC and DLPFC. 
 % To test the hypothesis that functional connectivity between PPC and DLPFC is impaired in schizophrenia, we 
 % will employ spectral measures of coherence and causality (M/EEG) and analogous measures of slow temporal 
 % co-variation (fMRI). To test the hypothesis that impairments increase along a posterior-to-anterior axis, we will 
@@ -28,9 +28,9 @@
 % Patients and healthy controls will perform, in separate blocks, 
 % three tasks that impose graded degrees of 
 % challenge on top-down attention. In order of increasing challenge, these 
-% are a visual pop-out task in “habitual” 
-% mode, a visual search task in “habitual” mode and a visual search task 
-% in “flexible” mode. The trial structure will 
+% are a visual pop-out task in "habitual"? 
+% mode, a visual search task in "habitual" mode and a visual search task 
+% in "flexible"? mode. The trial structure will 
 % be the same regardless of task (Fig. 5.1). After the 
 % appearance of a central cross, on which the subject 
 % must fixate, a color cue appears briefly at fixation. 
@@ -50,16 +50,16 @@
 % attention. 
 %
 % Each task has distinctive properties that determine the degree of challenge to top-down attention. Pop-out task 
-% in “habitual” mode. On a given block of trials, the color cue and the target will always be of one color (green in 
+% in "habitual" mode. On a given block of trials, the color cue and the target will always be of one color (green in 
 % Fig.5.1) and the distractors will all be of the same color, which will be the same from trial to trial (red in Fig.5.1). 
 % Thus the target can be selected for attention in a top-down fashion, on the basis of its matching the antecedent 
 % cue in color, but top-down selection subject to aid by two bottom-up processes, namely habit (the habit 
 % developed across the block of attending to a certain color) and automatic capture of attention by an item salient 
-% due to its perceptual oddball status. Visual search task in “habitual” mode. In this task, the target will be of the 
+% due to its perceptual oddball status. Visual search task in "habitual" mode. In this task, the target will be of the 
 % same color across the entire block of trials but the distractors on any given trial will be of multiple colors. Thus 
 % the target can be selected for attention in a top-down fashion, on the basis of its matching the antecedent cue 
 % in color, but top-down selection is subject to aid by a bottom-up process, namely habit (the habit developed 
-% across the block of attending to a certain color). Visual search task in “flexible” mode. In this task, both the 
+% across the block of attending to a certain color). Visual search task in "flexible" mode. In this task, both the 
 % target and the distractors will vary in color from trial to trial. Thus the target must be selected for attention in a 
 % top-down fashion, on the basis of its matching the antecedent cue in color, without any reliance on bottom-up 
 % aids. The three tasks will be run in interleaved blocks for a total of 480 trials. 
@@ -115,6 +115,7 @@
 % usage:
 %    attention MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
 function subject = attention(varargin)
+   clear trialsPerBlock
    %% globals
    % colors, paren, and degsize defined in setupscreen
    global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME modality filelist;
@@ -133,13 +134,19 @@ function subject = attention(varargin)
    %% different trial structures for each modality
    %fMRI: 48 full + 24 catch for 2 blocks
    %sets global trialsPerBlock and might remove totalfMRITime
-   eventTypes = getTrialFunc(@readAttentionEvents,72,2,        ...
-                             @generateAttentionEvents,72,6,   ...
-                            'timing/att.prac.txt',9, ...
-                             varargin{:});
+   numTrlRun.MEG         = { 72,6,@generateAttentionEvents};
+   numTrlRun.fMRI        = { 72,2,@readAttentionEvents};
+   numTrlRun.practiceMEG = { 9, 1,@generateAttentionEvents };
+   numTrlRun.practicefMRI ={ 7, 1, @(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
+   %eventTypes = getTrialFunc(@readAttentionEvents,72,2,        ...
+   %                          @generateAttentionEvents,72,6,   ...
+   %                         'timing/att.prac.txt',9, ...
+   %                          varargin{:});
     
-    % get fMRI/MEG, cumulative/not cumulative, and how to get events
-    [hostinfo, modality, CUMULATIVE ,getEvents] = getHostSettings(eventTypes, varargin{:});
+   % get fMRI/MEG, cumulative/not cumulative, and how to get events
+   [hostinfo, modality, CUMULATIVE ] = getHostSettings(varargin{:});
+   
+   trialsPerBlock = numTrlRun.(modality){1};
 
    % now we know our modality, do we want feedback?
    feedback=getFeedbackSetting(modality,varargin{:});
@@ -157,16 +164,19 @@ function subject = attention(varargin)
     
     %% initialze order of events/trials if needed
     if ~isfield(subject,'events') 
-       subject.events = getEvents();
+       subject.events = numTrlRun.(modality){3}(numTrlRun.(modality){1:2});
        subject.eventsInit = subject.events;
        subject.filelist  = filelist;
     end
     
-     checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
-         
-              
+
+    checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
+    
+
+    
     % get display instructions
     keylabels = {'left index finger','right index finger'};
+    
     [newInstructions,betweenInstructions,endStructions] = getAttentionInstructions(keylabels);
     
     thisBlk=subject.curBlk;
@@ -191,11 +201,13 @@ function subject = attention(varargin)
       last9Correct=0;
       
       
-      % give the spcheal
+      % give the spcheal if asked
       instructions(w,newInstructions,betweenInstructions,subject,varargin{:});
+      
       
       % start time, wait for ^ if needed
       starttime = startRun(w);
+      %starttime=getSecs();
       
       subject.starttime(thisBlk)=starttime;
       

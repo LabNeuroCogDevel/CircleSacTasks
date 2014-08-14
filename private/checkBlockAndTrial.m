@@ -1,4 +1,13 @@
 function checkBlockAndTrial(subject,trialsPerBlock,varargin)
+
+
+    fprintf('\ntrialsPerBlock %d\n\n',trialsPerBlock)     
+    if isempty(trialsPerBlock)
+        error('trialsPerBlock is empty')
+    %elseif exist('trialsPerBlock','var')
+    %    error('trialsPerBlock is not defined??')
+    end
+    
      % can we use the block we want?
      % check that this block makes sense
      if subject.curBlk > max([subject.events.block]) || subject.curBlk<1

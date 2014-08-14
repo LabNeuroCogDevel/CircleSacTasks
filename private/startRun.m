@@ -42,10 +42,12 @@ function [starttime]=startRun(w)
      % the screen after hitting okay on the instructions
      Screen('Flip', w,nextflash,1);
      nextflash=WaitSecs(.3);
-    
+     
+     fprintf('waiting for key press\n');
      while(~keyPressed) % should we wait for a specific key?
          nowtime=GetSecs();
          if(nowtime>nextflash)
+            fprintf('drawing next\n');
             drawBorder(w, [0 0 0], intensities(intensityIDX))
             Screen('Flip', w,nowtime,1); % dont clear
             nextflash=nowtime+waittime;
@@ -57,7 +59,7 @@ function [starttime]=startRun(w)
          keyPressed = KbCheck;
 
      end
-     
+     fprintf('left get ready screen\n');
      % redraw background
      Screen('Flip', w,nowtime);
      starttime=GetSecs();

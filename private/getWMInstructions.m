@@ -7,9 +7,11 @@ function [newInstructions,betweenInstructions,endStructions] = getWMInstructions
         % w is screen which we dont use to play the sound
         % but is expected by Instructions()
         global lsound
-        global a
-        PsychPortAudio('FillBuffer',a,lsound);
-        PsychPortAudio('Start',a,1,GetSecs(),1);
+        %global a
+        %PsychPortAudio('FillBuffer',a,lsound);
+        %PsychPortAudio('Start',a,1,GetSecs(),1);
+        %hacky to work with 2009a MSWin
+        Snd('Play',resample(lsound(1,:),1,2));
     end
 
     function drawDots(lPos,rPos,lColor,rColor,w)

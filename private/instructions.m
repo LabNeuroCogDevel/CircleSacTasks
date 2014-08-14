@@ -1,9 +1,5 @@
 function instructions(w,newInstructions,betweenInstructions,subject,varargin)
-   if any(cellfun(@(x) ischar(x)&&strcmpi(x,'noinstructions'), varargin))
-       return
-   end
-% show long instructions for first time player
-    if subject.curTrl <= 1 %|| subject.events(subject.curTrl).block ~= subject.events(subject.curTrl-1).block
+   if any(cellfun(@(x) ischar(x)&&strcmpi(x,'instructions'), varargin))
         Instructions=newInstructions;
     else
         Instructions=betweenInstructions;
