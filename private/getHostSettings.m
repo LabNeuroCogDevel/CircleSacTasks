@@ -49,19 +49,20 @@ function [thishostinfo, modality, CUMULATIVE] = getHostSettings(varargin)
     
     
     %% all of that above was useless if we specify a number of trials
-    tpbidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'tpb'), varargin),1);
-    if(~isempty(tpbidx))
-       modality='TEST';
-       trialsPerBlock=str2double(varargin{tpbidx+1});
-       blocksidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'nblocks'), varargin),1);
-       if ~isempty(blocksidx)
-           blocks=str2double(varargin{blocksidx+1});
-       else
-           blocks=3;
-       end
-       eventTypes.TEST= eventTypes.TEST(trialsPerBlock,blocks);
-    end
-    
+    % -- 20140814 --  removed this option, no longer use eventTypes struct
+%     tpbidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'tpb'), varargin),1);
+%     if(~isempty(tpbidx))
+%        modality='TEST';
+%        trialsPerBlock=str2double(varargin{tpbidx+1});
+%        blocksidx = find(cellfun(@(x) ischar(x)&&strcmpi(x,'nblocks'), varargin),1);
+%        if ~isempty(blocksidx)
+%            blocks=str2double(varargin{blocksidx+1});
+%        else
+%            blocks=3;
+%        end
+%        eventTypes.TEST= eventTypes.TEST(trialsPerBlock,blocks);
+%     end
+%     
 
     %% maybe we want to practice instead of test
     % did we pass in practice?

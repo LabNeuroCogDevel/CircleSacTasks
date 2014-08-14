@@ -1,5 +1,5 @@
-function events = readAttentionEvents(blocks,varargin)
-   global TIMES CLEARTIME trialsPerBlock filelist
+function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
+   global TIMES CLEARTIME filelist
     % TIMES is a cue attend probe clear (all .5)
     % CLEARTIME is the time allowed for a response after the screen is
     % cleared
@@ -65,7 +65,6 @@ function events = readAttentionEvents(blocks,varargin)
     end
     
     function events = getBlockEvents(blocknum, filename)
-        
         fid = fopen(filename,'r');
 
 

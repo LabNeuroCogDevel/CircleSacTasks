@@ -1,4 +1,4 @@
-function subject = getSubjectInfo(varargin)
+function subject = getSubjectInfo(prdgmStruct,varargin)
 % getSubjectInfo -- parse "varargin" for subject inforatiom, return struct
   
  %% set date
@@ -56,7 +56,7 @@ function subject = getSubjectInfo(varargin)
              if ~isempty( find(cellfun(@(x) ischar(x)&&strcmpi(x,'r'),  varargin ),1));
                  resume='y';
              else
-               resume=input(['resume from ' subject.file '? (Y|n) '],'s');
+               resume=input(['use subj info+order from ' subject.file '? (Y|n) '],'s');
              end
              
              if(strcmpi(resume,'n'))
@@ -75,7 +75,38 @@ function subject = getSubjectInfo(varargin)
          
      end
  end
+ 
+ 
+ %% if we dont have it, build events
+ if ~isfield(subject,'events') || ~isfield(subject,'trialsPerBlock')
+     %each modality in the paradigm structure has cell where elements are
+     % trialsPerBlock,block, and generating fuction
+     % the generating function will create
+     
 
+     
+
+     md=subject.modality;
+     eventsFunc=prdgmStruct.(md){3};
+     subject.trialsPerBlock= prdgmStruct.(md){1};
+     subject.noBlocks      = prdgmStruct.(md){2};
+     
+     %block order if specified
+     orderIdx=find(cellfun(@(x) ischar(x)&&strcmpi(x,'bOrder'),  varargin));
+     
+     if ~isempty(orderIdx)
+       subject.events = eventsFunc( subject.trialsPerBlock,...
+                                    subject.noBlocks, ...
+                                    'bOrder', varargin{orderIdx+1});
+     else
+        subject.events = eventsFunc( subject.trialsPerBlock,subject.noBlocks);
+     end
+    
+
+     % or more conciesely
+     %subject.events = prdgmStruct.(md){3}(prdgmStruct.(md){1:2},specifyoder{:});
+
+ end
 
  %% record seed -- not useful for matlab 2009 (MEG)
  % http://www.walkingrandomly.com/?p=3537

@@ -1,5 +1,5 @@
-function events = readWMEvents(blocks,varargin)
-    global LEFT RIGHT TIMES trialsPerBlock longdelaytime filelist LOADS;
+function events = readWMEvents(trialsPerBlock,blocks,varargin)
+    global LEFT RIGHT TIMES longdelaytime filelist LOADS;
     idxs={1 3 5 7};
     [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
     idxsname = {'cue','mem','delay','probe'};

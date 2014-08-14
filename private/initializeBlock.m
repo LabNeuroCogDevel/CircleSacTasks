@@ -1,8 +1,9 @@
 function subject=initializeBlock(subject,varargin)
  %% initializePosition -- set curBlk and curTrl on subject object
  % also look for 'block','#' 
+ % elsewhere the subject.trial will be cleared out for a repeated block
  % 
- global trialsPerBlock
+ trialsPerBlock=subject.trialsPerBlock;
  
     %% if block is specified by function argument
     % eg. 'block','3'

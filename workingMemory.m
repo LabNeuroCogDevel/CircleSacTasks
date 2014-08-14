@@ -61,7 +61,7 @@
 function subject=workingMemory(varargin)
     
     
-    global    TIMES totalfMRITime listenKeys trialsPerBlock filelist ...
+    global    TIMES totalfMRITime listenKeys filelist ...
               longdelaytime modality CUMULATIVE trlCatch;
     global a; % audio channel for left and right audio cues
 
@@ -76,21 +76,25 @@ function subject=workingMemory(varargin)
     
     %% different trial structures for each modality
     % fMRI = 32 full 16 catch, for 2 blocks
-    numTrlRun.MEG         = { 72,4,@generateWMEvents};
-    numTrlRun.fMRI        = { 48,2,@readWMEvents};
-    numTrlRun.practiceMEG = { 9, 1,@generateWMEvents};
-    numTrlRun.practicefMRI ={ 10,1,@(x,y) readWMEvents(x,y,'timing/wm.prac.txt')};
+    prdgmStruct.MEG         = { 72,4,@generateWMEvents};
+    prdgmStruct.fMRI        = { 48,2,@readWMEvents};
+    prdgmStruct.practiceMEG = { 9, 1,@generateWMEvents};
+    prdgmStruct.practicefMRI ={ 10,1,@(x,y) readWMEvents(x,y,'timing/wm.prac.txt')};
     %% get imaging tech. ("modality" is global)
     % set modality
     [hostinfo, modality, CUMULATIVE] = getHostSettings(varargin{:});
-        
-    trialsPerBlock = numTrlRun.(modality){1};
-    
+     % reset total fMRI time if its practice
+     % so we dont wait forever at the end
+     if any(regexpi(modality,'practice'))
+       totalfMRITime=0;
+     end
+       
     % now we know our modality, do we want feedback?
     wmfeedback=getFeedbackSetting(modality,varargin{:});
    
     %% get subject info
-    subject = getSubjectInfo('task','WorkingMemory','modality',modality, varargin{:});
+    % also set event structure using prgmStruct
+    subject = getSubjectInfo(prdgmStruct,'task','WorkingMemory','modality',modality, varargin{:});
     
     
     
@@ -118,11 +122,12 @@ function subject=workingMemory(varargin)
     
     % initialze order of events/trials
     % this is done differently for MEG and fMRI
-    if ~isfield(subject,'events') 
-        subject.events = numTrlRun.(modality){3}(numTrlRun.(modality){1:2});
+    if ~isfield(subject,'eventsInit') 
         subject.eventsInit = subject.events;
         subject.filelist  = filelist;
     end
+    
+    trialsPerBlock =  subject.trialsPerBlock;
     
     checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
     

@@ -60,7 +60,7 @@ keyCode=zeros(256);
      if( clearWhen ~= RTwindowEnd && ... we want to draw before the end
          clearOnsetTime == -Inf    && ... we haven't drawn already
          GetSecs() >= clearWhen )     ... its time to draw
-             
+
          [VBLTimestamp, clearOnsetTime  ] = Screen('Flip',w);
      end
  end

@@ -115,10 +115,9 @@
 % usage:
 %    attention MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
 function subject = attention(varargin)
-   clear trialsPerBlock
    %% globals
    % colors, paren, and degsize defined in setupscreen
-   global TIMES listenKeys trialsPerBlock CUMULATIVE CLEARTIME modality filelist;
+   global TIMES listenKeys CUMULATIVE CLEARTIME modality filelist;
    %       cue attend probe clear  
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
@@ -132,22 +131,20 @@ function subject = attention(varargin)
    globalSettings();
 
    %% different trial structures for each modality
-   %fMRI: 48 full + 24 catch for 2 blocks
    %sets global trialsPerBlock and might remove totalfMRITime
-   numTrlRun.MEG         = { 72,6,@generateAttentionEvents};
-   numTrlRun.fMRI        = { 72,2,@readAttentionEvents};
-   numTrlRun.practiceMEG = { 9, 1,@generateAttentionEvents };
-   numTrlRun.practicefMRI ={ 7, 1, @(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
-   %eventTypes = getTrialFunc(@readAttentionEvents,72,2,        ...
-   %                          @generateAttentionEvents,72,6,   ...
-   %                         'timing/att.prac.txt',9, ...
-   %                          varargin{:});
+   PrdgmStruct.MEG         = { 72,6,@generateAttentionEvents};
+   PrdgmStruct.fMRI        = { 72,2,@readAttentionEvents};
+   PrdgmStruct.practiceMEG = { 9, 1,@generateAttentionEvents };
+   PrdgmStruct.practicefMRI ={ 7, 1,@(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
+
     
    % get fMRI/MEG, cumulative/not cumulative, and how to get events
    [hostinfo, modality, CUMULATIVE ] = getHostSettings(varargin{:});
-   
-   trialsPerBlock = numTrlRun.(modality){1};
-
+   % reset total fMRI time if its practice
+   % so we dont wait forever at the end
+   if any(regexpi(modality,'practice'))
+       totalfMRITime=0;
+   end
    % now we know our modality, do we want feedback?
    feedback=getFeedbackSetting(modality,varargin{:});
     
@@ -159,15 +156,17 @@ function subject = attention(varargin)
     % get subject info, possible resume from previously
     % also set subject.curTrl and subject.curBlk
     %  -- read 'block' argument if provided
-    subject = getSubjectInfo('task','Attention','modality',modality, varargin{:});
+    % also set event structure using prgmStruct
+    subject = getSubjectInfo(PrdgmStruct,'task','Attention','modality',modality, varargin{:});
    
     
     %% initialze order of events/trials if needed
-    if ~isfield(subject,'events') 
-       subject.events = numTrlRun.(modality){3}(numTrlRun.(modality){1:2});
+    if ~isfield(subject,'eventsInit') 
        subject.eventsInit = subject.events;
        subject.filelist  = filelist;
     end
+    
+    trialsPerBlock =  subject.trialsPerBlock;
     
 
     checkBlockAndTrial(subject,trialsPerBlock,varargin{:})
@@ -275,9 +274,7 @@ function subject = attention(varargin)
      fprintf('Finished but maybe on a catch: waiting %.03f\n',wait);
      Screen('Flip',w,GetSecs()+wait)
      
-     
-     
-      
+
      %% wrap up
      % subject.curBlk-1 == thsiBlk
      subject.endtime(thisBlk)=GetSecs();

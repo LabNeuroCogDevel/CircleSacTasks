@@ -1,6 +1,5 @@
 function checkBlockAndTrial(subject,trialsPerBlock,varargin)
 
-
     fprintf('\ntrialsPerBlock %d\n\n',trialsPerBlock)     
     if isempty(trialsPerBlock)
         error('trialsPerBlock is empty')

@@ -73,5 +73,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
     
     thishostinfo=hostInfo.(host);
     thishostinfo.name=host;
+    v=version;
+    thishostinfo.version=str2double(v(1:3));
 end
 
