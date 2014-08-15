@@ -2,12 +2,6 @@
 ![workingMemory](https://raw.githubusercontent.com/LabNeuroCogDevel/CircleSacTasks/master/docs/workingMemory.gif)
 ![Attention](https://raw.githubusercontent.com/LabNeuroCogDevel/CircleSacTasks/master/docs/attention.gif)
 
-# TODO
-## MEG
- * check for working sound. The WM left/right audio cues may not play well
- * measure screen dimensions and distance to subject for degree size accuracy
- * set button glove keys
- * find working size changing border to activate photodiode
 
 # Using
 
@@ -70,8 +64,8 @@ see `eventTypes = ` line in [`attention.m`](https://github.com/LabNeuroCogDevel/
 
 |Task      |runs| trials |
 |----------|----| -------|
-|Attention | 6  |    75  |
-|WM        | 6  |    100 |
+|Attention | 6  |    72  |
+|WM        | 4  |    72  |
 
 One attention run includes only trials of one type (pop,hab, or flex).
 
