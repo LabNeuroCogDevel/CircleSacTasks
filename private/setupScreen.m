@@ -37,5 +37,8 @@ function w=setupScreen()
      %ListenChar(2); %leaving out for now because crashing at MRRC
     
      HideCursor;
+     
+     % initialize the TTL handler
+     sendCode(0);
 
 end
