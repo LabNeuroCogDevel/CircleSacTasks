@@ -45,16 +45,7 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     if( mod(nTrl,nTypes)~=0 )
         error('mod( %d trials, %d nTypes) != 0 !', nTrl, nTypes );
     end
-    % randomly arrange the types (interleave)
-    %t            = Shuffle(types(repmat(1:nTypes,1,nTrl/nTypes)));
-    
-    % blocks of only one repeating type
-    blocksPerType = ceil(blocks/nTypes);
-    trailTypeList = Shuffle(repmat([1:nTypes]', blocksPerType,1));
-    trialTypeIdx  = repmat(trailTypeList, 1, trialsPerBlock)';
-    t             = types(trialTypeIdx);
-    
-    
+
     % blocks repeat trialsPerBlock times
     blockrep     = repmat(1:blocks,trialsPerBlock,1);
     
@@ -62,42 +53,77 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     colors       = Shuffle(repmat(1:nColors,1,ceil(blocks/nColors)));
     colors       = colors(1:blocks);
     
-    % position of target
-    trgtpos  = Shuffle(repmat(1:nTrgts,1,ceil(nTrl/nTrgts)));
-    trgtpos  = trgtpos(1:nTrl);
     
-     % correct direction
-    directions   = Shuffle(repmat(1:nDirs,1,ceil(nTrl/nDirs)));
+    %% GENERATE
     
-    %re-populates directions so that each position has equal number of left
-    %and right 
-    % ASSUMES ONLY 2 directions
-    for i = 1:nTrgts;
-        sDirs = (find(trgtpos == i)); 
-        %Creates a matrix half the length of sDirs with ones and another with
-        %twos then concatenates them
-        newDirs = Shuffle([ones(1,ceil(length(find(trgtpos == i))/2)), (repmat(2,1,ceil(length(find(trgtpos == i))/2)))]);
-        newDirs = newDirs(1:length(sDirs));
-        directions(sDirs) = newDirs; 
-    end 
+    % blocks of 
+    
+    %  target pos (1:3, 4:6), open direction (left or right)
+    possibleComb=combvec(1:nTrgts,1:nDirs)';
+
+    %%% get blocks
+    % how many of each block
+    blocksPerType = ceil(blocks/nTypes); 
+    % block# repeated trial per block types
+    bidx=blockrep(:); 
+    % trial type listed trialsPerBlock times for each block
+    trialTypeList = Shuffle(repmat([1:nTypes]', blocksPerType,1));
+    trialTypeList = trialTypeList(bidx);
+    
+    %%% build manipulations
+    % how many reps of the manipluation array do we need
+    numrepsneeded=ceil(trialsPerBlock/size(possibleComb,1));
+    % fullRun will contain everything for this session
+    % +2 for target position -- target color set by colors
+    fullRun=zeros(trialsPerBlock.*blocks, size(possibleComb,2)+1);
+    
+    % enumearte all targerts for a block (later shuffled)
+    listofColors=repmat(1:nColors,1,ceil(trialsPerBlock/nColors));
+    % each block should have as close to equal as possible number of
+    % manipulations
+    for b=1:blocks
+      % all possible maniuplations replicated potentially more than we need
+      possibles = repmat(possibleComb,numrepsneeded, 1);
+      % shuffled up
+      blockCombidx = Shuffle(1:size(possibles,1));
+      % take exactly what we need
+      fullblock = possibles(blockCombidx(1:trialsPerBlock),:);
+      % put it into the session
+      blockidxs=( (b-1)*trialsPerBlock + 1):( b*trialsPerBlock );
+      fullRun(  blockidxs, 1:2  ) = fullblock;
+      
+      %%% we also have target pos and color to counter balence
+      % targetpos
+      trgColor  = Shuffle(listofColors);
+      fullRun(blockidxs,3)  = trgColor(1:trialsPerBlock);
+      % cue color (if flex)
+      
+    end
+    % fullrun still needs trial type
+    fullRun = [ trialTypeList fullRun];
+    
+    %% FORMAT
     
     % in >= Matlab2013, events looks like a table in variable explorer
     % if we events as an array of structs
     for i=1:nTrl;
         events(i).block  = blockrep(i);
-        events(i).type   = t{i};
-        events(i).crtDir = directions(i);
-        events(i).trgtpos= trgtpos(i);
+        events(i).type   = types{fullRun(i,1)};
+        events(i).trgtpos= fullRun(i,2);
+        events(i).crtDir = fullRun(i,3);
+        
+        
+        % vestiage of old format
         events(i).RT     = [];
         events(i).Correct= []; 
         
-        if(strcmp(t{i},'Flexible') )
-            events(i).trgClr = randi(nColors);
+        if(  strcmp(events(i).type,'Flexible') )
+            events(i).trgClr = fullRun(i,4);
         else
-            events(i).trgClr = colors(blockrep(i));
+             events(i).trgClr = colors(blockrep(i));
         end
         
-        if(strcmp(t{i},'Popout'))
+        if(strcmp(events(i).type,'Popout'))
             % wrong color is always "opposite" color
             events(i).wrgClr = mod(colors(blockrep(i))+ceil(nColors/2)-1,nColors)+1;
         else
