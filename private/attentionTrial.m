@@ -39,7 +39,6 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,feedback,va
       drawCross(w);
       [ timing.attend.onset, trial.ColorIdxs,trial.Direction]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX,'Direction', dirIDX, 'when',timing.attend.ideal,varargin{:});
       sendCode(2); 
-      
       % 3. probe ("response array")
       % NOTE THE SHADY THING WE JUST DID:
       %  we used the attend (whcih doesn't actually display directions) to
@@ -50,7 +49,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,feedback,va
       if(timing.probe.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], 0);
       drawCross(w);
-      timing.probe.onset = drawRing(w, 'PROBE', 'Position', 1:6, 'Color',trial.ColorIdxs, 'Direction', trial.Direction,'when',timing.probe.ideal,varargin{:});
+      timing.probe.onset = drawRing(w, 'PROBE', 'Position', 1:6, 'Color',trial.ColorIdxs, 'Direction', trial.Direction,'when',timing.probe.ideal,'targetidx',positionIDX ,varargin{:});
       sendCode(3); 
       
       %colorDir = [ trial.ColorIdxs; trial.Direction' ]
