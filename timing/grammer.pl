@@ -29,7 +29,7 @@ my $parser = qr{
 #"snd [.5]; mem [3] {high,low}; dly [1]; test [2] {same,diff};" =~ $parser;
 #"snd; mem {high,low};-;dly {short,long {extra,normal}};-; test;" =~ $parser;
 #"cue [.5]  <5> ; mem * [.5] {high <5> ,low <5> };- <2> ; dly <3> {long [3] <1>, short [1] <1> {reallyshort, notsoshort}  }; probe [1];" =~ $parser;
-"cue [.5]  <5> ; mem * [.5] {high,low };- <2> ; dly <3> " =~ $parser;
+"cue [.5]  <5> ; mem * [.5] {high,low };CATCH <2> ; dly <3> " =~ $parser;
 say Dumper(%/);
 # prase input
 my %inputed = %{$/{Tree}};
@@ -70,7 +70,19 @@ sub getEvents {
      for my $n (@innodes){
        
         # if the parent is a catch type, carry it through but dont add to it
-        push @addedNodes,$n and next if $n =~ /-/;
+        if("CATCH" =~ /CATCH/){
+         say "I'm not crazy";
+        }
+        if($e->{Name} =~ /CATCH/){
+          print "cought "
+        }
+        if($e->{Name} eq "CATCH"){
+           say " catch $n with $e->{Name}";
+           push @addedNodes,$n;
+           next 
+        } 
+
+        say "looking at '$n' with '$e->{Name}'";
 
         # add node to parent in innodes
         # get new childs id
@@ -103,6 +115,7 @@ sub getEvents {
      push @endnodes, @addedNodes;
    }
 
+   #say "returning nodes: @endnodes";
    return @endnodes;
 };
 

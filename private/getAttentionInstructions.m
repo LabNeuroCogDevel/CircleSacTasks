@@ -1,4 +1,4 @@
-function [newInstructions,betweenInstructions,endStructions] = getAttentionInstructions(keys)
+function [newInstructions,betweenInstructions,endStructions] = getAttentionInstructions(keys,block,totalblock)
   % set the instructions (in their own function for easy tracking/editing
   % with git
   % each element of a cell is a new screen
@@ -57,7 +57,12 @@ function [newInstructions,betweenInstructions,endStructions] = getAttentionInstr
         ]...
 
         };
-    betweenInstructions = { [ 'Welcome Back\n\n' pushinstructions ] };
-    endStructions       = {'Thanks For Playing'};
+    betweenInstructions = { 'Welcome Back\n\n',...
+                            'remember to keep fixation on the cneter of the screen',...
+                             pushinstructions ...
+                            };
+    endStructions       = {['You finished block ' num2str(block) ...
+                            '\n' num2str(totalblock-block) ' more to go!'...
+                            '\nThanks for playing']};
     
 end

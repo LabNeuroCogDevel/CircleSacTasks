@@ -208,7 +208,7 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
             Screen('FillRect', w ,[1 1 1]*255/2,  ... color--same as background
                  [ positions(n,:) + movmat(1:2)   ... top left
                    positions(n,:) + movmat(3:4)], ... bottom right 
-                 degsize.*.05                     ... pen width
+                 0 ...degsize.*.05                     ... pen width
                );
          end
    end
@@ -220,6 +220,25 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
       when=GetSecs();
    end
    
+
    % TODO: for testing add argument option to not draw
    [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
+   
+   %% take a screen shot
+   if 0 && isProbe
+         targetidxidx  = find(cellfun(@(x) ischar(x)&&strcmpi(x,'targetidx'), varargin ))+1;
+         n=varargin{targetidxidx};
+         rect = repmat(positions(n,:),1,2)+[ 0 0 1 1].*crclSize;
+         gap=movement{Directions(n)};
+         carea= crclSize^2;
+         garea=prod(gap(3:4)-gap(1:2));
+         fprintf( 'screenshot: s %.3f  c %.3f g %.3f r %.3f\n',shrinkProbe, carea, garea, garea/carea);
+         imageArray = Screen('GetImage', w, rect );
+         % flip so all are the same orentation..to make gif
+         if( Directions(n)~=1)
+             size(imageArray);
+             imageArray=flipdim(imageArray,2);
+         end
+         imwrite(imageArray, ['ringsProbe-' num2str( shrinkProbe) '.png'])
+   end
 end

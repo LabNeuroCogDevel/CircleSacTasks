@@ -1,4 +1,4 @@
-function [newInstructions,betweenInstructions,endStructions] = getWMInstructions(keys)
+function [newInstructions,betweenInstructions,endStructions] = getWMInstructions(keys,block,totalblock)
   % set the instructions (in their own function for easy tracking/editing
   % with git
   % each element of a cell is a new screen
@@ -88,7 +88,13 @@ function [newInstructions,betweenInstructions,endStructions] = getWMInstructions
          'Remember: \n It is important for us that your gaze always stays at the center of the screen'...
         };
     
-    betweenInstructions = { 'Welcome Back', keystext }; 
-    endStructions       = {'Thanks For Playing'};
+    betweenInstructions = { 'Welcome Back', ...
+                          keystext, ...
+                          'Remember: \n It is important for us that your gaze always stays at the center of the screen'...
+                          }; 
+                      
+    endStructions       = {['You finished block ' num2str(block) ...
+                            '\n' num2str(totalblock-block) ' more to go!'...
+                            '\nThanks for playing']};
       
 end

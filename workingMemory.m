@@ -79,7 +79,7 @@ function subject=workingMemory(varargin)
     prdgmStruct.MEG         = { 72,4,@generateWMEvents};
     prdgmStruct.fMRI        = { 48,2,@readWMEvents};
     prdgmStruct.practiceMEG = { 9, 1,@generateWMEvents};
-    prdgmStruct.practicefMRI ={ 10,1,@(x,y) readWMEvents(x,y,'timing/wm.prac.txt')};
+    prdgmStruct.practicefMRI ={ 7,1,@(x,y) readWMEvents(x,y,'timing/wm.prac.txt')};
     %% get imaging tech. ("modality" is global)
     % set modality
     [hostinfo, modality, CUMULATIVE] = getHostSettings(varargin{:});
@@ -136,7 +136,8 @@ function subject=workingMemory(varargin)
 
 
     % what are the key instructions
-    [newInstructions,betweenInstructions,endStructions] = getWMInstructions(hostinfo.keys.names);
+    [newInstructions,betweenInstructions,endStructions] = ...
+         getWMInstructions(hostinfo.keys.names,thisBlk,prdgmStruct.(modality){2});
 
     % reset the subject to this block
     startofblock=(thisBlk-1)*trialsPerBlock+1;

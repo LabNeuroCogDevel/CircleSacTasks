@@ -135,7 +135,7 @@ function subject = attention(varargin)
    PrdgmStruct.MEG         = { 72,6,@generateAttentionEvents};
    PrdgmStruct.fMRI        = { 72,2,@readAttentionEvents};
    PrdgmStruct.practiceMEG = { 9, 1,@generateAttentionEvents };
-   PrdgmStruct.practicefMRI ={ 7, 1,@(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
+   PrdgmStruct.practicefMRI ={ 10, 1,@(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
 
     
    % get fMRI/MEG, cumulative/not cumulative, and how to get events
@@ -176,7 +176,6 @@ function subject = attention(varargin)
     % get display instructions
     keylabels = {'left index finger','right index finger'};
     
-    [newInstructions,betweenInstructions,endStructions] = getAttentionInstructions(keylabels);
     
     thisBlk=subject.curBlk;
     % reset the subject to this block
@@ -184,6 +183,11 @@ function subject = attention(varargin)
     endofblock  = thisBlk*trialsPerBlock;
     subject.events(startofblock:endofblock) = subject.eventsInit(startofblock:endofblock);
     subject.curTrl=startofblock;
+    
+    
+    % set instructions
+    [newInstructions,betweenInstructions,endStructions] = ...
+         getAttentionInstructions(keylabels,thisBlk,PrdgmStruct.(modality){2});
     
    % some info to the command window
     fprintf('Event Type: %s\n' , subject.events(subject.curTrl).type);

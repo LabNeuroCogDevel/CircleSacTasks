@@ -77,9 +77,9 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,feedback,va
       
       %% give subject feedback on perfomance
       if(feedback)
-          crosscolor=responseColors(trial.correct+2,:)
+          crosscolor=responseColors(trial.correct+2,:);
       else
-          crosscolor=[255 255 255]
+          crosscolor=[255 255 255];
       end
       drawBorder(w,[0 0 0], .7);
       drawCross(w,crosscolor);
