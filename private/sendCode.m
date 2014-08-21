@@ -5,7 +5,7 @@ function  sendCode( code )
  global modality DIOHANDLE;
  persistent address; % LPT port for fMRI computer
  
- if(all(modality(1:3)=='MEG') && ispc) % use ismember to extend (e.g. fMRIwTrigger)
+ if(any(regexp(modality,'MEG')) && ispc) % use ismember to extend (e.g. fMRIwTrigger)
    if(isempty(DIOHANDLE))
        DIOHANDLE=digitalio('parallel','lpt1');
        addline(DIOHANDLE,0:7,0,'out');
@@ -16,13 +16,16 @@ function  sendCode( code )
    %putvalue(DIOHANDLE,code,1);
    putvalue(DIOHANDLE,0);
  
- elseif(0 && all(modality(1:3)=='fMRI') && ispc)
+ elseif(0 && any(regexp(modality,'fMRI')) && ispc)
      if(isempty(address))
-         address=hex2dec(378);
+         % where the LPT1 port is
+         % see device manager: mmc devmgmt.msc
+         address=hex2dec('378');
+         % where outp and inp are
          addpath('parallelPort/io32/win32/')
      end
      
-     outp(adress,code);
+     outp(address,code);
  end
  
 
