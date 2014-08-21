@@ -23,6 +23,8 @@ function  sendCode( code )
          address=hex2dec('378');
          % where outp and inp are
          addpath('parallelPort/io32/win32/')
+         % get settings? set conget?
+         config_io
      end
      
      outp(address,code);
