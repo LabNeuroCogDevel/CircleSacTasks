@@ -1,3 +1,9 @@
+# Install
+ 1. disable UAC (`msconfig` > Tools, reboot) [necessary!]
+ 1. `inpout*.dll`  to `C:\Windows\SYSTEM32` (`C:\windows\sysWOW64` if 32bit ML on 64bit win)
+ 1. add folder with `io*dll` `*m`  to matlab path (`File>Set Path>Add with Subfiles`)
+ 1. run `config_io`
+
 # Original Site
 http://apps.usd.edu/coglab/psyc770/IO32.html
 
