@@ -1,6 +1,6 @@
 function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
    % globals used by all functions
-   global colors degsize paren;
+   global colors degsize paren backgroundColor;
    % colors =  rgb for black, purple, green, light blue, pink, red, yellow, white
  
     
@@ -205,7 +205,7 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
             % what direction are we going to show
             movmat = movement{Directions(n)};
             % cut out piece on left or right
-            Screen('FillRect', w ,[1 1 1]*255/2,  ... color--same as background
+            Screen('FillRect', w ,backgroundColor,  ... color--same as background
                  [ positions(n,:) + movmat(1:2)   ... top left
                    positions(n,:) + movmat(3:4)], ... bottom right 
                  0 ...degsize.*.05                     ... pen width

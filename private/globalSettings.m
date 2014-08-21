@@ -2,7 +2,7 @@ function globalSettings()
     global colors paren backgroundColor;
     
     %50% white/black
-    backgroundColor=[1 1 1].*256.*.5;
+    backgroundColor=[1 1 1].*256.*.3;
     
     % conviency ananomous function
     paren=@(x,varargin) x(varargin{:});

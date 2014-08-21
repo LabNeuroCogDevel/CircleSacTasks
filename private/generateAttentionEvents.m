@@ -102,8 +102,12 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
     % fullrun still needs trial type
     fullRun = [ trialTypeList fullRun];
     
-    %% FORMAT
+    %% Habitual colors
+    habcolors=Shuffle(1:nColors); % if we do more than 8 hab blocks, we'll have a problem
     
+    habblocknum=1; % this index increases with each new habitual block
+                   % make sure we sample different colors for each habblock
+    %% FORMAT
     % in >= Matlab2013, events looks like a table in variable explorer
     % if we events as an array of structs
     for i=1:nTrl;
@@ -117,15 +121,24 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
         events(i).RT     = [];
         events(i).Correct= []; 
         
-        if(  strcmp(events(i).type,'Flexible') )
-            events(i).trgClr = fullRun(i,4);
+        % habitual has the same same color througout the block
+        % popout and flex have a different color for each trial
+        if(  strcmp(events(i).type,'Habitual') )
+            
+            if i>1 && ~ strcmp( events(i).type, events(i-1).type )
+                habblocknum=habblocknum+1;
+            end
+   
+            events(i).trgClr = habcolors(habblocknum);
+            
         else
-             events(i).trgClr = colors(blockrep(i));
+            events(i).trgClr = fullRun(i,4);
         end
         
+        % wrong color is always "opposite" color for popout
+        % others we just get a random sample
         if(strcmp(events(i).type,'Popout'))
-            % wrong color is always "opposite" color
-            events(i).wrgClr = mod(colors(blockrep(i))+ceil(nColors/2)-1,nColors)+1;
+            events(i).wrgClr = mod(events(i).trgClr +ceil(nColors/2)-1,nColors)+1;
         else
             events(i).wrgClr = [];
         end

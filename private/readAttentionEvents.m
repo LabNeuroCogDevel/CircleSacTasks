@@ -46,10 +46,12 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
     
     events = [];
     
+    habcolors=Shuffle(1:nColors);
+    
     for blocknum=1:blocks;
         
          % get this block
-         thisblock=getBlockEvents(blocknum, filelist{blocknum} );
+         thisblock=getBlockEvents(blocknum, filelist{blocknum}, habcolors(blocknum) );
          
          % warn about weird trial lengths
          if(length(thisblock)~=trialsPerBlock)
@@ -64,7 +66,7 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
          events= [ events thisblock];
     end
     
-    function events = getBlockEvents(blocknum, filename)
+    function events = getBlockEvents(blocknum, filename,habcolor)
         fid = fopen(filename,'r');
 
 
@@ -81,21 +83,42 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         for i=1:nTrl; t{i}=dict.(t{i}); end
 
         %% set the color 
-        % should be the same for each mini block
-        % we can get when blocks change using the trial type
-        % but if it stats with a catch trial, we'll be a little off
-        %catchIDX = find(strcmp(t,'Catch'))-1;
-        %catchIDX = catchIDX(catchIDX>0);
-        %tnocatch = t; tnocatch(catchIDX)=tnocatch(catchIDX-1);
-        %[a,changeIDX] = unique(tnocatch);
-
-        % ignore above, we know there are 3 types with equal catch trial dist
-        % so nTrls/3
-        cuecolors       = Shuffle(1:nColors);
-        cuecolors       = cuecolors(1:3);
-        cuecolors       = repmat(cuecolors,ceil(nTrl/3));
-        cuecolors       = cuecolors(1:nTrl);
-
+%         % should be the same for each mini block
+%         % we can get when blocks change using the trial type
+%         % but if it stats with a catch trial, we'll be a little off
+%         %catchIDX = find(strcmp(t,'Catch'))-1;
+%         %catchIDX = catchIDX(catchIDX>0);
+%         %tnocatch = t; tnocatch(catchIDX)=tnocatch(catchIDX-1);
+%         %[a,changeIDX] = unique(tnocatch);
+% 
+%         % ignore above, we know there are 3 types with equal catch trial dist
+%         % so nTrls/3
+%         cuecolors       = Shuffle(1:nColors);
+%         cuecolors       = cuecolors(1:3);
+%         cuecolors       = repmat(cuecolors,ceil(nTrl/3));
+%         cuecolors       = cuecolors(1:nTrl);
+        % on a third of the trials, we are using habitual method
+        % so there is no trg color change
+        
+        habtrl=strcmp(t,'Habitual'); % logical array of "is hab. trial?"
+        %%%
+        %ugly catch trial hack 
+        % need to set habtrl to catchs within hab
+        for n=1:3
+            thirds=nTrl/3;
+            rng=  ( (n-1)*thirds +1): n*thirds;
+            if(ceil(mean(habtrl(rng)))==1)
+                habtrl(rng)=1;
+            end
+        end
+        %%%
+        ntrlwcolor=length(find(~habtrl)); % num trls w var. color (not hab)
+        neededColors = repmat(1:nColors,1,ceil(ntrlwcolor/nColors) );
+        vartrgClrs=paren(Shuffle( neededColors ), 1:ntrlwcolor );
+        
+        trgClrs(habtrl)=habcolor;
+        trgClrs(~habtrl)=vartrgClrs;
+        
         % position of target, sample individually for each mini block
         trgtpos  = repmat(1:nTrgts,1,ceil((nTrl/3)/nTrgts));
         trgtpos  = [ paren(Shuffle(trgtpos),1:ceil(nTrl/3)) ...
@@ -111,7 +134,6 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         % [trgtpos' ceil(trgtpos/3)' cogInCog directions'] % check the math
 
 
-
         for i=1:nTrl;
             events(i).block  = blocknum;
             events(i).type   = t{i};
@@ -119,16 +141,12 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
             events(i).trgtpos= trgtpos(i);
             events(i).RT     = [];
             events(i).Correct= []; 
-
-            if(strcmp(t{i},'Flexible') )
-                events(i).trgClr = randi(nColors);
-            else
-                events(i).trgClr = cuecolors(i);
-            end
+            events(i).trgClr = trgClrs(i);
+         
 
             if(strcmp(t{i},'Popout'))
                 % wrong color is always "opposite" color
-                events(i).wrgClr = mod(cuecolors(i)+ceil(nColors/2)-1,nColors)+1;
+                events(i).wrgClr = mod(events(i).trgClr+ceil(nColors/2)-1,nColors)+1;
             else
                 events(i).wrgClr = [];
             end
@@ -173,5 +191,7 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         end
     end
 
-      
+      %%TESTING
+      % for i=1:20; e=readAttentionEvents(72,2); [u,~,ui] = unique(paren([e.trgClr],find(~strcmp({e.type},'Habitual')))); d(i,:)=histc(ui,1:length(u)); end; mean(d)
+      % d will be mostly 12 with some 16 -- result of catch trials
 end

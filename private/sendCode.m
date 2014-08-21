@@ -8,9 +8,11 @@ function  sendCode( code )
    if(isempty(DIOHANDLE))
        DIOHANDLE=digitalio('parallel','lpt1');
        addline(DIOHANDLE,0:7,0,'out');
+       % DIOHANDLE = daqgetfield(DIOHANDLE,'uddobject')
    end
    
    putvalue(DIOHANDLE,code);
+   %putvalue(DIOHANDLE,code,1);
    putvalue(DIOHANDLE,0);
  end
 
