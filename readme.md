@@ -219,3 +219,13 @@ rsync  -rvhi  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timi
 
 # Timing vs Saving
 a mat file with largely redudant data is saved after every trial, leading to at times a .01 sec delay.
+
+# Parellel Port 
+## Universal
+[pp.m](https://code.google.com/p/ratrix/source/browse/classes/util/parallelPort/?name=trunk)
+## Windows 7
+ * [mex](http://apps.usd.edu/coglab/psyc770/IO64.html)
+## linux
+ * https://sites.google.com/site/alexanderheimel/protocols/parallel-port-in-matlab
+## see also
+ * https://code.google.com/p/ratrix/source/browse/classes/util/parallelPort/pp.m?name=trunk
