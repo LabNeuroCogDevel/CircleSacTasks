@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Requested Site Unavailable </title>
+<style type="text/css"> 
+<!--
+.style1 {
+	font-family: "trebuchet ms", arial, helvetica;
+	font-size: 14px;
+	font-weight: bold;
+}
+body {
+	background-image: url();
+	background-repeat: no-repeat;
+}
+.style2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+-->
+</style>
+</head>
+ 
+<body>
+<table width="770" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td><a href="http://www.upmc.com"><img src="http://infosecurity.dev.upmc.com/approve/headernew.jpg" width="770" height="98" border="0" /></a></td>
+  </tr>
+  <tr>
+    <td><p class="style1">&nbsp;</p>
+      <p class="style1">Requested Page Unavailable</p>
+      <p class="style2">A virus or other malicious code has been detected and access has 
+          been prohibited.&nbsp; If you believe you have received this page in error, 
+          please contact the 
+          <span style="font-size:11.0pt;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;
+mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-ansi-language:
+EN-US;mso-fareast-language:EN-US;mso-bidi-language:AR-SA">
+          <a href="mailto:ISGTechnicalTeam@upmc.edu">ISG Technical Team</a> for 
+          assistance.</span><!--<p class="style1">UPMC CHP users</p>
+<p class="style2">Your request must go to a different support group. You must use the link below in order for your request to be processed correctly.</p>
+ 
+<ul>
+        <li class="style2"><a href="http://ddi.upmc.edu/chp/chp.asp">UPMC CHP Request Form</a></li></ul>--></td>
+  </tr>
+</table>
+<p class="style1">&nbsp;</p>
+<p class="style1">&nbsp;</p>
+<p class="style1">&nbsp;</p>
+<p class="style1">&nbsp;</p>
+</body>
+</html>
