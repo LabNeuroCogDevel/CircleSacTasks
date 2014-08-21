@@ -255,6 +255,8 @@ function subject = attention(varargin)
               e.timing, feedback,...
               e.type, 'ShrinkProbe', 1/(last9Correct+1) );
           
+          trl.shrink = 1/(last9Correct+1);
+          
           trl.ITI=wait;
           % save subject, update position in run
           % subject.curTrl and subject.curBlk are updated
