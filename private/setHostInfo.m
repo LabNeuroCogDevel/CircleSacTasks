@@ -33,6 +33,11 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.upmc_56ce704785.keys.WM        = KbName({'7&','2@'});
     hostInfo.upmc_56ce704785.keys.names  = {'7', '2'};
     
+    %practice 
+    hostInfo.Practice_PC = hostInfo.upmc_56ce704785;
+    hostInfo.upmc_56ce704785.modality = 'practicefMRI';
+
+    
     % will's
     hostInfo.reese_loeff114.hSize = 41;
     hostInfo.reese_loeff114.vDist = 60;
