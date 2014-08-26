@@ -3,6 +3,10 @@ function  sendCode( code )
 % only for MEG
 % also initializes global HANDLE as ltp1 if not done yet
  global modality DIOHANDLE;
+ if isempty(modality)
+     return
+ end
+ 
  persistent address; % LPT port for fMRI computer
  
  if(any(regexp(modality,'MEG')) && ispc) % use ismember to extend (e.g. fMRIwTrigger)
