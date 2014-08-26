@@ -6,12 +6,15 @@ function [newInstructions,betweenInstructions,endStructions] = getWMInstructions
     function playleft(w)
         % w is screen which we dont use to play the sound
         % but is expected by Instructions()
-        global lsound
+        %global lsound
         %global a
         %PsychPortAudio('FillBuffer',a,lsound);
         %PsychPortAudio('Start',a,1,GetSecs(),1);
         %hacky to work with 2009a MSWin
-        Snd('Play',resample(lsound(1,:),1,2));
+        %Snd('Play',resample(lsound(1,:),1,2));
+        drawWMArrow(w,1);
+        drawCross(w);
+        Screen('Flip',w);
     end
 
     function drawDots(lPos,rPos,lColor,rColor,w)
@@ -51,7 +54,7 @@ function [newInstructions,betweenInstructions,endStructions] = getWMInstructions
          ], ...
         [...
          'Step 1.\n'...
-         'You will hear "left" or "right".\n', ...
+         'You see an arrow pointing left or right .\n', ...
          'Pay attention only to that side.'     ...
         ] ,...
         @playleft, ...
