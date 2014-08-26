@@ -104,19 +104,27 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         %%%
         %ugly catch trial hack 
         % need to set habtrl to catchs within hab
+        if mod(nTrl,3) ~= 0
+            warning('trials wont be balanced across 3 types with %d trials', nTrl);
+            htRplc = ones(nTrl*3,1);
+            htRplc(1:length(habtrl))=habtrl;
+            habtrl=htRplc;
+        end
         for n=1:3
-            thirds=nTrl/3;
+            thirds=ceil(nTrl/3);
             rng=  ( (n-1)*thirds +1): n*thirds;
             if(ceil(mean(habtrl(rng)))==1)
                 habtrl(rng)=1;
             end
         end
+        habtrl=~~habtrl(1:nTrl); % recover from unequal generation (fMRIpractice)
+                                 % force logical
         %%%
         ntrlwcolor=length(find(~habtrl)); % num trls w var. color (not hab)
         neededColors = repmat(1:nColors,1,ceil(ntrlwcolor/nColors) );
         vartrgClrs=paren(Shuffle( neededColors ), 1:ntrlwcolor );
         
-        trgClrs(habtrl)=habcolor;
+        trgClrs(~~habtrl)=habcolor; 
         trgClrs(~habtrl)=vartrgClrs;
         
         % position of target, sample individually for each mini block
