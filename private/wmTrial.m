@@ -2,13 +2,13 @@
 % JS 20140528 -- Initial
 % WF 21040529 -- pull out bits that are shared with attention, modify timing
 
-function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing,wmfeedback)
+function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
 % wmTrial -- play a trial of working memory task
 %  use screen 'w' and audiodev 'a'
 %  show 'number' of circles
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
-
+a='adf';
     global LEFT RIGHT listenKeys TIMES colors;
     %% -1. get Codes
     ttls = getCodes(playCue,number,changes);
@@ -63,7 +63,7 @@ function trial = wmTrial(w,a,number,changes,playCue,color,pos,timing,wmfeedback)
 
     %% 1. cue
     drawBorder(w,[0 0 0], .75);
-    [timing.cue.onset, timing.cue.audioOnset] = cue(w,a,playCue,timing.cue.ideal);%GetSecs()+1);
+    [timing.cue.onset] = cue(w,playCue,timing.cue.ideal);%GetSecs()+1);
     sendCode(ttls(1))
 
     %% 2. memory set
@@ -154,31 +154,35 @@ function offset = calcOffset(w)
 end
 
 %% 2. cue.
-function [StimulusOnsetTime, soundStartTime] = cue(w,a,playCue, when)
-    global LEFT RIGHT lsound rsound modality;
-    if playCue
-        PsychPortAudio('DeleteBuffer');
-        if playCue==LEFT
-            PsychPortAudio('FillBuffer',a,lsound);
-            y=lsound;
-            %sounddata=[sound;zeros(size(sound))];
-        else
-            PsychPortAudio('FillBuffer',a,rsound);
-            y=rsound;
-        end
-        % start playback of 'a', 1 repetition, at 'when' time, wait for
-        % start and return estimated start timestamp
-        %https://docs.psychtoolbox.org/SND
-        %ugly ugly hack to get sound to work
-        if regexpi(modality,'MEG') 
-            soundStartTime=GetSecs();
-            Snd('Play',resample(y(1,:),1,2));
-        else
-           soundStartTime=PsychPortAudio('Start',a,1,when,1);
-        end
-    else
-        soundStartTime=-1;
-    end
+function [StimulusOnsetTime ] = cue(w,playCue, when)
+    %TODO: add arrow
+    global degsize paren LEFT;
+    center = paren(Screen('Rect',w),[3,4])./2;
+    %how wide is the line
+    % position of horizontal line
+    color=0.*[1 1 1];
+    %Screen('DrawLines',w,pos,linew,color,center);
+    
+    x=-2.*(playCue==LEFT)+1;
+    % (x;y x;y) (x;y x;y)
+    scaleby=.5.*degsize;
+    linewidth=degsize/6;
+    arrowLines = [0 x, x 0; ...
+                  1 0, 0 -1 ];
+    %arrowLines(2,:)=arrowLines(2,:)-3; % move arrow above
+    arrowLines=arrowLines.*scaleby;    
+    
+    Screen('DrawLines',w,  arrowLines, ...
+        linewidth, color, center); 
+    % mask hole in lines on right
+    rect=[ scaleby.*x+center(1)-2; ...
+           center(2)-3; ...
+           scaleby.*x+center(1)+2; ...
+           center(2)+3;];
+    
+    Screen('FillOval',w,color, rect); 
+    %fprintf('draw %d %d %d cross @ %.3f\n',color,GetSecs())
+
     drawCross(w);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end

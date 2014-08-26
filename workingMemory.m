@@ -63,7 +63,7 @@ function subject=workingMemory(varargin)
     
     global    TIMES totalfMRITime listenKeys filelist ...
               longdelaytime modality CUMULATIVE trlCatch;
-    global a; % audio channel for left and right audio cues
+    %global a; % audio channel for left and right audio cues
 
     datetime=sprintf('%02d',clock);
     diary(['log/WM_' datetime(1:12) ]);
@@ -153,7 +153,7 @@ function subject=workingMemory(varargin)
     %psychtoolbox bit
     try
          w = setupScreen();
-         a = setupAudio();
+         %a = setupAudio();
           
          % give the spcheal
          instructions(w,newInstructions,betweenInstructions,subject,varargin{:});
@@ -203,7 +203,7 @@ function subject=workingMemory(varargin)
             subject.waitbefore(subject.curTrl)=wait;
           
             % sreen,audio,load,hemichange,playcue, colors, positions
-            trl = wmTrial(w,a, ...
+            trl = wmTrial(w, ...
                   e.load, ...
                   e.changes, ...
                   e.playCue, e.Colors, e.pos, e.timing, wmfeedback);
