@@ -206,6 +206,19 @@ Run task with `attention.m`
 * `drawRing.m`       used for cue, attention, and probe trial events, can return directions and colors of each annulus
 * `fixation.m`       draws a center fixation at a provided time
 
+#### Ring Numbers
+
+```txt
+  1 2
+3     4
+  5 6
+```
+
+#### Direction
+
+ * `1` is open on left
+ * `2` is open onright
+
 ### Working Memory
 * `workingMemory.m`      runs a block of trials saving after each trial and each block (uses `attentionTrial.m`)
 * `wmTrial.m`            runs an individual trial
