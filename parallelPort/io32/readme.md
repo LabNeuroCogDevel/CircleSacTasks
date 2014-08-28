@@ -4,6 +4,7 @@ use files in the folder that matches compter/matlab architecture
  1. *move* `inpout*.dll`  to `C:\Windows\SYSTEM32` (`C:\windows\sysWOW64` if 32bit ML on 64bit win)
  1. *add* folder with `io*dll` `*m`  to matlab path (`File>Set Path>Add with Subfiles`)
  1. *run* `config_io` on admin privileged matlab (needs UAC to be disabled)
+ 1. *re-enable* UAC (optionally :) )
 
 # Original Site
 http://apps.usd.edu/coglab/psyc770/IO32.html
