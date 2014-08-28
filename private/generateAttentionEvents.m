@@ -1,4 +1,4 @@
-function events = generateAttentionEvents(trialsPerBlock, blocks)
+function events = generateAttentionEvents(trialsPerBlock, blocks,varargin)
 %generateAttentionEvents -- generate random order of events for attention
 %
 % block, type, crtDir, trgtpos, trgClr, wrgClr
@@ -23,6 +23,8 @@ function events = generateAttentionEvents(trialsPerBlock, blocks)
 % with constrants:
 %   blocked or interleaved ?
 %   how many habitial in a row if interleaved?
+
+% NB varargin in allows function to be used like readAttentionEvents
     global TIMES;
     types  = { 'Popout','Habitual','Flexible'};
 

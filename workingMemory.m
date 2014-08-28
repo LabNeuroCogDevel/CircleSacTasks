@@ -77,7 +77,7 @@ function subject=workingMemory(varargin)
     %% different trial structures for each modality
     % fMRI = 32 full 16 catch, for 2 blocks
     prdgmStruct.MEG         = { 72,4,@generateWMEvents};
-    prdgmStruct.fMRI        = { 48,2,@readWMEvents};
+    prdgmStruct.fMRI        = { 48,3,@readWMEvents};
     prdgmStruct.practiceMEG = { 9, 1,@generateWMEvents};
     prdgmStruct.practicefMRI ={ 7,1,@(x,y) readWMEvents(x,y,'timing/wm.prac.txt')};
     %% get imaging tech. ("modality" is global)
@@ -101,16 +101,18 @@ function subject=workingMemory(varargin)
     % setup keys such that the correct LEFT push is at LEFT index       
     % what keys will we accept as correct/incorrect
     listenKeys = hostinfo.keys.WM;
-    % should we reverse the keys?
+    
+    
+    % we can pass "reversekeys or "normalkeys" to override the default
+    % if subject.cb='A' then normal keys
+    %
     if ~isfield(subject,'reversekeys')
         if find(cellfun(@(x) ischar(x)&&strcmpi(x,'reversekeys'),  varargin ))
             subject.reversekeys=1;
         elseif find(cellfun(@(x) ischar(x)&&strcmpi(x,'normalkeys'),  varargin ))
             subject.reversekeys=0; 
-        elseif strcmpi( input('(n)ormal or (r)eversed keys?','s'), 'r' );
-             subject.reversekeys=1;
         else
-             subject.reversekeys=0;
+             subject.reversekeys=strmatch('B',subject.cb);
         end
     end 
     % flip instructions for counterbalanced subjects

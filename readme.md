@@ -11,7 +11,7 @@
 % the simplest working memory invocation
 workingMemory 
 % involved invocations
-workingMemory MEG reversekeys ID subjID sex m age 99 r block 1
+workingMemory MEG  ID subjID sex m age 99 cb A r block 1
 workingMemory fMRI normalkeys ID subjID sex m age 99 r block 2 bOrder 1:5:3:2:4:6
 % testing 
 workingMemory HOSTNAME Admin_PC feedback reversekeys ID subjID sex m age 99 r block 1
@@ -35,10 +35,13 @@ attention ID 0001WF r block 2
 
 ## Options
 
-Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, and `age` (each followed by their value). There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial). Alternatively, `HOSTNAME host` where host is e.g. `Admin_PC`, `PUH1DMEG03` can be used to get the settings used by that computer. There is also the option for `practice`, which will run a truncated version and save the output under a different name. Feedback can be set with either `nofeedback` and `feedback`. Defaults to no feedback unless `practice`.
+Both `workingMemory` and `attention` have similar invocations. Neither require any arguments, but can take `ID`, `sex`, `age` and `cb` (each followed by their value). When any of the arguments are not given, their value will be assigned by prompt.
 
-`workingMemory` can take an additional argument flag, `normalkeys` or `reversekeys`, to counterbalance the "same" and "different" key presses.
-When any of the arguments are not given, their value will be assigned by prompt.
+`cb` is "counter balance" and should be either `A` or `B`.  
+
+There are also argument flags: `r` ( *r*esume subject info without prompting), `fMRI` (cumulative timing with timing files), and `MEG` (randomly generate events and reset timing each trial). Alternatively, `HOSTNAME host` where host is e.g. `Admin_PC`, `PUH1DMEG03` can be used to get the settings used by that computer. There is also the option for `practice`, which will run a truncated version and save the output under a different name. Feedback can be set with either `nofeedback` and `feedback`. Defaults to no feedback unless `practice`.
+
+`workingMemory` can take an additional argument flag, `normalkeys` or `reversekeys`, to override the `A` or `B` counterbalance of the "same" and "different" key presses.
 
 *NOTE:* `reversekeys` and `normalkeys` are only parsed for the first block. Even if they are specified differently for subsequent blocks, they will be ignored.
 

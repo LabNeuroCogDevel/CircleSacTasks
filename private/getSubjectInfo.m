@@ -12,6 +12,7 @@ function subject = getSubjectInfo(prdgmStruct,varargin)
  hint.id    = '.+';
  hint.age   = '[0-9]+';
  hint.sex   =  'm|f';
+ hint.cb    =  'A|B';
  
  % if we didn't use arguments, remind user we can
  
@@ -99,7 +100,7 @@ function subject = getSubjectInfo(prdgmStruct,varargin)
                                     subject.noBlocks, ...
                                     'bOrder', varargin{orderIdx+1});
      else
-        subject.events = eventsFunc( subject.trialsPerBlock,subject.noBlocks);
+        subject.events = eventsFunc( subject.trialsPerBlock,subject.noBlocks,'cb',subject.cb);
      end
     
 

@@ -18,8 +18,21 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
        end
        filelist= repmat( Shuffle(filelist), 1, ceil(blocks/length(filelist)) );
 
+    % PROVIDED as input
     elseif strcmpi(varargin{1}, 'bOrder')
         filelist=strsplit(varargin{2},':');
+        for i=1:length(filelist)
+          filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
+        end
+        
+    % USING COUNTERBALANCING
+    elseif strcmpi(varargin{1}, 'cb')
+        if strcmpi(varargin{2}, 'A')
+            filelist={'1','2','3'};
+        else
+            filelist={'3','1','2'};
+        end
+        
         for i=1:length(filelist)
           filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
        end
@@ -71,24 +84,24 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
     %                'block',zs,'RT',[], 'Correct', [], ...
     %                'longdelay',delaylong);
                
-    for i=1:length(memload);
-        events(i).playCue = playCue(i);
-        events(i).load    = memload(i);
-        events(i).changes = memchange(i);
-        events(i).block   = blocknum;
-        events(i).RT      = []; 
-        events(i).Correct = []; 
-        events(i).longdelay=delaylong(i);
+    for j=1:length(memload);
+        events(j).playCue = playCue(j);
+        events(j).load    = memload(j);
+        events(j).changes = memchange(j);
+        events(j).block   = blocknum;
+        events(j).RT      = []; 
+        events(j).Correct = []; 
+        events(j).longdelay=delaylong(j);
         
         %% setup timing
         
         %fixation timing is after the last not -1 value
-        if(i>1)
+        if(j>1)
             
             % find the time we should allow for the last 
             % non-catch event
             lastevent=length(idxs);
-            while lastevent>0 && optime{idxs{lastevent}+1}(i-1) == -1;
+            while lastevent>0 && optime{idxs{lastevent}+1}(j-1) == -1;
                 lastevent=lastevent-1;
             end
             if lastevent==1;
@@ -96,7 +109,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
             end
             %% there are two delays but only in fMRI
             % if we have long delay, uses it!
-            if delaylong(i-1)==1 && strcmpi(idxsname{lastevent},'delay')
+            if delaylong(j-1)==1 && strcmpi(idxsname{lastevent},'delay')
                 addtime=longdelaytime;
             else
             %otherwise we aer just catching a normal trial
@@ -105,20 +118,20 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
             
             % move the onseto of fixaiton up so whatever we caught gets its
             % time
-            events(i).timing.fix.ideal   = optime{idxs{lastevent}+1}(i-1) + addtime;
+            events(j).timing.fix.ideal   = optime{idxs{lastevent}+1}(j-1) + addtime;
             
         else
-            events(i).timing.fix.ideal=0;
+            events(j).timing.fix.ideal=0;
             % not zero or we'd assume event timing
             %events(i).timing.fix.ideal=0.0001;
         end
         
         % other times
-        events(i).timing.cue.ideal    = optime{idx.cue+1}(i);
-        events(i).timing.mem.ideal    = optime{idx.mem+1}(i);
-        events(i).timing.delay.ideal  = optime{idx.delay+1}(i);
-        events(i).timing.probe.ideal  = optime{idx.probe+1}(i);
-        events(i).timing.finish.ideal = optime{idx.probe+1}(i) + durtimes(4);
+        events(j).timing.cue.ideal    = optime{idx.cue+1}(j);
+        events(j).timing.mem.ideal    = optime{idx.mem+1}(j);
+        events(j).timing.delay.ideal  = optime{idx.delay+1}(j);
+        events(j).timing.probe.ideal  = optime{idx.probe+1}(j);
+        events(j).timing.finish.ideal = optime{idx.probe+1}(j) + durtimes(4);
         
     end
     

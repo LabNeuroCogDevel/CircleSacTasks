@@ -133,7 +133,7 @@ function subject = attention(varargin)
    %% different trial structures for each modality
    %sets global trialsPerBlock and might remove totalfMRITime
    PrdgmStruct.MEG         = { 72,6,@generateAttentionEvents};
-   PrdgmStruct.fMRI        = { 72,2,@readAttentionEvents};
+   PrdgmStruct.fMRI        = { 72,3,@readAttentionEvents};
    PrdgmStruct.practiceMEG = { 9, 1,@generateAttentionEvents };
    PrdgmStruct.practicefMRI ={ 10, 1,@(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
 

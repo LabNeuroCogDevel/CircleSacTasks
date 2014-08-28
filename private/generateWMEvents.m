@@ -1,9 +1,10 @@
-function events = generateWMEvents(trialsPerBlock, blocks)
+function events = generateWMEvents(trialsPerBlock, blocks,varargin)
  %generateWMEvents -- generate random order of events for WorkingMemory
 % three variables: 
 %   load (3 varations), 
 %   change (no change, left change, right change),
 %   cue (left or right)
+% NB varargin used so func has same form as readWMEvents 
     global LEFT RIGHT LOADS TIMES %colors;
     % LEFT = 1
     % RIGTH= 2

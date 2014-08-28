@@ -37,6 +37,18 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         for i=1:length(filelist)
           filelist{i}=['timing/attention/best/' filelist{i} '.txt'];
         end 
+                
+    % USING COUNTERBALANCING
+    elseif strcmpi(varargin{1}, 'cb')
+        if strcmpi(varargin{2}, 'A')
+            filelist={'hpf','phf','pfh'};
+        else
+            filelist={'phf','hpf','pfh'};
+        end
+        
+        for i=1:length(filelist)
+          filelist{i}=['timing/attention/best/' filelist{i} '.txt'];
+       end
     else
         filelist=varargin;
     end
