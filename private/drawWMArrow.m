@@ -8,20 +8,43 @@ function drawWMArrow(w,playCue)
     
     x=-2.*(playCue==LEFT)+1;
     % (x;y x;y) (x;y x;y)
-    scaleby=.5.*degsize;
+    scaleby=.3.*degsize;
     linewidth=degsize/6;
+    
+    % two lines that make a < or > "chevron"
     arrowLines = [0 x, x 0; ...
                   1 0, 0 -1 ];
-    %arrowLines(2,:)=arrowLines(2,:)-3; % move arrow above
-    arrowLines=arrowLines.*scaleby;    
     
-    Screen('DrawLines',w,  arrowLines, ...
-        linewidth, color, center); 
+              
+    
+    
+    % make the arrows bigger
+    arrowLines=arrowLines.*scaleby;
+    
+    
     % mask hole in lines on right
-    rect=[ scaleby.*x+center(1)-2; ...
+    rect=[ ...
+           scaleby.*x+center(1)-2; ...
            center(2)-3; ...
            scaleby.*x+center(1)+2; ...
-           center(2)+3;];
+           center(2)+3; ...
+          ];
+       
+       
+    %%move arrows and dot above fix
+    %moveby=2*scaleby;
+    %arrowLines(2,:)=arrowLines(2,:)-moveby;
+    %rect([2 4])=rect([2 4]) - moveby;
     
+    % center chevrons 
+    moveby=(-2*(LEFT==playCue)+1).*scaleby/2;
+    arrowLines(1,:)=arrowLines(1,:)-moveby;
+    rect([1 3])=rect([1 3])  - moveby;
+    
+   
+    
+    % draw everything to the screen
+    Screen('DrawLines',w,  arrowLines, ...
+        linewidth, color, center);     
     Screen('FillOval',w,color, rect); 
 end

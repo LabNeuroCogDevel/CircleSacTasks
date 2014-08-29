@@ -156,7 +156,7 @@ end
 %% 2. cue.
 function [StimulusOnsetTime ] = cue(w,playCue, when)
     drawWMArrow(w,playCue);
-    drawCross(w);
+    %drawCross(w);
     %fprintf('draw %d %d %d cross @ %.3f\n',color,GetSecs())
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end
