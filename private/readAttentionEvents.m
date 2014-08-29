@@ -50,11 +50,16 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
           filelist{i}=['timing/attention/best/' filelist{i} '.txt'];
        end
     else
-        filelist=varargin;
+        filelist={varargin{1}}; % last 2 will be {cb, 'A'}
+        
     end
     
     %events.filelist= orderfiles;
-    fprintf('order: \n');for i=1:length(filelist), fprintf('%d %s\n',i, filelist{i});end; fprintf('\n');
+    fprintf('order: \n');
+    for i=1:length(filelist)
+         fprintf('%d %s\n',i, filelist{i});
+    end; 
+    fprintf('\n');
     
     events = [];
     

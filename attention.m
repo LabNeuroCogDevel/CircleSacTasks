@@ -135,7 +135,7 @@ function subject = attention(varargin)
    PrdgmStruct.MEG         = { 72,6,@generateAttentionEvents};
    PrdgmStruct.fMRI        = { 72,3,@readAttentionEvents};
    PrdgmStruct.practiceMEG = { 9, 1,@generateAttentionEvents };
-   PrdgmStruct.practicefMRI ={ 10, 1,@(x,y) readAttentionEvents(x,y,'timing/att.prac.txt')};
+   PrdgmStruct.practicefMRI ={ 10, 1,@(x,y,varargin) readAttentionEvents(x,y,'timing/att.prac.txt',varargin)};
 
     
    % get fMRI/MEG, cumulative/not cumulative, and how to get events
