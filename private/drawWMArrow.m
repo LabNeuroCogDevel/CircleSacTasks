@@ -43,8 +43,34 @@ function drawWMArrow(w,playCue)
     
    
     
-    % draw everything to the screen
-    Screen('DrawLines',w,  arrowLines, ...
-        linewidth, color, center);     
-    Screen('FillOval',w,color, rect); 
+    %% draw everything to the screen
+    % DrawLines isn't in old PTB, use multiple DrawLine calls
+    %Screen('DrawLines',w,  arrowLines, ...
+    %    linewidth, color, center);     
+    %Screen('FillOval',w,color, rect); 
+    
+    %  %Screen('DrawLines', windowPtr, xy [,width] [,colors] [,center] [,smooth]);
+    %    %"xy" is a two-row vector containing the x and y coordinates of the line
+    %    %segments: Pairs of consecutive columns define (x,y) positions of the starts and
+    %    %ends of line segments
+    
+    
+    %  arrowLines =
+    %   6    -6    -6     6
+    %   12     0     0   -12
+    % Screen('DrawLine', windowPtr [,color], fromH, fromV, toH, toV [,penWidth]);
+    
+    Screen('DrawLine', w, [ 0 0 0], ...
+        arrowLines(1,1)+center(1), ...
+        arrowLines(2,1)+center(2),...
+        arrowLines(1,2)+center(1), ...
+        arrowLines(2,2)+center(2),linewidth );
+
+    Screen('DrawLine', w, [ 0 0 0], ...
+        arrowLines(1,3)+center(1), ...
+        arrowLines(2,3)+center(2),...
+        arrowLines(1,4)+center(1), ...
+        arrowLines(2,4)+center(2),linewidth );
+
+    
 end

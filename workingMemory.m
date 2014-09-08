@@ -182,7 +182,6 @@ function subject=workingMemory(varargin)
                   subject.events(subject.curTrl).timing, ...
                   initTime);
             
-            
             % find the last time we displayed something
             if subject.curTrl > startofblock
               times=subject.trial(subject.curTrl-1).timing ;
@@ -219,7 +218,32 @@ function subject=workingMemory(varargin)
             % thorugh
             %
             % see private/readWMEvents
-
+            
+            
+            
+            
+            %% 
+            % when accuracy hasn't been met and
+            % we are practicing, we should restart 
+            %
+            if subject.curTrl > endofblock && regexpi(modality, 'practice') 
+                needCR=.75;
+                rsp = [subject.trial.correct];
+                ncor=length(find(rsp>=1));
+                nerr=length(find(rsp==0 ) );
+                nmiss=length(find(rsp<0 ) );
+                pcor=ncor/(ncor+nerr+nmiss);
+                if pcor >= needCR
+                    break
+                end
+                fprintf('================REDO============\n');
+                subject.curTrl=startofblock;
+                instructions(w,{''},{['Try Again! (' num2str(pcor*100) '% correct)']},subject);
+                subject.events(startofblock:endofblock) = ...
+                    subject.eventsInit(startofblock:endofblock);
+                starttime=GetSecs();
+                subject.starttime(thisBlk)=starttime;
+            end
          end
 
      

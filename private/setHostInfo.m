@@ -35,7 +35,8 @@ function [ thishostinfo ] = setHostInfo( varargin )
     
     %practice 
     hostInfo.Practice_PC = hostInfo.upmc_56ce704785;
-    hostInfo.upmc_56ce704785.modality = 'practicefMRI';
+    hostInfo.Practice_PC.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
+
 
     
     % will's

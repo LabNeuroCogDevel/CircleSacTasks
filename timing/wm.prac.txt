@@ -1,7 +1,7 @@
 snd	2	mem:L1	2.5	dly:long	3	RSP:change    6	
-snd	9.5	mem:L1	10	dly:long	-1	RSP	-1
-snd	11.5	mem:L1	12	dly:long	12.5	RSP:nochange	15.5
+snd	9.5	mem:L4	10	dly:long	-1	RSP	-1
+snd	11.5	mem:L1	12	dly:long	13	RSP:nochange	13.5
 snd	18	mem:L1	18.5	dly	-1	RSP	-1
-snd	19	mem:L1	19.5	dly:short	20	RSP:change	21
-snd	23.5	mem:L1	24	dly:short	24.5	RSP:change	25.5
-snd	28	mem:L1	28.5	dly:short	29	RSP:nochange	30
+snd	20	mem:L1	20.5	dly:short	22	RSP:change	25
+snd	27	mem:L4	27.5	dly:short	28	RSP:change	29
+snd	31	mem:L1	31.5	dly:short	32	RSP:nochange	33

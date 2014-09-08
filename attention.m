@@ -267,6 +267,35 @@ function subject = attention(varargin)
           last9 = max(startofblock,nineago):(subject.curTrl-1);
           % issues: missed and catch trials are -1, counted twice
           last9Correct = sum([ subject.trial(last9).correct ] == 1);
+          
+          
+            
+          %% 
+            % when accuracy hasn't been met and
+            % we are practicing, we should restart 
+            %
+            if subject.curTrl > endofblock && regexpi(modality, 'practice') 
+                needCR=.75;
+                rsp = [subject.trial.correct];
+                ncor=length(find(rsp>=1));
+                nerr=length(find(rsp==0 ) );
+                nmiss=length(find(rsp<0 ) );
+                pcor=ncor/(ncor+nerr+nmiss);
+                subject.trial
+                startofblock
+                endofblock
+                subject.trial(startofblock:endofblock)
+                if pcor >= needCR
+                    break
+                end
+                fprintf('================REDO============\n');
+                subject.curTrl=startofblock;
+                instructions(w,{''},{['Try Again! (' num2str(pcor*100) '% correct)']},subject);
+                subject.events(startofblock:endofblock) = ...
+                    subject.eventsInit(startofblock:endofblock);
+                starttime=GetSecs();
+                subject.starttime(thisBlk)=starttime;
+            end
       end
   
      
