@@ -133,7 +133,7 @@ function subject = attention(varargin)
    %% different trial structures for each modality
    %sets global trialsPerBlock and might remove totalfMRITime
    PrdgmStruct.MEG         = { 72,6,@generateAttentionEvents};
-   PrdgmStruct.fMRI        = { 72,3,@readAttentionEvents};
+   PrdgmStruct.fMRI        = { 72,2,@readAttentionEvents};
    PrdgmStruct.practiceMEG = { 9, 1,@generateAttentionEvents };
    PrdgmStruct.practicefMRI ={ 10, 1,@(x,y,varargin) readAttentionEvents(x,y,'timing/att.prac.txt',varargin)};
 
@@ -274,7 +274,7 @@ function subject = attention(varargin)
             % when accuracy hasn't been met and
             % we are practicing, we should restart 
             %
-            if subject.curTrl > endofblock && regexpi(modality, 'practice') 
+            if subject.curTrl > endofblock && any(regexpi(modality, 'practice')) 
                 needCR=.75;
                 rsp = [subject.trial.correct];
                 ncor=length(find(rsp>=1));

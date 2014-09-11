@@ -77,7 +77,7 @@ function subject=workingMemory(varargin)
     %% different trial structures for each modality
     % fMRI = 32 full 16 catch, for 2 blocks
     prdgmStruct.MEG         = { 72,4,@generateWMEvents};
-    prdgmStruct.fMRI        = { 48,3,@readWMEvents};
+    prdgmStruct.fMRI        = { 48,2,@readWMEvents};
     prdgmStruct.practiceMEG = { 9, 1,@generateWMEvents};
     prdgmStruct.practicefMRI ={ 7,1,@(x,y,varargin) readWMEvents(x,y,'timing/wm.prac.txt',varargin)};
     %% get imaging tech. ("modality" is global)
@@ -226,7 +226,7 @@ function subject=workingMemory(varargin)
             % when accuracy hasn't been met and
             % we are practicing, we should restart 
             %
-            if subject.curTrl > endofblock && regexpi(modality, 'practice') 
+            if subject.curTrl > endofblock && any(regexpi(modality, 'practice')) 
                 needCR=.75;
                 rsp = [subject.trial.correct];
                 ncor=length(find(rsp>=1));
