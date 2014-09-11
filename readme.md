@@ -230,7 +230,7 @@ Run task with `attention.m`
 # Copying to Scanner
 
 ```bash
-rsync  -rvhi  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timing/*/stims' --exclude '.git/' . /mnt/usb/CircleSacTasks/ 
+rsync  -rvhi --exclude screenshots --exclude parallelPort  --exclude 'atMR/' --exclude 'atMEG/'  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timing/*/stims' --exclude '.git/' . /mnt/usb/P5SzAttWm
 ```
 
 # Timing vs Saving
