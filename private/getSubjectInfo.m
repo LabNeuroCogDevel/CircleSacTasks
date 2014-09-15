@@ -12,7 +12,7 @@ function subject = getSubjectInfo(prdgmStruct,varargin)
  hint.id    = '.+';
  hint.age   = '[0-9]+';
  hint.sex   =  'm|f';
- hint.cb    =  'A|B';
+ hint.cb    =  'A|B|X|Y';
  
  % if we didn't use arguments, remind user we can
  
@@ -77,6 +77,14 @@ function subject = getSubjectInfo(prdgmStruct,varargin)
      end
  end
  
+ % counter balanced cb is A or B. if X or Y, switch to A, B resp.
+ if strcmpi(subject.cb,'X')
+     subject.cb='A';
+     fprintf('cb X is same as cb A\n');
+ elseif strcmpi(subject.cb,'Y')
+     subject.cb='B';
+     fprintf('cb Y is same as cb B\n');
+ end
  
  %% if we dont have it, build events
  if ~isfield(subject,'events') || ~isfield(subject,'trialsPerBlock')
