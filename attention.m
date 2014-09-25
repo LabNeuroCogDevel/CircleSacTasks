@@ -121,6 +121,10 @@ function subject = attention(varargin)
    %       cue attend probe clear  
    TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
+   
+   % the smallest the hole can get is 1/(CRCTSHRINK+1)
+   CRCTSHRINK=6; % how far back to look for correct trials
+   
    startdelay=8; enddelay=16; miniblockdelay=15;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
    
@@ -201,7 +205,7 @@ function subject = attention(varargin)
 
 
       % how many of the last 9 did we get correct? 0 at the start
-      last9Correct=0;
+      lastNumCorrect=0;
       
       
       % give the spcheal if asked
@@ -253,9 +257,9 @@ function subject = attention(varargin)
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               e.timing, feedback,...
-              e.type, 'ShrinkProbe', 1/(last9Correct+1) );
+              e.type, 'ShrinkProbe', 1/(lastNumCorrect+1) );
           
-          trl.shrink = 1/(last9Correct+1);
+          trl.shrink = 1/(lastNumCorrect+1);
           
           trl.ITI=wait;
           % save subject, update position in run
@@ -263,10 +267,10 @@ function subject = attention(varargin)
           subject=saveTrial(subject,trl,starttime);
           
           % update correct, so we can shrink annuals
-          nineago=subject.curTrl-9;
-          last9 = max(startofblock,nineago):(subject.curTrl-1);
+          ago=subject.curTrl-CRCTSHRINK;
+          previdxs = max(startofblock,ago):(subject.curTrl-1);
           % issues: missed and catch trials are -1, counted twice
-          last9Correct = sum([ subject.trial(last9).correct ] == 1);
+          lastNumCorrect = sum([ subject.trial(previdxs).correct ] == 1);
           
           
             
