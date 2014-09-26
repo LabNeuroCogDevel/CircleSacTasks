@@ -32,7 +32,7 @@ function events = generateAttentionEvents(trialsPerBlock, blocks,varargin)
     nTypes = length(types);
     nTrl   = trialsPerBlock*blocks;
     nTrgts = 6;
-    nColors= 8; % if colors were avaible we could use it's length
+    nColors= 6; % if colors were avaible we could use it's length
 
     %         cue attend probe clear
     %times = [ .5   .5   .5     .5 ]; % time between each event in seconds

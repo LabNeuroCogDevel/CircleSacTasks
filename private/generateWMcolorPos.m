@@ -7,7 +7,7 @@ function     [events, varargout] = generateWMcolorPos(events)
   %    ne = generateWMcolorPos(events); c=[ne.Colors]; m=[c.Mem]; find([m.LEFT]==[m.RIGHT])
   %    [ne gt]  = generateWMcolorPos(events);max(abs(gt-mean(gt)))
   
-  nColors=8;
+  nColors=6;
   % given events of a working memory trial
   % add color and position properties
   % abstracted to a function because both MEG (generated) and fMRI (read in)
@@ -18,7 +18,7 @@ function     [events, varargout] = generateWMcolorPos(events)
     
   gridTotal.LEFT = zeros(21,1);        
   gridTotal.RIGHT = zeros(21,1);
-  colorChangeTotal = zeros(8,1);
+  colorChangeTotal = zeros(nColors,1);
 
   % do this second so events looks nicer in matlab varable explorer
   LEFTRIGHT={'LEFT','RIGHT'};
