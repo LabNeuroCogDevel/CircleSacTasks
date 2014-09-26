@@ -1,6 +1,7 @@
 function WMsettings()
     % colors screenResolution and gridsize are defined in setupScreen
-    global   gridsize   LEFT RIGHT LOADS  TIMES totalfMRITime longdelaytime trlCatch;
+    global   gridsize   LEFT RIGHT LOADS  TIMES totalfMRITime longdelaytime ...
+             trlCatch decMemArray;
 
     % useful paradigmn info
     gridsize = [9 7];
@@ -20,6 +21,10 @@ function WMsettings()
     trlCatch.points= {'mem','longdelay','delay','probe'};
     trlCatch.resume= {'snd','mem'      ,'mem', 'delay'};
     trlCatch.times = [ longdelaytime TIMES(3:5)];
+    
+    % ad hoc change: decreate the length of the memory array by .8
+    %    changing from 1 sec to .2 secs
+    decMemArray=TIMES(3)-.2;
     
     % total time we should spend in the MRI scanner
     % used for additional fixation at end

@@ -8,8 +8,8 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
 %  show 'number' of circles
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
-a='adf';
-    global LEFT RIGHT listenKeys TIMES colors;
+
+    global LEFT RIGHT listenKeys TIMES colors decMemArray;
     %% -1. get Codes
     ttls = getCodes(playCue,number,changes);
     
@@ -22,6 +22,12 @@ a='adf';
     trial.playCue = playCue;
     trial.triggers= ttls;
     
+    
+    % HACK, change timing: want .2s instead of 1
+    % BAD CODE SMELL
+    %  change timing here means all generated times and 
+    %  calcs dependent on TIMES can stay unchanged
+    timing.delay.ideal = timing.delay.ideal - decMemArray;
     
     % defaults  -- mising color, pos, and timing
     if isempty(number),    number=5;    end

@@ -306,7 +306,7 @@ end
 
 function [when, wait, catchidx ]= catchTrialEnd(timing)
      
-     global trlCatch; 
+     global trlCatch decMemArray; 
      % in private/WMsettings()
      %trlCatch.points= {'mem','longdelay','delay','probe'};
      %trlCatch.resume= {'snd','mem'      ,'mem', 'delay'};
@@ -319,6 +319,14 @@ function [when, wait, catchidx ]= catchTrialEnd(timing)
      lastcatch=cellfun(@(x) timing.(x).ideal,trlCatch.points);
      catchidx=find(lastcatch==-1,1);
      wait=trlCatch.times(catchidx);
+     
+     % UGLY HACK - mem is shorter originally coded
+     %  b/c we dec. mem array dur from 1 to .2 
+     if strmatch(trlCatch.points(catchidx),'mem')
+        fprintf('mem catch\n');
+        wait = wait - decMemArray;
+     end
+     
      % also have to check that this is not a long delay catch
      if ~isempty(catchidx)
         f=trlCatch.resume(catchidx);
