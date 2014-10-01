@@ -30,7 +30,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
         if strcmpi(varargin{2}, 'A')
             filelist={'1','2','3'};
         else
-            filelist={'3','1','2'};
+            filelist={'2','1','3'};
         end
         
         for i=1:length(filelist)
