@@ -37,7 +37,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,feedback,va
       if(timing.attend.ideal<0); trial.timing  = timing;return; end
       drawBorder(w,[0 0 0], .5);
       drawCross(w);
-      [ timing.attend.onset, trial.ColorIdxs,trial.Direction]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX,'Direction', dirIDX, 'when',timing.attend.ideal,varargin{:});
+      [ timing.attend.onset, trial.ColorIdxs,trial.Direction]  = drawRing(w, 'Position', positionIDX, 'Color',colorIDX(1),'Direction', dirIDX, 'when',timing.attend.ideal,varargin{:});
       sendCode(2); 
       % 3. probe ("response array")
       % NOTE THE SHADY THING WE JUST DID:

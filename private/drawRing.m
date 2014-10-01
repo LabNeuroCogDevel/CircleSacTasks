@@ -75,7 +75,7 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
       spefColors=varargin{labeledColIdx};
       allColors=1:length(colors);
       shuffledcolors= Shuffle( setdiff( allColors, spefColors) );
-      ColorIdxs(randPos) = shuffledcolors(1:length(randPos));
+      ColorIdxs(randPos) = shuffledcolors( 1: length(randPos) );
       ColorIdxs(varargin{labeledPosIdx}) = varargin{labeledColIdx}(1:length(varargin{labeledPosIdx}) );
   else
       % otherwise just shuffle the colors
