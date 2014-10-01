@@ -322,8 +322,8 @@ function [when, wait, catchidx ]= catchTrialEnd(timing)
      
      % UGLY HACK - mem is shorter originally coded
      %  b/c we dec. mem array dur from 1 to .2 
-     if strmatch(trlCatch.points(catchidx),'mem')
-        fprintf('mem catch\n');
+     if strmatch(trlCatch.points(catchidx),'delay') || strmatch(trlCatch.points(catchidx),'longdelay')
+        fprintf('delay catch\n');
         wait = wait - decMemArray;
      end
      

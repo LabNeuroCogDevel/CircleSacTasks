@@ -27,7 +27,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     % BAD CODE SMELL
     %  change timing here means all generated times and 
     %  calcs dependent on TIMES can stay unchanged
-    timing.delay.ideal = timing.delay.ideal - decMemArray;
+    %timing.delay.ideal = timing.delay.ideal - decMemArray;
     
     % defaults  -- mising color, pos, and timing
     if isempty(number),    number=5;    end
@@ -71,6 +71,9 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     drawBorder(w,[0 0 0], .75);
     [timing.cue.onset] = cue(w,playCue,timing.cue.ideal);%GetSecs()+1);
     sendCode(ttls(1))
+    
+    %% 1.5 ISI
+    [timing.isi.onset ] = fixation(w,timing.isi.ideal,[ 0 0 0]);
 
     %% 2. memory set
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
@@ -81,18 +84,18 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
     sendCode(ttls(2))
-    
-    % print what is on the display
-%     fprintf('POS\n');
-%     fprintf('Left\n');
-%     disp(lCirclePos);
-%     fprintf('Right\n');
-%     disp(rCirclePos)
-%     fprintf('MEMORY\n');
-%     fprintf('colors Left\n');
-%     disp(colors(color.Mem.LEFT,:))
-%     fprintf('colors right\n');
-%     disp(colors(color.Mem.RIGHT,:))
+
+    % global backgroundColor screenResolution
+    % screenResolution=[400 300]
+    % w=setupScreen()
+    % offset = [0  0];
+    % lCirclePos = generateCirclePosns([1 2 3 4],offset);rCirclePos = generateCirclePosns([7 8 9 10],offset,6);
+    % ovalpos=cat(2,lCirclePos,rCirclePos);
+    % for i=.1:.1:1
+    %   Screen('FillRect',w,[1 1 1]*256*i);Screen('FillOval',w,ovalcolors,ovalpos);DrawFormattedText(w,num2str(i), 'center','center',[0 0 0])
+    %   Screen('Flip',w)
+    %   imwrite(Screen('GetImage', w),['colors_' num2str(i) '.png'])
+    % end
 
     %% 3. delay
     if(timing.delay.ideal<0); trial.timing  = timing; return; end
@@ -101,7 +104,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     %timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
     % so lets draw the circles again, but make them all gray
     graycolors=ovalcolors;
-    graycolors(:)=100;
+    graycolors(:)=0;
     timing.delay.onset = drawCircles(w, graycolors ,ovalpos, timing.delay.ideal);% GetSecs()+.5);
     sendCode(ttls(3))
 
@@ -135,10 +138,13 @@ end
 
 
 %% 1. fixation
-function StimulusOnsetTime = fixation(w,when)
+function StimulusOnsetTime = fixation(w,when,varargin)
 
     %color of fix cross
     ITIcolor=[255 255 255];
+    if ~isempty(varargin)
+        ITIcolor=varargin{1};
+    end
          
     drawCross(w,ITIcolor);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);

@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use strict; use warnings;
 use 5.14.0; # use "say"
-use List::Util qw/shuffle reduce sum/;
+use List::Util qw/shuffle reduce sum max/;
 use List::MoreUtils qw/uniq zip/;
 my $VERBOSE=1;
 use Data::Dumper;
@@ -49,12 +49,14 @@ say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
 my $taskname="workingMemory_vardly";
 mkdir "$taskname" if ! -d "$taskname/";
 
-@seq = qw/ snd  mem CATCH1 dly CATCH2 RSP/;
+@seq = qw/ snd isi mem  CATCH1 dly CATCH2 RSP/;
 %events = (
- snd=> [ {event=>"snd", name=>"snd", occurRatio=>1, duration=>.5, nrep=>48   }  ],
+ snd=> [ {event=>"snd", name=>"snd", occurRatio=>1, duration=>.2, nrep=>48   }  ],
 
- mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>1, nrep=>16} ,
-          {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>1, nrep=>16} ] ,
+ mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>.2, nrep=>16} ,
+          {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>.2, nrep=>16} ] ,
+
+ isi=> [ {event=>"isi", name=>"isi", occurRatio=>1, duration=>1.1, nrep=>48   }  ],
 
  CATCH1=> [ {event=>"CATCH1", name=>"CATCH1",   occurRatio=>1/6, duration=>0, nrep=>4   } ,
             {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>40  }  ],
@@ -129,7 +131,10 @@ for my $trialseq (@allseq) {
 }
 
 
-
+my $MINISI = .7;
+my $MAXISI = 2;
+my $MEANISI=$events{isi}->[0]->{duration} ;
+my $ISItime= $MEANISI * $TOTALTRIALS; # 1.1 seconds * all occurances = 52.8
 
 ## build run/block
 # we need to know 
@@ -245,10 +250,26 @@ for my $deconIt (1..$NITER) {
   for my $ttype (shuffle @cuedist) {
       push @trialSeqIDX, {seqno=>$_ ,ttype=>$ttype} for shuffle @{$trialSeqIDX{$ttype}} 
   }
+  ### generate isi 
+  my ($itcount,$ISIsum,@ISIs) = (0,99,0);
+  until (   abs($ISItime - $ISIsum) <= .1 && $ISItime - $ISIsum  > 0  ) {
+    @ISIs = map {sprintf("%.2f",$_)} random_exponential($TOTALTRIALS,($MEANISI) );
+    next if scalar(grep {$_>=$MAXISI} @ISIs) > 2;
+    @ISIs = map {$_=$_<$MINISI?$MINISI:$_} @ISIs;
+    @ISIs = map {$_=$_>$MAXISI?$MAXISI:$_} @ISIs;
+    $ISIsum=sum(@ISIs);
+    $itcount++;# near 50 iterations
+    say "\tgenerating ISI, on  $itcount iteration: $ISIsum sum vs $ISItime time" if($itcount>500  && $itcount%50==0 && $VERBOSE);
+  }
+  say join("\t",sort @ISIs);
 
-  my ($itcount,$ITIsum,@ITIs) = (0,99,0);
-  until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 ) {
+
+  ### generate ITI list
+  $itcount =0;
+  my ($ITIsum,@ITIs) = (99,0);
+  until (   $ITItime - $ITIsum <= .5 && $ITItime - $ITIsum  > 0 && max(@ITIs)<=$MAXITI  ) {
     @ITIs = map {sprintf("%.2f",$_+$MINITI)} random_exponential($NTRIAL,$MEANITI-$MINITI);
+    next if grep {$_>$MAXITI} @ITIs > 1;
     @ITIs = map {$_=$_>$MAXITI?$MAXITI:$_} @ITIs;
     $ITIsum=sum(@ITIs);
     $itcount++;# near 50 iterations
@@ -282,6 +303,9 @@ for my $deconIt (1..$NITER) {
 
      # skip catches
      next if $seq->{event} =~ /^CATCH/;
+     
+     # use generated isi not mean
+     $seq->{duration}=$ISIs[$seqno] if($seq->{event} eq 'isi');
 
      # build branch name like snd::mem:L4.1D
      $seqbranchname.=($seqbranchname?"::":"") . $seq->{name};
@@ -309,6 +333,7 @@ for my $deconIt (1..$NITER) {
      }
   
      #say "$timeused $seq->{name} [$seq->{event}] ($seq->{duration})";
+
      $timeused+=$seq->{duration};
 
     }
@@ -318,7 +343,7 @@ for my $deconIt (1..$NITER) {
     
     
     # write out this trial
-    print {$files{alltiming}} join("\t", map {$_->[0]."\t".$_->[1]} (@eventSeqTime,['ITI',$ITIs[$seqno]]) ), "\n";
+    print {$files{alltiming}} join("\t", map {$_->[0]."\t".sprintf("%.02f",$_->[1])} (@eventSeqTime,['ITI',$ITIs[$seqno]]) ), "\n";
 
 
     

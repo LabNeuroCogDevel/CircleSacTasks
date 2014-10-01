@@ -24,13 +24,14 @@ function events = generateWMEvents(trialsPerBlock, blocks,varargin)
     times=TIMES;
     timing.fix.ideal   = 0;
     timing.cue.ideal   = sum(times(1:1));
-    timing.mem.ideal   = sum(times(1:2));
-    timing.delay.ideal = sum(times(1:3));
-    timing.probe.ideal = sum(times(1:4));
-    timing.finish.ideal  = sum(times(1:5));
+    timing.isi.ideal   = sum(times(1:2));
+    timing.mem.ideal   = sum(times(1:3));
+    timing.delay.ideal = sum(times(1:4));
+    timing.probe.ideal = sum(times(1:5));
+    timing.finish.ideal= sum(times(1:6));
     
   
-    %% eaqual perms of load x sidecue (snd) x change
+    %% equal perms of load x sidecue (snd) x change
     playCues=[LEFT RIGHT];
     changeTypes=[0 1];
     possibleComb = combvec(LOADS,playCues,changeTypes)';

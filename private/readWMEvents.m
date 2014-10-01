@@ -1,8 +1,8 @@
 function events = readWMEvents(trialsPerBlock,blocks,varargin)
     global LEFT RIGHT TIMES longdelaytime filelist LOADS;
-    idxs={1 3 5 7};
-    [idx.cue, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
-    idxsname = {'cue','mem','delay','probe'};
+    idxs={1 3 5 7 9};
+    [idx.cue, idx.isi, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
+    idxsname = {'cue','isi', 'mem','delay','probe'};
     %         cue mem   delay response
     %durtimes = [ .5  .5     1     2];
     % see WMsettings
@@ -64,7 +64,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
     if(isempty(fid)), error('could not find %s',filename), end
 
     % read in file (like string tab onsettime )
-    optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
+    optime = textscan(fid,'%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f\t%s\t%f');
     fclose(fid);
     
     % mem:L1 or mem:L4 --> 1 or 4
@@ -128,6 +128,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
         
         % other times
         events(j).timing.cue.ideal    = optime{idx.cue+1}(j);
+        events(j).timing.isi.ideal    = optime{idx.isi+1}(j);
         events(j).timing.mem.ideal    = optime{idx.mem+1}(j);
         events(j).timing.delay.ideal  = optime{idx.delay+1}(j);
         events(j).timing.probe.ideal  = optime{idx.probe+1}(j);

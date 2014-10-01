@@ -2,7 +2,7 @@ function globalSettings()
     global colors paren backgroundColor;
     
     %50% white/black
-    backgroundColor=[1 1 1].*256.*.3;
+    backgroundColor=[1 1 1].*256.*.3; % MEG is using 1/8 instead of .3
     
     % conviency ananomous function
     paren=@(x,varargin) x(varargin{:});
@@ -16,12 +16,12 @@ function globalSettings()
                 165, 178, 88;
                 216, 161, 83;];
             
-    colors = [  255, 0  , 0  ;
-                255, 255, 0  ;
-                0  , 255, 0  ;
-                0  , 205, 205;
-                255, 255, 255;
-                255, 0  , 255;
-    ];
+    colors = [180 0   0  ;
+              0   0   255;
+              0   120 0  ;
+              160 0   150;
+              140 90  0  ;
+              97  97  97];
+
 
 end
