@@ -10,8 +10,8 @@ function WMsettings()
     LOADS = [ 1 4 ];
 
     %      fix-> cue-> isi->  memory->  delay->  probe->  finish
-    %        .5    .2     1.1       .2        1      2 
-    TIMES = [ .5  .2  1.1  .2  1  2];
+    %        .5    .2     .4       .2        1      2 
+    TIMES = [ .5  .2  .4  .2  1  2];
     longdelaytime=3; % this was 2 even after the change to 3, erronously?
     % MEG depends on this to set all timings
     % fMRI depeonds on this to set times after catch trial

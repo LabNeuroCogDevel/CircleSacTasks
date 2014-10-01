@@ -56,7 +56,7 @@ mkdir "$taskname" if ! -d "$taskname/";
  mem=> [  {event=>"mem", name=>"mem:L1", occurRatio=>1/2, duration=>.2, nrep=>16} ,
           {event=>"mem", name=>"mem:L4", occurRatio=>1/2, duration=>.2, nrep=>16} ] ,
 
- isi=> [ {event=>"isi", name=>"isi", occurRatio=>1, duration=>1.1, nrep=>48   }  ],
+ isi=> [ {event=>"isi", name=>"isi", occurRatio=>1, duration=>.4, nrep=>48   }  ],
 
  CATCH1=> [ {event=>"CATCH1", name=>"CATCH1",   occurRatio=>1/6, duration=>0, nrep=>4   } ,
             {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>40  }  ],
@@ -131,8 +131,8 @@ for my $trialseq (@allseq) {
 }
 
 
-my $MINISI = .7;
-my $MAXISI = 2;
+my $MINISI = .3;
+my $MAXISI = 1;
 my $MEANISI=$events{isi}->[0]->{duration} ;
 my $ISItime= $MEANISI * $TOTALTRIALS; # 1.1 seconds * all occurances = 52.8
 
@@ -253,7 +253,7 @@ for my $deconIt (1..$NITER) {
   ### generate isi 
   my ($itcount,$ISIsum,@ISIs) = (0,99,0);
   until (   abs($ISItime - $ISIsum) <= .1 && $ISItime - $ISIsum  > 0  ) {
-    @ISIs = map {sprintf("%.2f",$_)} random_exponential($TOTALTRIALS,($MEANISI) );
+    @ISIs = map {sprintf("%.2f",$_+$MINISI)} random_exponential($TOTALTRIALS,$MEANISI-$MINISI );
     next if scalar(grep {$_>=$MAXISI} @ISIs) > 2;
     @ISIs = map {$_=$_<$MINISI?$MINISI:$_} @ISIs;
     @ISIs = map {$_=$_>$MAXISI?$MAXISI:$_} @ISIs;
