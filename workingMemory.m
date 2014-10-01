@@ -79,7 +79,7 @@ function subject=workingMemory(varargin)
     prdgmStruct.MEG         = { 72,4,@generateWMEvents};
     prdgmStruct.fMRI        = { 48,2,@readWMEvents};
     prdgmStruct.practiceMEG = { 9, 1,@generateWMEvents};
-    prdgmStruct.practicefMRI ={ 7,1,@(x,y,varargin) readWMEvents(x,y,'timing/wm.prac.txt',varargin)};
+    prdgmStruct.practicefMRI ={ 8,1,@(x,y,varargin) readWMEvents(x,y,'timing/wm.prac.txt',varargin)};
     %% get imaging tech. ("modality" is global)
     % set modality
     [hostinfo, modality, CUMULATIVE] = getHostSettings(varargin{:});
