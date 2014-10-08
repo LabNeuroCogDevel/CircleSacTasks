@@ -1,0 +1,14 @@
+<[autotemplate]
+documentclass={beamer}
+usepackage={listings}
+usepackage={wasysym}
+usepackage={graphicx}
+usetheme={Amsterdam}
+date={\today}
+lstdefinestyle={basic}{....}
+titleframe=True
+[autotemplate]>
+>>>include/task.wiki<<<
+>>>include/mrproto.wiki<<<
+>>>include/results.wiki<<<
+>>>include/future.wiki<<<
