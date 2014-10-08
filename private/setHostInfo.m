@@ -47,6 +47,11 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.reese_loeff114.keys.attention = KbName({'1!','2@','space'});
     hostInfo.reese_loeff114.keys.WM        = KbName({'1!','2@'});
     hostInfo.reese_loeff114.keys.names  = {'1', '2'};
+    
+    % screenshot
+    hostInfo.shots = hostInfo.reese_loeff114;
+    hostInfo.shots.screenResolution=[800 600];
+    hostInfo.shots.vDist = 160; % this makes everything larger :)
 
     hostInfo.yogert = hostInfo.OACO4CNRL6;
     

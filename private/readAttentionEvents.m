@@ -1,4 +1,18 @@
 function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
+  % balanced such that
+  %  * expects cong/incog to be equal comming in
+  %  * all trgts (1:6) are seen equally
+  %  * left and right are pushed equally
+  %  * hemisphere + incong/cong
+  %  * some sort of color match (excludes habitual)
+  % NOT BAL
+  %  * target per condition (flex,hab,pop) (16/6 = 2.66666 )
+  %  * color+direction+position -- too many combos
+  % see
+  % e=readAttentionEvents(72,2,'cb','a'); histc(paren([e.crtDir],isfinite([e.crtDir])),1:2),b=[[e.trgtpos]' [e.crtDir]' ];f=isfinite([e.crtDir]);[v,u,i]=unique(b(f,:),'rows');[c,bin] = histc(i,1:length(v)); [ c v]
+
+
+
    global TIMES CLEARTIME filelist
     % TIMES is a cue attend probe clear (all .5)
     % CLEARTIME is the time allowed for a response after the screen is
@@ -17,8 +31,11 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
     % get what trial type
     paren = @(x, varargin) x(varargin{:});
     curly = @(x, varargin) x{varargin{:}};
+    % for reading type
+    dict=struct('Catch',nan,'Popout',1,'Habitual',2, 'Flexible', 3);
+    % for reading in incg/cog:
     dict.pop='Popout'; dict.hab='Habitual';  dict.flex='Flexible'; dict.catch='Catch';
-    dict.incng=1; dict.cng=0;  dict.probeCatch=0;
+    dict.incng=1; dict.cng=0;  dict.probeCatch=NaN;
 
 
     
@@ -61,27 +78,38 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
     end; 
     fprintf('\n');
     
-    events = [];
     
     habcolors=Shuffle(1:nColors);
-    
-    for blocknum=1:blocks;
-        
-         % get this block
-         thisblock=getBlockEvents(blocknum, filelist{blocknum}, habcolors(blocknum) );
-         
-         % warn about weird trial lengths
-         if(length(thisblock)~=trialsPerBlock)
-             warning(['expected %d trials (inc catch), have %d -- changing\n' ...
-                      'I hope you know what you are doing'],...
-                    trialsPerBlock, length(thisblock) );
-                
-             trialsPerBlock=length(thisblock);
-         end
-         
-         % iterivelyl build events
-         events= [ events thisblock];
+    maxRep=Inf; minRep=-Inf;
+    while abs(maxRep - minRep)>1
+        events = [];
+        for blocknum=1:blocks;    
+             % get this block
+             thisblock=getBlockEvents(blocknum, filelist{blocknum}, habcolors(blocknum) );
+
+             % warn about weird trial lengths
+             if(length(thisblock)~=trialsPerBlock)
+                 warning(['expected %d trials (inc catch), have %d -- changing\n' ...
+                          'I hope you know what you are doing'],...
+                        trialsPerBlock, length(thisblock) );
+
+                 trialsPerBlock=length(thisblock);
+             end
+
+             % iterivelyl build events
+             events= [ events thisblock];
+        end
+        % make sure we are balanced
+        b=[cellfun(@(x) dict.(x), {events.type})' [events.crtDir]' ];
+        f=isfinite([events.crtDir]);
+        [vl,unq,vi]=unique(b(f,:),'rows');
+        [cnt,bin] = histc(vi,1:length(vl));
+        maxRep=max(cnt);
+        minRep=min(cnt);
     end
+    
+
+    %all = [ c v]
     
     function events = getBlockEvents(blocknum, filename,habcolor)
         fid = fopen(filename,'r');
@@ -144,26 +172,94 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         trgClrs(~~habtrl)=habcolor; 
         trgClrs(~habtrl)=vartrgClrs;
         
-        % position of target, sample individually for each mini block
-        trgtpos  = repmat(1:nTrgts,1,ceil((nTrl/3)/nTrgts));
-        trgtpos  = [ paren(Shuffle(trgtpos),1:ceil(nTrl/3)) ...
-                     paren(Shuffle(trgtpos),1:ceil(nTrl/3)) ...
-                     paren(Shuffle(trgtpos),1:ceil(nTrl/3)) ];
-        trgtpos  = trgtpos(1:nTrl);
+        % correct direction, balenced in generating file
+        % each line of optime{idx.probe} is 
+        %   probe        catch
+        %   probe:cng    opens on same side as displayed
+        %   probe:incng  opens on opposite side of displayed
+        % chop off the probe part and use dict.('cng'|'incng') to num val
+        % catch is NAN, cong 0 incog 1
+        cogInCog = cellfun(@(x) dict.(curly( ...
+                [strsplit(x,':'), 'probeCatch'] ... either {type,cog,catch} or {type,catch}
+              ,2)), optime{idx.probe});
+        
+        % get the places that target position matters (not catch trials)
+        % only want to balance directions of those that require a keypress
+        hasProbe = find(isfinite(cogInCog));
+        nProbeTrl= length(hasProbe);
+        cogInCogProbe = cogInCog(hasProbe);
 
-        % correct direction, balenced by 
-        % optime :cong (sic) or :incog
-        cogInCog = cellfun(@(x) dict.(curly([strsplit(x,':'), 'probeCatch'],2)), optime{idx.probe});
-        directions = mod(ceil(trgtpos/3) + cogInCog',2);
-        directions(directions==0)=2;
-        % [trgtpos' ceil(trgtpos/3)' cogInCog directions'] % check the math
+        %% create a matrix balancing target position and cong/incog
+        c=repmat(combvec(1:nTrgts,0:1)', ceil(nProbeTrl/(2*nTrgts)),1);
+        % 1 0
+        % ...
+        % 6 1
+        trgtpos=zeros(1,size(c,1));
+        intv=floor(1/3*length(trgtpos));
+        cogidx=cogInCogProbe==0;
+        
+        maxPosRep=Inf;
+        leftcnt=0;rightcnt=Inf;
+
+
+        while abs(leftcnt - rightcnt)>1  || maxPosRep > 2
+            % shuffle them up so order is random
+            c=c(Shuffle(1:size(c,1)),:);
+            % set targets to the approprate mix
+            trgtpos(cogidx)  = c( c(:,2)==0, 1);
+            trgtpos(~cogidx) = c( c(:,2)==1, 1);
+            % left is odd target 1,3,5; right is even 2,4,6
+            side=mod(trgtpos,2)'; side(side==0)=2;
+            %initialize all directions
+            directions = cogInCog;
+            % set the trials that matter
+            directions(hasProbe) = mod(side + cogInCogProbe,2);
+            directions(directions==0)=2;
+            
+            
+            % make sure we aren't really lopsided in paritioning
+            maxPosRep=0;
+            for pi = 1:3; % for pop flex and hab
+             s=(pi-1)*intv+1;
+             e=pi*intv;
+             [v,u,vi] = unique([ side(s:e) cogInCogProbe(s:e) trgtpos(s:e)' ],'rows');
+             [ch,bin] = histc(vi,1:length(v));
+             maxPosRep=max(maxPosRep,max(ch));
+             leftcnt  =length(find(directions(s:e)==2));
+             rightcnt =length(find(directions(s:e)==1));             
+             if abs(leftcnt - rightcnt)>1 || maxPosRep > 2
+                 %[ch v ]
+                 break
+             end
+            end            
+        end
+         %[ ch v];
+
+        % set other target positions
+        allTrgtPos = nan(nTrl,1); % e=readAttentionEvents(72,2,'cb','b');, e(11) cannot be NaN
+        allTrgtPos(hasProbe)=trgtpos;
+        
+        % sort of balance target positions that are used in catch trials
+        catchidxs=find(~isfinite(cogInCog));
+        allTrgtPos(catchidxs)=paren(Shuffle(...
+                                repmat(1:6,1,...
+                                          ceil(length(catchidxs)/6))),...
+                             1:length(catchidxs));
+
+        %
+        % [u, ~, ui] =unique([ side cogInCog(hasProbe) directions(hasProbe) ],'rows')
+        % [ histc(e,1:length(s)) s]
+        % 14   1     0     1
+        % 10   1     1     2
+        % 10   2     0     2
+        % 14   2     1     1
 
 
         for i=1:nTrl;
             events(i).block  = blocknum;
             events(i).type   = t{i};
             events(i).crtDir = directions(i);
-            events(i).trgtpos= trgtpos(i);
+            events(i).trgtpos= allTrgtPos(i);
             events(i).RT     = [];
             events(i).Correct= []; 
             events(i).trgClr = trgClrs(i);
@@ -217,6 +313,13 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
     end
 
       %%TESTING
+      % global TIMES
+      % TIMES = [ .5   .5   .5     .5 ];
       % for i=1:20; e=readAttentionEvents(72,2); [u,~,ui] = unique(paren([e.trgClr],find(~strcmp({e.type},'Habitual')))); d(i,:)=histc(ui,1:length(u)); end; mean(d)
       % d will be mostly 12 with some 16 -- result of catch trials
+      %
+      %
+      % b=[[e.trgtpos]' [e.crtDir]' ];f=isfinite([e.crtDir]);[v,u,i]=unique(b(f,:),'rows');[c,bin] = histc(i,1:length(v)); [ c v]
+      % 
+      %
 end

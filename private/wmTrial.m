@@ -65,15 +65,17 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     %% 0. fixation
     drawBorder(w,[0 0 0], 1);
     timing.fix.onset = fixation(w,timing.fix.ideal);
-
+    screenshot(w,'WM/fix',1);
 
     %% 1. cue
     drawBorder(w,[0 0 0], .75);
     [timing.cue.onset] = cue(w,playCue,timing.cue.ideal);%GetSecs()+1);
     sendCode(ttls(1))
+    screenshot(w,'WM/cue');
     
     %% 1.5 ISI
     [timing.isi.onset ] = fixation(w,timing.isi.ideal,[ 0 0 0]);
+    screenshot(w,'WM/isi');
 
     %% 2. memory set
     if(timing.mem.ideal<0); trial.timing  = timing; return; end
@@ -84,6 +86,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     ovalpos=cat(2,lCirclePos,rCirclePos);
     timing.mem.onset = drawCircles(w, ovalcolors,ovalpos, timing.mem.ideal);% GetSecs()+.5);
     sendCode(ttls(2))
+    screenshot(w,'WM/mem');
 
     % global backgroundColor screenResolution
     % screenResolution=[400 300]
@@ -107,6 +110,8 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     graycolors(:)=0;
     timing.delay.onset = drawCircles(w, graycolors ,ovalpos, timing.delay.ideal);% GetSecs()+.5);
     sendCode(ttls(3))
+    screenshot(w,'WM/dly');
+
 
     %% 4. probe
     if(timing.probe.ideal<0); trial.timing  = timing;  return; end
@@ -114,7 +119,8 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     ovalcolors=cat(1,colors(color.Resp.LEFT,:),colors(color.Resp.RIGHT,:))';
     
     timing.probe.onset = drawCircles(w, ovalcolors,ovalpos, timing.probe.ideal);%GetSecs()+1);
-    sendCode(ttls(4))
+    sendCode(ttls(4));
+    screenshot(w,'WM/prb');
 
 %     fprintf('PROBE\n');
 %     fprintf('colors Left\n');

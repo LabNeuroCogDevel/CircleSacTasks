@@ -63,6 +63,12 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
   
   % what's left to be random
   if ~isempty(labeledPosIdx)
+     
+     % position doesn't matter, we have no target
+     if all(isnan(varargin{labeledPosIdx}))
+         varargin{labeledPosIdx}=Sample(1:6);
+     end
+     
      randPos = setdiff( 1:numStim , varargin{labeledPosIdx} ); % positions that will be randomly set
   else
       randPos = 1:numStim;

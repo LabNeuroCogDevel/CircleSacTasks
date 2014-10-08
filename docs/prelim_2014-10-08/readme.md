@@ -4,4 +4,10 @@
 
 see http://wiki2beamer.sourceforge.net/ and http://wiki2beamer.sourceforge.net/wiki2beamer-example.pdf for syntax
 # create
- * `make`
+ run `make`
+
+ may also need run `make amsterdam` to get the theme file
+# Depends
+ * wiki2beamer
+ * pdflatex
+ * make
