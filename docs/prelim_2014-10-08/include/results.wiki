@@ -1,5 +1,56 @@
 == RESULTS ==
-=== Overview ===
 ==== Overview ====
-* TODO
+* 2 pilot controls
+* 1 full run w/ patient 
+* 1 rest + 1 run attention
+
+==== Complications ====
+* 32 coil too small for headphones (lost Brenden)
+* Sz (Lost WM for patient)
+* FOV: aliasing/wrap-around
+<<<badhead.png,height=.5\textheight>>>
+
+=== Data:WM ===
+==== WM:RT ====
+<<<wmRT.png,height=.9\textheight>>>
+==== WM:PC ====
+<<<wmPC.png,height=.9\textheight>>>
+
+==== WM:MR:cue+mem ====
+<<<afni/wm/11327_20140911/cue_mem_p05.png,height=.4\textheight>>>
+==== WM:MR:cue+mem:load 4 - 1 ====
+<<<afni/wm/11327_20140911/cAm_load4M1_p05.png,height=.4\textheight>>>
+
+==== WM:MR:dly ====
+<<<afni/wm/11327_20140911/dly_p05.png,height=.4\textheight>>>
+==== WM:MR:cue+mem:load 4 - 1 ====
+<<<afni/wm/11327_20140911/dly_load4M1_p05.png,height=.4\textheight>>>
+
+==== WM:MR:prb ====
+<<<afni/wm/11327_20140911/prb_p05.png,height=.4\textheight>>>
+==== WM:MR:cue+mem:load 4 - 1 ====
+<<<afni/wm/11327_20140911/prb_load4M1_p05.png,height=.4\textheight>>>
+
+=== Data:Att===
+==== Att:RT ====
+<<<attRT.png,height=.9\textheight>>>
+==== Att:PC ====
+<<<attPC.png,height=.9\textheight>>>
+
+
+==== Att:MR:cue ====
+<<<afni/att/11327_20140911/cue_p05.png,width=\textwidth>>>
+==== Att:MR:cue flx - pop ====
+<<<afni/att/11327_20140911/cue_flxVpop_p05.png,width=\textwidth>>>
+
+
+==== Att:MR:att ====
+<<<afni/att/11327_20140911/att_p05.png,width=\textwidth>>>
+==== Att:MR:cue flx - pop ====
+<<<afni/att/11327_20140911/att_flxVpop_p05.png,width=\textwidth>>>
+
+==== Att:MR:prb ====
+<<<afni/att/11327_20140911/prb_p05.png,width=\textwidth>>>
+==== Att:MR:prb flx - pop ====
+<<<afni/att/11327_20140911/prb_flxVpop_p05.png,width=\textwidth>>>
 

@@ -3,8 +3,10 @@ documentclass={beamer}
 usepackage={listings}
 usepackage={wasysym}
 usepackage={graphicx}
-usetheme={Amsterdam}
+usetheme={bjeldbak}
+title={Prelim}
 date={\today}
+graphicspath={{../imgs/}}
 lstdefinestyle={basic}{....}
 titleframe=True
 [autotemplate]>
