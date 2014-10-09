@@ -11,7 +11,9 @@
 <<<badhead.png,height=.5\textheight>>>
 
 === Data:WM ===
+>>>include/wm_table.tex<<<
 ==== WM:RT ====
+\tiny
 <<<wmRT.png,height=.9\textheight>>>
 ==== WM:PC ====
 <<<wmPC.png,height=.9\textheight>>>
@@ -32,6 +34,7 @@
 <<<afni/wm/11327_20140911/prb_load4M1_p05.png,height=.4\textheight>>>
 
 === Data:Att===
+>>>include/att_table.tex<<<
 ==== Att:RT ====
 <<<attRT.png,height=.9\textheight>>>
 ==== Att:PC ====
