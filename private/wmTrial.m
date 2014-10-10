@@ -106,9 +106,10 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     % this could be like any other fixation, but it's confusing
     %timing.delay.onset = fixation(w,timing.delay.ideal);%GetSecs()+0.3);
     % so lets draw the circles again, but make them all gray
-    graycolors=ovalcolors;
-    graycolors(:)=0;
-    timing.delay.onset = drawCircles(w, graycolors ,ovalpos, timing.delay.ideal);% GetSecs()+.5);
+    %graycolors=ovalcolors;
+    %graycolors(:)=0;
+    %timing.delay.onset = drawCircles(w, graycolors ,ovalpos, timing.delay.ideal);% GetSecs()+.5);
+    timing.delay.onset = fixation(w, timing.delay.ideal, [ 256 256 0 ], 1.2); % bigger yellow
     sendCode(ttls(3))
     screenshot(w,'WM/dly');
 
@@ -148,11 +149,15 @@ function StimulusOnsetTime = fixation(w,when,varargin)
 
     %color of fix cross
     ITIcolor=[255 255 255];
+    sizeinc=1;
     if ~isempty(varargin)
         ITIcolor=varargin{1};
+        if length(varargin)>=2
+            sizeinc=varargin{2};
+        end
     end
          
-    drawCross(w,ITIcolor);
+    drawCross(w,ITIcolor,sizeinc);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end
 

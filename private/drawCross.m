@@ -1,13 +1,21 @@
+% draw a cross to w with color varargin{1} (or black) and size relative to
+% varargin{2}
 function drawCross(w,varargin)
     global degsize paren;
     center = paren(Screen('Rect',w),[3,4])./2;
     crosslen = degsize/5;
     crossw = degsize/20;
-    pos = [0 0 -1 1; -1 1 0 0].*crosslen;
     color=[0,0,0];
-    if(length(varargin)==1)
+    if(length(varargin)>=1)
         color=varargin{1};
     end
+    if(length(varargin)>=2)
+        crosslen = crosslen.*varargin{2};
+        crossw   = crossw.*varargin{2};
+    end
+    
+    pos = [0 0 -1 1; -1 1 0 0].*crosslen;
+
     %fprintf('draw %d %d %d cross @ %.3f\n',color,GetSecs())
     Screen('DrawLines',w,pos,crossw,color,center);   
 

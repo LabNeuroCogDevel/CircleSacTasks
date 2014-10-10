@@ -3,7 +3,7 @@ function trial = attentionTrial(w,positionIDX,dirIDX,colorIDX,timing,feedback,va
 % for popout, provide colorIDX as [targetColorIDX restColorIDX] and
 % varargin as 'Popout'
       
-      global listenKeys CLEARTIME CUMULATIVE;
+      global listenKeys CLEARTIME;
  
       %% setup
       % default values in case of catch trial
