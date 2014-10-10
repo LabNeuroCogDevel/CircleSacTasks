@@ -79,25 +79,17 @@
 %   up to 6 stimuli (0.65° annuli -- circle or notched circle)
 %   on a centered 5x5 grid
 %   
-%   each colored distincly
-%     black, purple, green, light blue, pink, red, yellow, or white
+%   each colored distincly from 6 different colors
 % 
 % 1. fix (.5 sec)
 % 2. cue (.5 secs)
-% 3. attention (.5secs)
-% 4. probe (.5secs) + wait for response (<= 1.5s)
+% 3. attention (.3secs)
+% 4. probe (.3secs) + wait for response (<= 1.5s)
 
 %%%%%%%%%
 
 %% TODO and change log
-%   [ ] instructions?
-%   [?] use rectFrame for percision timing w/photodiode?
-% WF 20140602 -- save trial (may cause timing issues -- rewritting all of
-%                            subject struct every trial)
-% WF 20140530 -- add event ordering via generateAttentionEvents, set
-%                subject info via getSubejctIfno
-% WF 20140529 -- redudant code merge with working memory
-% WF 20140528 -- skeleton
+%  see git
 
 %%%%%%%%%
 
@@ -118,12 +110,13 @@ function subject = attention(varargin)
    %% globals
    % colors, paren, and degsize defined in setupscreen
    global TIMES listenKeys CUMULATIVE CLEARTIME modality filelist;
-   %       cue attend probe clear  
-   TIMES = [ .5   .5   .5     .5 ]; % time between each event in seconds
+   %       fix->cue->attend->probe->clear  
+   TIMES = [  .5   .5      .2     .2 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
+   shrinkVal=1/6; % how big is the hole in the circles on probe
    
-   % the smallest the hole can get is 1/(CRCTSHRINK+1)
-   CRCTSHRINK=6; % how far back to look for correct trials
+   % %the smallest the hole can get is 1/(CRCTSHRINK+1)
+   % CRCTSHRINK=6; % how far back to look for correct trials
    
    startdelay=8; enddelay=16; miniblockdelay=15;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
@@ -204,8 +197,8 @@ function subject = attention(varargin)
       w = setupScreen();
 
 
-      % how many of the last 9 did we get correct? 0 at the start
-      lastNumCorrect=0;
+      % % how many of the last 9 did we get correct? 0 at the start
+      % lastNumCorrect=0;
       
       
       % give the spcheal if asked
@@ -257,20 +250,20 @@ function subject = attention(varargin)
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               e.timing, feedback,...
-              e.type, 'ShrinkProbe', 1/(lastNumCorrect+1) );
+              e.type, 'ShrinkProbe', shrinkVal); %1/(lastNumCorrect+1) );
           
-          trl.shrink = 1/(lastNumCorrect+1);
+          trl.shrink = shrinkVal; %1/(lastNumCorrect+1);
           
           trl.ITI=wait;
           % save subject, update position in run
           % subject.curTrl and subject.curBlk are updated
           subject=saveTrial(subject,trl,starttime);
           
-          % update correct, so we can shrink annuals
-          ago=subject.curTrl-CRCTSHRINK;
-          previdxs = max(startofblock,ago):(subject.curTrl-1);
-          % issues: missed and catch trials are -1, counted twice
-          lastNumCorrect = sum([ subject.trial(previdxs).correct ] == 1);
+          % % update correct, so we can shrink annuals
+          % ago=subject.curTrl-CRCTSHRINK;
+          % previdxs = max(startofblock,ago):(subject.curTrl-1);
+          % % issues: missed and catch trials are -1, counted twice
+          % lastNumCorrect = sum([ subject.trial(previdxs).correct ] == 1);
           
           
             
