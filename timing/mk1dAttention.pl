@@ -43,15 +43,15 @@ mkdir "$taskname" if ! -d "$taskname/";
  CATCH1=> [ {event=>"CATCH1", name=>"CATCH1", occurRatio=>1/6, duration=>0, nrep=>12   } ,
             {event=>"CATCH1", name=>"NOCATCH1", occurRatio=>5/6, duration=>0, nrep=>12+48   }  ],
 
- atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>1/3, duration=>.3,nrep=>48/3} ,
-          {event=>"atnd", name=>"atnd:hab", occurRatio=>1/3, duration=>.3, nrep=>48/3} ,
-          {event=>"atnd", name=>"atnd:flex",occurRatio=>1/3, duration=>.3, nrep=>48/3}  ],
+ atnd=> [ {event=>"atnd", name=>"atnd:pop", occurRatio=>1/3, duration=>.4,nrep=>48/3} ,
+          {event=>"atnd", name=>"atnd:hab", occurRatio=>1/3, duration=>.4, nrep=>48/3} ,
+          {event=>"atnd", name=>"atnd:flex",occurRatio=>1/3, duration=>.4, nrep=>48/3}  ],
 
  CATCH2=> [ {event=>"CATCH2", name=>"CATCH2",   occurRatio=>10/48, duration=>0, nrep=>12   } ,
             {event=>"CATCH2", name=>"NOCATCH2", occurRatio=>5/6, duration=>0, nrep=>48     }  ],
 
- probe=>[ {event=>"probe", name=>"probe:cng",   occurRatio=>.5, duration=>.3, nrep=>48/2} ,
-          {event=>"probe", name=>"probe:incng", occurRatio=>.5, duration=>.3,nrep=>48/2 } ], 
+ probe=>[ {event=>"probe", name=>"probe:cng",   occurRatio=>.5, duration=>.4, nrep=>48/2} ,
+          {event=>"probe", name=>"probe:incng", occurRatio=>.5, duration=>.4,nrep=>48/2 } ], 
 
  clear=>[ {event=>"clear", name=>"clear",   occurRatio=>1, duration=>1.5, nrep=>48}] 
 );

@@ -111,12 +111,10 @@ function subject = attention(varargin)
    % colors, paren, and degsize defined in setupscreen
    global TIMES listenKeys CUMULATIVE CLEARTIME modality filelist;
    %       fix->cue->attend->probe->clear  
-   TIMES = [  .5   .5      .2     .2 ]; % time between each event in seconds
+   TIMES = [  .5   .5      .4     .4 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
-   shrinkVal=1/6; % how big is the hole in the circles on probe
+   shrinkVal=1/4; % how big is the hole in the circles on probe
    
-   % %the smallest the hole can get is 1/(CRCTSHRINK+1)
-   % CRCTSHRINK=6; % how far back to look for correct trials
    
    startdelay=8; enddelay=16; miniblockdelay=15;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;
@@ -250,20 +248,15 @@ function subject = attention(varargin)
               e.crtDir, ...
               [ e.trgClr e.wrgClr ], ... only popout has wrong color
               e.timing, feedback,...
-              e.type, 'ShrinkProbe', shrinkVal); %1/(lastNumCorrect+1) );
+              e.type, 'ShrinkProbe', shrinkVal); 
           
-          trl.shrink = shrinkVal; %1/(lastNumCorrect+1);
+          
+          trl.shrink = shrinkVal; 
           
           trl.ITI=wait;
           % save subject, update position in run
           % subject.curTrl and subject.curBlk are updated
           subject=saveTrial(subject,trl,starttime);
-          
-          % % update correct, so we can shrink annuals
-          % ago=subject.curTrl-CRCTSHRINK;
-          % previdxs = max(startofblock,ago):(subject.curTrl-1);
-          % % issues: missed and catch trials are -1, counted twice
-          % lastNumCorrect = sum([ subject.trial(previdxs).correct ] == 1);
           
           
             

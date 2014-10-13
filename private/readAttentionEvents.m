@@ -288,7 +288,7 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
                 % match
                 %             1    2       3      4      
                 % idx:  fix-> cue->  attend-> probe->  clear ->     
-                % TIMES:     .5   .5      .2       .2        (1.5)     
+                % TIMES:     .5   .5      .4       .4        (1.5)     
                 lastevent=length(idxs); 
                 while lastevent>0 && optime{idxs{lastevent}+1}(i-1) == -1;
                     lastevent=lastevent-1;

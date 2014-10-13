@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 cd attention
+[ ! -d best ] && mkdir best
 for i in $(sort -k3,3nr stimSums.txt | cut -f 1|sed 20q); do
   cut -f3 stims/$i/alltiming.txt|
   sed -n 's/.*:\([hpf]\).*/\1/p' |

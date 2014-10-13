@@ -1,6 +1,6 @@
 % TestMEG paradigm
 %
-%     test =PdgmTest ; res=run(test)
+%     test =PdgmTest ; genres=test.testAttGen; res=run(test)
 
 classdef PdgmTest < matlab.unittest.TestCase
 
@@ -55,7 +55,7 @@ classdef PdgmTest < matlab.unittest.TestCase
         function testAttGen(tc)
            %global TIMES; in startup
            global TIMES
-           TIMES = [  .5   .5      .2     .2 ];
+           TIMES = [  .5   .5      .4     .4 ];
            paren = @(x, varargin) x(varargin{:});
            trls=72;
            blks=2;
@@ -63,7 +63,7 @@ classdef PdgmTest < matlab.unittest.TestCase
            
            for i=1:3; 
                
-               %% setup
+               %% setupgenres=test.testAttGen;
                e=readAttentionEvents(trls,blks);
                noProb=~isfinite([e.crtDir]); % all catch trials
                cueOnly=strcmp({e.type},'Catch'); % cue-only catch trials
