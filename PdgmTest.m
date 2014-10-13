@@ -44,6 +44,96 @@ classdef PdgmTest < matlab.unittest.TestCase
 
     methods (Test)
 
+        %%% CHECH BALANCING
+        % - colors are equally targets (ignore habitual)
+        % - cong/incog is balanced per position, implies
+        %    - positions are equally used
+        %    - response is equally balenced left/right
+        %
+        % x  color per position -- too many permuts
+        
+        function testAttGen(tc)
+           %global TIMES; in startup
+           global TIMES
+           TIMES = [  .5   .5      .2     .2 ];
+           paren = @(x, varargin) x(varargin{:});
+           trls=72;
+           blks=2;
+           ntr=trls*blks;
+           
+           for i=1:3; 
+               
+               %% setup
+               e=readAttentionEvents(trls,blks);
+               noProb=~isfinite([e.crtDir]); % all catch trials
+               cueOnly=strcmp({e.type},'Catch'); % cue-only catch trials
+               
+               % Catch type trumps actual block type (hab flex pop)
+               % so make a list of miniblocks 
+               miniblocks=ones(trls/3,1)*[1:(3*blks)];
+               miniblocks=miniblocks(:);
+               
+               habTrls = find(strcmp({e.type},'Habitual')); %all trials but hab
+               habBks  = unique( miniblocks(habTrls) );
+               notHabTrl = ~ismember(miniblocks,habBks);
+               
+               
+               trgColors = [e.trgClr];
+               
+               
+               
+               %% do we have a trgClr for all trials (total num trail)
+               tc.verifyEqual(ntr,length(trgColors),'check num trl colors');
+               
+               %% are colors seen equally for all with targets?
+               [u,~,ui] = unique( trgColors(notHabTrl) );
+               ColorCnt = histc(ui,1:length(u));
+               tc.verifyTrue(all( ColorCnt==ColorCnt(1) ), ...
+                             'check matched colors (exclude hab)');
+
+               % see disp([ ColorCnt u']);
+               % e.g.   16 1; 16 2; 16 3; ... 16 6; 
+               
+               %% are all habituals the same color
+               for hbn = habBks';
+                  hbtrgcolor=trgColors( miniblocks==hbn );
+                  tc.verifyTrue( all( hbtrgcolor == hbtrgcolor(1) ),...
+                      'check hab of same block have same color target' )
+               end
+
+               
+               
+               %%% positon and correct direction
+               % everytime there is a probe
+               %  does the number of pushes for left equal that for right
+               %  for each ring position? 
+               trgtPos=[e.trgtpos]';
+               crctDir=[e.crtDir]';
+               
+               %% position+direction on full trials are equally distributed
+               b=[ trgtPos crctDir ];
+               [v,u,i]=unique(b(~noProb,:),'rows');
+               [c,bin] = histc(i,1:length(v));
+               tc.verifyTrue( all( c == c(1) ), ...
+                   'check position+direction match on full trials' )
+               % see: disp([ c v]);
+               % like: [8     1     1; 8     1     2; 8     2     1;...]
+               
+               
+               %% trgt position is eq. dist. on no probe (cue+attnd) catchs
+               CatchPosCnt=histc( trgtPos(noProb&~cueOnly), 1:max(trgtPos));
+               tc.verifyTrue( all( CatchPosCnt == CatchPosCnt(1) ),...
+                   'check target is matched for catch trials')
+
+               % no need to check trgtPos(cueOnly) -- those pos are never
+               % seen
+               
+
+               
+               
+           end
+       
+        end
 
         %%%%%%%%%% ACTUAL TASK  %%%%%%%%
         function testAttentionfMRI(tc)

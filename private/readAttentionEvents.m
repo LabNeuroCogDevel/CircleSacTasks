@@ -240,12 +240,17 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         allTrgtPos(hasProbe)=trgtpos;
         
         % sort of balance target positions that are used in catch trials
-        catchidxs=find(~isfinite(cogInCog));
-        allTrgtPos(catchidxs)=paren(Shuffle(...
+        allCatches=~isfinite(cogInCog);
+        cueOnly=strcmp(t,'Catch');
+        cidxs= {  allCatches&~cueOnly, cueOnly};
+        for ci=1:2
+            catchidxs = find(cidxs{ci});
+            allTrgtPos(catchidxs)=paren(Shuffle(...
                                 repmat(1:6,1,...
                                           ceil(length(catchidxs)/6))),...
                              1:length(catchidxs));
-
+        end
+        
         %
         % [u, ~, ui] =unique([ side cogInCog(hasProbe) directions(hasProbe) ],'rows')
         % [ histc(e,1:length(s)) s]
