@@ -91,7 +91,7 @@ function [newInstructions,betweenInstructions,endStructions] = getWMInstructions
          %then fixation
          %then present four dots again 
          %'Did the dots change colors? 
-         %'Press "1" for yes or "2" for no.'
+         %'Press "1" for "yes" or "2" for no.'
          [...
           'Sometimes trials will end early\n\n', ...
           'For example, you will see the arrow, then four dots, a yellow cross, and then the trial ends.'
