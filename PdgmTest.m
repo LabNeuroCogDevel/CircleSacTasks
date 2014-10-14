@@ -44,6 +44,86 @@ classdef PdgmTest < matlab.unittest.TestCase
 
     methods (Test)
 
+        function testWMRead(tc)
+            WMsettings();
+            tpb=48;
+            nb=2;
+            e=readWMEvents(tpb,nb);
+            
+            tc.verifyEqual(length(e),tpb*nb,'check expected trials')
+
+            % check only 2 load types and they are balanced
+            loads=[e.load];            
+            loadTypes=unique(loads);
+            tc.verifyEqual(length(loadTypes),2,'check only 2 loads');
+            
+            loadCnt=histc(loads,loadTypes);
+            tc.verifyEqual(loadCnt(1),loadCnt(2),'check equal loads');
+            
+            
+            % find catch trials
+            % catches (ideal onset is -1) are either on 
+            %   dly  or
+            %   probe
+            dlyPrbTime = cell2mat(...
+                     cellfun(@(x) [x.delay.ideal x.probe.ideal]',...
+                     {e.timing} , 'UniformOutput',0));
+             
+            dlyCatch = dlyPrbTime(1,:)==-1;
+            prbCatch = dlyPrbTime(2,:)==-1 & ~dlyCatch;
+            
+            tc.verifyEqual(length(find(dlyCatch)),length(find(prbCatch)),...
+                'check same num dlyCatch as prbCatch');
+            
+            
+            % check counter balencing of load+same/diff+longdelay
+            loadChangeDelay = [ [e.load]' [e.changes]' [e.longdelay]' ];
+            lcdNoCatch = loadChangeDelay(~dlyCatch&~prbCatch,:);
+            [lcdU, ~,lcdUv ] = unique(lcdNoCatch,'rows');
+            lcdCount = histc(lcdUv,1:length(lcdU));
+            % see output of: [ lcdCount lcdU ]
+            
+            tc.verifyTrue(all(lcdCount==lcdCount(1)),...
+                'check equal load+same/diff+long/short for no catch');
+            
+            % only actually need to check load and delay
+            %  response is never seen
+            lcdCatch = loadChangeDelay(prbCatch,:);
+            [lcdCU, lcdCUi,lcdCUv ] = unique(lcdCatch,'rows');
+            lcdCatchCount = histc(lcdCUv,1:length(lcdCUi));
+            
+            tc.verifyTrue(all(lcdCount==lcdCount(1)),...
+                'check equal load+same/diff+long/short for probe catchs');
+            
+            % for catchs on dly, only need to check load
+            catchLoads = histc(loads(dlyCatch),unique(loads));
+            tc.verifyTrue(all(catchLoads==catchLoads(1)),...
+                'check equal loads for catch at dly');
+            
+            
+            %% color and position are not checked
+            % would also need to check catch and not cought trials
+            
+            % check color usage -- not checked!!!
+            noCatchColor = {e(~dlyCatch&~prbCatch).Colors};
+            allcolors = cell2mat(cellfun(...
+                @(x) [ x.Mem.LEFT ...
+                       x.Mem.RIGHT ...
+                       setdiff(x.Resp.LEFT,x.Mem.LEFT)...
+                       setdiff(x.Resp.RIGHT,x.Mem.RIGHT) ...
+                     ],noCatchColor, ...
+                 'UniformOutput',0));
+            colorCounts = histc(allcolors,1:max(allcolors));
+            
+            % check all positions -- not checked
+            pos={e(~dlyCatch&~prbCatch).pos};
+            allPos = cell2mat(cellfun(...
+                @(x) [ x.LEFT x.RIGHT ],...
+                pos,'UniformOutput',0));
+            posCounts = histc(allPos,unique(allPos));
+            
+        end
+        
         %%% CHECH BALANCING
         % - colors are equally targets (ignore habitual)
         % - cong/incog is balanced per position, implies
@@ -52,7 +132,7 @@ classdef PdgmTest < matlab.unittest.TestCase
         %
         % x  color per position -- too many permuts
         
-        function testAttGen(tc)
+        function testAttRead(tc)
            %global TIMES; in startup
            global TIMES
            TIMES = [  .5   .5      .4     .4 ];
