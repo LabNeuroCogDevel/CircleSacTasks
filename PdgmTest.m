@@ -90,9 +90,9 @@ classdef PdgmTest < matlab.unittest.TestCase
             %  response is never seen
             lcdCatch = loadChangeDelay(prbCatch,:);
             [lcdCU, lcdCUi,lcdCUv ] = unique(lcdCatch,'rows');
-            lcdCatchCount = histc(lcdCUv,1:length(lcdCUi));
+            lcdCatchCount = histc(lcdCUv,1:2);
             
-            tc.verifyTrue(all(lcdCount==lcdCount(1)),...
+            tc.verifyTrue(all(lcdCatchCount==lcdCatchCount(1)),...
                 'check equal load+same/diff+long/short for probe catchs');
             
             % for catchs on dly, only need to check load
