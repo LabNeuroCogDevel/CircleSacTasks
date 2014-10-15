@@ -1,0 +1,48 @@
+# Timing
+page 83 of [3dDeconvolve manual](http://afni.nimh.nih.gov/pub/dist/doc/manual/3dDeconvolve.pdf): lower std is more power, want small values!
+
+## WM
+```{r}
+# render file with
+#knit('timingInfo.Rmd')
+# prepare data
+library(plyr)
+library(ggplot2)
+sofile<-Sys.glob('workingMemory_shortDelay/stims/*/eff.txt')
+slfile<-Sys.glob('workingMemory_vardly/stims/*/eff.txt')
+so <- adply(sofile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
+sl <- adply(slfile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
+so$dly <- "short"
+sl$dly <- "both"
+stds <- rbind(so,sl);
+names(stds)<-c('n','contrast','std','dly')
+wide<-reshape(stds,direction="wide",idvar=c("n","dly"),timevar="contrast")
+```
+
+### Ranges
+```{r}
+stdranges<-ddply(wide, .(dly), function(d){
+  sapply(grep('std.',names(wide)),function(x){range(d[,x])})
+} )
+names(stdranges)[2:length(names(stdranges))]<-names(wide)[grep('std.',names(wide))]
+print(stdranges)
+
+
+p<-ggplot(stds,aes(x=contrast,y=std,color=dly,group=dly)) + geom_violin()
+print(p)
+```
+
+
+### Best
+looking at event schedule with best mem-probe separation
+
+```{r}
+bestTable<-ddply(wide, .(dly), function(x){
+  i<-which.min(x[,'std.mem-RSP']);
+  data.frame(
+     memVRSP=x[i,'std.mem-RSP'],
+     bestMvR_mean=mean(unlist(x[i,grep('std.',names(x))]),na.rm=T ) 
+  )
+} )
+print(bestTable)
+```
