@@ -217,6 +217,12 @@ function [StimulusOnsetTime,varargout ] = drawRing(w, varargin)
                  0 ...degsize.*.05                     ... pen width
                );
          end
+         
+         % number rings: left to right :1 2; 3 4; 5 6;
+         if 0
+             Screen('DrawText',w,num2str(n),positions(n,1), positions(n,2),...
+                 256*[1 1 1]);
+         end
    end
    
    % if we have a time to wait till display, wait that time

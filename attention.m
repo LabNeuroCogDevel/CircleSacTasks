@@ -113,8 +113,14 @@ function subject = attention(varargin)
    %       fix->cue->attend->probe->clear  
    TIMES = [  .5   .5      .4     .4 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
-   shrinkVal=1/4; % how big is the hole in the circles on probe
-   
+   shrinkVal=1/2; % how big is the hole in the circles on probe
+   % shrinkVal calc like (in drawRing.m)
+   %annulisSize = crclSize/2 + [-1;1].*crclSize/2 *shrinkProbe;
+   %movement = { ...
+   %     ... LEFT
+   %     [  [0                    annulisSize(1)      ], ...
+   %        [crclSize/2           annulisSize(2)      ]] ...
+   % .... 
    
    startdelay=8; enddelay=16; miniblockdelay=15;
    totalfMRITime=306+startdelay+enddelay+miniblockdelay*2;

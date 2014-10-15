@@ -11,17 +11,23 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
         Instructions=betweenInstructions;
     end
     
+    
     numInstrct=length(Instructions);
-    for instnum = 1:numInstrct
+    
+    % double space instructions
+    for instnum=1:numInstrct
+        if ischar( Instructions{instnum} )
+             Instructions{instnum}=strrep(Instructions{instnum},'\n','\n\n');
+        end
+    end
+    
+    instnum=1;
+    lastinstruct=1;
+    while(instnum <= numInstrct)
         % instructions can be a character string
         % or a function
         if ischar( Instructions{instnum} )
-           
-           % double space lines if we have old PTB
-           %if Vrev<10
-             Instructions{instnum}=strrep(Instructions{instnum},'\n','\n\n');
-           %end
-           
+                      
            DrawFormattedText(w, [ ...
                Instructions{instnum} ...
                ... '\n\n' num2str(instnum) '/' num2str(numInstrct) ...
@@ -37,14 +43,21 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
                if keyCode(KbName('escape'))
                      closedown();
                      error('Exit on instructions');
+                % want to go back to last instruct
+               elseif keyCode(KbName('LeftArrow'))
+                   instnum=lastinstruct(end)-1;
+                   lastinstruct=lastinstruct(1:(end-1));
+                   break;
                end
            end
+           lastinstruct=[lastinstruct instnum]
+
         else
             Instructions{instnum}(w);
             WaitSecs(1);
         end
         
-            
+        instnum=instnum+1;    
         % clear events if we are using a control box, otherwise long presses flash through instructions
         %if(~isempty(resppad)),CedrusResponseBox('FlushEvents', resppad); end
     end
