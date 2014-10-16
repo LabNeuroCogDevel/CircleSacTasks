@@ -1,34 +1,11 @@
 # Timing
-page 83 of [3dDeconvolve manual](http://afni.nimh.nih.gov/pub/dist/doc/manual/3dDeconvolve.pdf): lower std is more power, want small values!
+There are 36 trials to schedule in 360 seconds. Trials types (high/low load + same/different) occur at equally. 1/3 are catch. 
+1000 random schedules are created with exponentially sampled ITI and ISI with and without (1000 ea) variable delay, see `mk1dWM.pl` and `mk1dWM_vardly.pl`. The `1D` description of the schedule is fed to `3dDecovolve -nodata` and the `norm. std. dev.` extracted for contrasts of interest. See page 83 of [3dDeconvolve manual](http://afni.nimh.nih.gov/pub/dist/doc/manual/3dDeconvolve.pdf): lower std is more power, **want small values**.
 
 ## WM
 
-```r
-# render file with
-#knit('timingInfo.Rmd')
-# prepare data
-library(plyr)
-library(ggplot2)
-sofile<-Sys.glob('workingMemory_shortDelay/stims/*/eff.txt')
-slfile<-Sys.glob('workingMemory_vardly/stims/*/eff.txt')
-so <- adply(sofile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
-sl <- adply(slfile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
-so$dly <- "short"
-sl$dly <- "both"
-stds <- rbind(so,sl);
-names(stds)<-c('n','contrast','std','dly')
-wide<-reshape(stds,direction="wide",idvar=c("n","dly"),timevar="contrast")
-```
 
 ### Ranges
-
-```r
-stdranges<-ddply(wide, .(dly), function(d){
-  sapply(grep('std.',names(wide)),function(x){range(d[,x])})
-} )
-names(stdranges)[2:length(names(stdranges))]<-names(wide)[grep('std.',names(wide))]
-print(stdranges)
-```
 
 ```
 ##     dly std.mem:L1 std.isi std.dly:short std.RSP:nochange std.RSP:change
@@ -48,36 +25,12 @@ print(stdranges)
 ## 4     10.2845           NA
 ```
 
-```r
-p<-ggplot(stds,aes(x=contrast,y=std,color=dly,group=dly)) + geom_violin()
-print(p)
-```
-
-```
-## Warning: position_dodge requires constant width: output may be incorrect
-```
-
-```
-## Warning: position_dodge requires non-overlapping x intervals
-```
-
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+![plot of chunk ranges](figure/ranges-1.png) 
 
 
 ### Best
 looking at event schedule with best mem-probe separation
 
-
-```r
-bestTable<-ddply(wide, .(dly), function(x){
-  i<-which.min(x[,'std.mem-RSP']);
-  data.frame(
-     memVRSP=x[i,'std.mem-RSP'],
-     bestMvR_mean=mean(unlist(x[i,grep('std.',names(x))]),na.rm=T ) 
-  )
-} )
-print(bestTable)
-```
 
 ```
 ##     dly memVRSP bestMvR_mean
