@@ -32,7 +32,7 @@ my $STARTTIME=8;
 my $ENDTIME=16;
 my $TOTALSCANNER=$TOTALTIME + $STARTTIME + $ENDTIME;
 my $TR=1.5;
-my $MEANITI=2;
+my $MEANITI=2.5;
 my $MINITI=1;
 my $MAXITI=99; #no max
 #my $NITER=2;
@@ -46,7 +46,7 @@ my $TESTS="mem, mem:L4 - mem:L1, dly, mem - snd, mem - RSP"; # care about extrac
 say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
 say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
 
-my $taskname="workingMemory_noCatch";
+my $taskname="workingMemory_noCatchShort";
 mkdir "$taskname" if ! -d "$taskname/";
 
 @seq = qw/ snd isi mem dly RSP/;
@@ -58,11 +58,9 @@ mkdir "$taskname" if ! -d "$taskname/";
 
  isi=> [ {event=>"isi", name=>"isi", occurRatio=>1, duration=>.4, nrep=>48   }  ],
 
- dly   => [ {event=>"dly", name=>"dly:short", occurRatio=>1, duration=>1, nrep=>16},
-            {event=>"dly", name=>"dly:long",  occurRatio=>1, duration=>3, nrep=>16}   ],
-
- RSP  =>  [ {event=>"RSP", name=>"RSP:change",  occurRatio=>1,   duration=>2, nrep=>6     },
-            {event=>"RSP", name=>"RSP:nochange",occurRatio=>1,   duration=>2, nrep=>6     }] 
+ dly   => [ {event=>"dly", name=>"dly:short", occurRatio=>1, duration=>1, nrep=>48} ] , 
+ RSP  =>  [ {event=>"RSP", name=>"RSP:change",  occurRatio=>1,   duration=>2, nrep=>12     },
+            {event=>"RSP", name=>"RSP:nochange",occurRatio=>1,   duration=>2, nrep=>12     }] 
 );
 
 
