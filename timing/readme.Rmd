@@ -1,4 +1,10 @@
-# WM Timing
+# Timing
+use `./mk1dWM_vardly.pl` and `./mk1dAttention.pl` +  `./getBestWorkingMemory.bash` and `./getBestAttentionTiming.bash` 
+
+for WM, run deconvolves with `deconvolve/runAllDeconvovles.bash`
+## Att 
+
+## WM 
 There are `n` trials to schedule in 360 seconds. Trials types (high/low load + same/different) occur equally. If catch trials are used, 1/3 of all are catch (1/2 before dly, 1/2 after dly). If varable delay is used on noCatch and "both". Delays are `1s` and `3s`, distributed evenly.
 
 1. snd (cue )
@@ -17,6 +23,7 @@ There are `n` trials to schedule in 360 seconds. Trials types (high/low load + s
 |fullTrials| 36 |48     |36   |48          |
 |trials    | 48 |48     |48   |48          |
 
+TODO: show collinearity
 ```{r constants}
 # Power = Pr(Z>x)  where Z ~ N(0,1)
 k=3   # alpha=.0013
@@ -37,14 +44,14 @@ afniprz <- function(x) prz(k-AB/(s*x) )
 library(plyr)
 library(ggplot2)
 
-sofile<-Sys.glob('workingMemory_shortDelay/stims/*/eff.txt')
-slfile<-Sys.glob('workingMemory_vardly/stims/*/eff.txt')
-ncfile<-Sys.glob('workingMemory_noCatch/stims/*/eff.txt')
-ncsfile<-Sys.glob('workingMemory_noCatchShort/stims/*/eff.txt')
-so <- adply(sofile,1,function(x){read.table(header=F,x,sep="\t")})[2:5]
-sl <- adply(slfile,1,function(x){read.table(header=F,x,sep="\t")})[2:5]
-nc <- adply(ncfile,1,function(x){read.table(header=F,x,sep="\t")})[2:5]
-ns <- adply(ncsfile,1,function(x){read.table(header=F,x,sep="\t")})[2:5]
+sofile  <- Sys.glob('deconvolve/shortDelay.out/*.stds.txt')
+slfile  <- Sys.glob('deconvolve/vardly.out/*.stds.txt')
+ncfile  <- Sys.glob('deconvolve/noCatch.out/*.stds.txt')
+ncsfile <- Sys.glob('deconvolve/noCatchShort.out/*.stds.txt')
+so <- adply(sofile, 1,function(x){read.table(header=F,x,sep="\t")})[,2:5]
+sl <- adply(slfile, 1,function(x){read.table(header=F,x,sep="\t")})[,2:5]
+nc <- adply(ncfile, 1,function(x){read.table(header=F,x,sep="\t")})[,2:5]
+ns <- adply(ncsfile,1,function(x){read.table(header=F,x,sep="\t")})[,2:5]
 so$dly <- "short"
 sl$dly <- "both"
 nc$dly <- "noCatch"
@@ -57,25 +64,25 @@ stds$power <- afniprz(stds$std)
 wide<-reshape(stds,direction="wide",idvar=c("n","dly"),timevar="contrast")
 ```
 
-## Ranges
+### Ranges
 ```{r ranges,echo=F}
 stdranges<-ddply(wide, .(dly), function(d){
   sapply(grep('std.',names(wide)),function(x){range(d[,x])})
 } )
 names(stdranges)[2:length(names(stdranges))]<-names(wide)[grep('std.',names(wide))]
-print(stdranges)
+#print(stdranges)
 
 
 g<-ggplot(stds,aes(x=dly,y=std,color=dly))+theme_bw() +ggtitle('volin plot: dist. of std. dev. of est. of IRF/contrast')
 p<-g + geom_violin() + facet_wrap(~contrast)
 p<-g + geom_violin(aes(y=power)) + facet_wrap(~contrast)
 print(p)
-p<-ggplot(data=stds[grep('-.*LC$',stds$contrast),], aes(x=dly,y=power,color=dly)) + geom_point()  +geom_violin() + facet_wrap(~contrast,scales="free_y") + theme_bw() + ggtitle('power')
+p<-ggplot(data=stds[grep('-.*LC$',stds$contrast),], aes(x=dly,y=power,color=dly)) + geom_point()  +geom_violin() + facet_wrap(~contrast) + theme_bw() + ggtitle('power')
 print(p)
 ```
 
 
-## Best
+### Best
 looking at event schedule with best mem-probe separation
 
 ```{r best,echo=F}

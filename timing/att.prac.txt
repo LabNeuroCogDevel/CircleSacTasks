@@ -3,8 +3,11 @@ cue	3.5	atnd:pop  -1		probe:incng	-1	clear -1
 cue	5	atnd:pop	5.5	probe:incng	6	clear 6.5	
 cue	9	atnd:pop	9.5	probe:cng	10	clear	10.5
 cue	12.5	atnd:pop	13	probe	-1	clear	-1
-cue	14	atnd:hab	14.5	probe	15	clear	15.5
-cue	17.5	atnd:hab	18	probe	18.5	clear	19
+cue	14	atnd:hab	14.5	probe:incng	15	clear	15.5
+cue	17.5	atnd:hab	18	probe:cng	18.5	clear	19
 cue	22	atnd:hab	-1	probe	-1	clear	-1
 cue	25	atnd:flex	25.5	probe	-1	clear	-1
-cue	28	atnd:flex	28.5	probe	29	clear	29.5
+cue	26.5	atnd:flex	27	probe:cng	27.5	clear	28
+cue	30	atnd:flex	30.5	probe:cng	31	clear	31.5
+cue	34	atnd:flex	34.5	probe:incng	35	clear	35.5
+cue	40	atnd:flex	40.5	probe:incng	41	clear	41.5

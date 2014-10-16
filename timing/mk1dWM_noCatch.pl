@@ -412,6 +412,12 @@ for my $deconIt (1..$NITER) {
   my $label="";
   my %results=();
 
+  my $cmd="3dDeconvolve ". join(" ",@cmd);
+  open my $FHcmd, ">", "$taskname/stims/$deconIt/cmd.txt" or die "cannot open $taskname/stims/$deconIt/cmd.txt";
+  say $cmd;
+  say $FHcmd $cmd ;
+  close $FHcmd;
+
   open my $FHvals, ">", "$taskname/stims/$deconIt/eff.txt" or die "cannot open $taskname/stims/$deconIt/eff.txt";
   while(<$CMD>){
     $label="$2" and next if m/^(Stimulus|General).*:\s+([\w:\+\-]+)/;

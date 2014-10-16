@@ -194,7 +194,7 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         % 1 0
         % ...
         % 6 1
-        trgtpos=zeros(1,size(c,1));
+        trgtpos=zeros(1,   min(  size(c,1), length(hasProbe)  ) );
         intv=floor(1/3*length(trgtpos));
         cogidx=cogInCogProbe==0;
         
@@ -205,11 +205,17 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
         while abs(leftcnt - rightcnt)>1  || maxPosRep > 2
             % shuffle them up so order is random
             c=c(Shuffle(1:size(c,1)),:);
+            
             % set targets to the approprate mix
-            trgtpos(cogidx)  = c( c(:,2)==0, 1);
-            trgtpos(~cogidx) = c( c(:,2)==1, 1);
+            % will break if cogInCog doesn't match combvec
+            trgtpos(cogidx)  = paren(  c( c(:,2)==0, 1),...
+                                        1:length(find(cogidx)));
+            trgtpos(~cogidx) = paren ( c( c(:,2)==1, 1),...
+                                        1:length(find(~cogidx)));
+            
             % left is odd target 1,3,5; right is even 2,4,6
-            side=mod(trgtpos,2)'; side(side==0)=2;
+            side=mod(trgtpos,2)';
+            side(side==0)=2;
             %initialize all directions
             directions = cogInCog;
             % set the trials that matter

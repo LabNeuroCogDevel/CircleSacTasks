@@ -36,7 +36,7 @@ my $MEANITI=2.5;
 my $MINITI=1;
 my $MAXITI=99; #no max
 #my $NITER=2;
-my $NITER=1000;
+my $NITER=10;
 my $TOTALTRIALS=48;
 #my $TESTS="";  #no tests
 
@@ -413,8 +413,14 @@ for my $deconIt (1..$NITER) {
   push @cmd, "-num_glt ". ($#testEq+1);
   push @cmd, "-gltsym 'SYM: $testEq[$_]->{eq}'  -glt_label ". ($_+1). " $testEq[$_]->{name}" for (0..$#testEq);
   
-  say join(" ",@cmd) ;
-  open my $CMD, '-|', "3dDeconvolve ". join(" ",@cmd) ;#." 2>/dev/null";
+
+  my $cmd="3dDeconvolve ". join(" ",@cmd);
+  open my $FHcmd, ">", "$taskname/stims/$deconIt/cmd.txt" or die "cannot open $taskname/stims/$deconIt/cmd.txt";
+  say $cmd;
+  say $FHcmd $cmd ;
+  close $FHcmd;
+
+  open my $CMD, '-|', $cmd;#." 2>/dev/null";
   my $label="";
   my %results=();
 
