@@ -1,8 +1,8 @@
-# Timing
-There are 36 trials to schedule in 360 seconds. Trials types (high/low load + same/different) occur at equally. 1/3 are catch. 
+# WM Timing
+There are 36 trials to schedule in 360 seconds. Trials types (high/low load + same/different) occur equally. 1/3 are catch. 
 1000 random schedules are created with exponentially sampled ITI and ISI with and without (1000 ea) variable delay, see `mk1dWM.pl` and `mk1dWM_vardly.pl`. The `1D` description of the schedule is fed to `3dDecovolve -nodata` and the `norm. std. dev.` extracted for contrasts of interest. See page 83 of [3dDeconvolve manual](http://afni.nimh.nih.gov/pub/dist/doc/manual/3dDeconvolve.pdf): lower std is more power, **want small values**.
 
-## WM
+
 ```{r setup,echo=F}
 # render file with
 #library('knitr')
@@ -13,16 +13,19 @@ library(plyr)
 library(ggplot2)
 sofile<-Sys.glob('workingMemory_shortDelay/stims/*/eff.txt')
 slfile<-Sys.glob('workingMemory_vardly/stims/*/eff.txt')
+ncfile<-Sys.glob('workingMemory_noCatch/stims/*/eff.txt')
 so <- adply(sofile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
 sl <- adply(slfile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
+nc <- adply(ncfile,1,function(x){read.table(header=F,x,sep="\t")[,c(1,2,4)]})[2:4]
 so$dly <- "short"
 sl$dly <- "both"
-stds <- rbind(so,sl);
+nc$dly <- "noCatch"
+stds <- rbind(rbind(so,sl),nc);
 names(stds)<-c('n','contrast','std','dly')
 wide<-reshape(stds,direction="wide",idvar=c("n","dly"),timevar="contrast")
 ```
 
-### Ranges
+## Ranges
 ```{r ranges,echo=F}
 stdranges<-ddply(wide, .(dly), function(d){
   sapply(grep('std.',names(wide)),function(x){range(d[,x])})
@@ -32,12 +35,12 @@ print(stdranges)
 
 
 p<-ggplot(stds,aes(x=dly,y=std,color=dly)) + geom_violin() + facet_wrap(~contrast)
-p<-p+theme_bw()
+p<-p+theme_bw() +ggtitle('volin plot: dist. of std. dev. of est. of IRF/contrast')
 print(p)
 ```
 
 
-### Best
+## Best
 looking at event schedule with best mem-probe separation
 
 ```{r best,echo=F}

@@ -41,7 +41,7 @@ my $TOTALTRIALS=48;
 #my $TESTS="";  #no tests
 
 # need dly for L1 and dly for L4 
-my $TESTS="mem, mem:L4 - mem:L1, dly"; # care about extracting response and memory
+my $TESTS="mem, mem:L4 - mem:L1, dly, mem - snd, mem - RSP"; # care about extracting response and memory
 
 say "need a TOTALTIME=; line" and exit if(!$TOTALTIME || $TOTALTIME <= 0 );
 say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
@@ -49,7 +49,7 @@ say "need a TR=; line" and exit if(!$TR || $TR <= 0 );
 my $taskname="workingMemory_vardly";
 mkdir "$taskname" if ! -d "$taskname/";
 
-@seq = qw/ snd isi mem  CATCH1 dly CATCH2 RSP/;
+@seq = qw/ snd isi mem CATCH1 dly CATCH2 RSP/;
 %events = (
  snd=> [ {event=>"snd", name=>"snd", occurRatio=>1, duration=>.2, nrep=>48   }  ],
 
@@ -417,10 +417,17 @@ for my $deconIt (1..$NITER) {
   open my $CMD, '-|', "3dDeconvolve ". join(" ",@cmd) ;#." 2>/dev/null";
   my $label="";
   my %results=();
+
+  open my $FHvals, ">", "$taskname/stims/$deconIt/eff.txt" or die "cannot open $taskname/stims/$deconIt/eff.txt";
   while(<$CMD>){
     $label="$2" and next if m/^(Stimulus|General).*:\s+([\w:\+\-]+)/;
-    push @{$results{$1}}, {label=>$label, value=>$2} and next if m/^  (h|LC).+=\s+([\d\.]+)/;
+    if(m/^  (h|LC).+=\s+([\d\.]+)/){
+       push @{$results{$1}}, {label=>$label, value=>$2};
+       say $FHvals join("\t",$deconIt,$label,$1,$2,$&);
+       next;
+    }
   }
+  close $FHvals;
   
   my @sums;
   push @sums,sum(map {$_->{value}} @{$results{$_}} ) for (qw/h LC/);
