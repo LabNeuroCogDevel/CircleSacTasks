@@ -36,7 +36,7 @@ my $MEANITI=2.5;
 my $MINITI=1;
 my $MAXITI=99; #no max
 #my $NITER=2;
-my $NITER=10;
+my $NITER=1000;
 my $TOTALTRIALS=48;
 #my $TESTS="";  #no tests
 
