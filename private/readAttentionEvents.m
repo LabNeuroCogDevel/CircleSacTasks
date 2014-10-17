@@ -58,9 +58,9 @@ function events = readAttentionEvents(trialsPerBlock, blocks,varargin)
     % USING COUNTERBALANCING
     elseif strcmpi(varargin{1}, 'cb')
         if strcmpi(varargin{2}, 'A')
-            filelist={'hpf','phf','pfh'};
+            filelist={'phf','hfp'};%Habit --> Flexible --> Popout
         else
-            filelist={'phf','hpf','pfh'};
+            filelist={'hfp','phf'};
         end
         
         for i=1:length(filelist)
