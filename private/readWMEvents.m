@@ -1,5 +1,7 @@
 function events = readWMEvents(trialsPerBlock,blocks,varargin)
-    global LEFT RIGHT TIMES longdelaytime filelist LOADS;
+    global LEFT RIGHT TIMES longdelaytime filelist LOADS TIMEDIR;
+    % TIMEDIR='workingMemory_vardly'; set in WMsettings.m
+    
     idxs={1 3 5 7 9};
     [idx.cue, idx.isi, idx.mem,  idx.delay,  idx.probe ] = idxs{:};
     idxsname = {'cue','isi', 'mem','delay','probe'};
@@ -14,7 +16,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
     if isempty(varargin)
        filelist={'1','2','3','4','5','6'};
        for i=1:length(filelist)
-          filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
+          filelist{i}=['timing/' TIMEDIR '/best/' filelist{i} '.txt'];
        end
        filelist= repmat( Shuffle(filelist), 1, ceil(blocks/length(filelist)) );
 
@@ -22,7 +24,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
     elseif strcmpi(varargin{1}, 'bOrder')
         filelist=strsplit(varargin{2},':');
         for i=1:length(filelist)
-          filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
+          filelist{i}=['timing/' TIMEDIR '/best/' filelist{i} '.txt'];
         end
         
     % USING COUNTERBALANCING
@@ -34,7 +36,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
         end
         
         for i=1:length(filelist)
-          filelist{i}=['timing/workingMemory_vardly/best/' filelist{i} '.txt'];
+          filelist{i}=['timing/' TIMEDIR '/best/' filelist{i} '.txt'];
        end
     else
         filelist=varargin;

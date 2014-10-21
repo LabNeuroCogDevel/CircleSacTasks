@@ -9,7 +9,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
 
-    global LEFT RIGHT listenKeys TIMES colors decMemArray;
+    global LEFT RIGHT listenKeys TIMES colors DLYFIXINC;
     %% -1. get Codes
     ttls = getCodes(playCue,number,changes);
     
@@ -109,7 +109,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     %graycolors=ovalcolors;
     %graycolors(:)=0;
     %timing.delay.onset = drawCircles(w, graycolors ,ovalpos, timing.delay.ideal);% GetSecs()+.5);
-    timing.delay.onset = fixation(w, timing.delay.ideal, [ 256 256 0 ], 1.2); % bigger yellow
+    timing.delay.onset = fixation(w, timing.delay.ideal, [ 256 256 0 ], DLYFIXINC); % bigger yellow
     sendCode(ttls(3))
     screenshot(w,'WM/dly');
 

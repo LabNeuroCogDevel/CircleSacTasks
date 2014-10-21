@@ -55,6 +55,15 @@
 % WF 20140529 -- shared code with attention task
 % JS 20140528 -- initial
 
+% Manipulations/potentional changes
+% 1) fixation size
+% 2) high load
+% 3) response keys
+% changes in timing
+% 4) cue duration
+% 5) no catches
+
+
 
 %% Working Memory task
 % usage: workingMemory MEG ID test sex m age 99 tpb 6 nblocks 3 block 2
@@ -62,14 +71,15 @@ function subject=workingMemory(varargin)
     
     
     global    TIMES totalfMRITime listenKeys filelist ...
-              longdelaytime modality CUMULATIVE trlCatch;
+              longdelaytime modality CUMULATIVE trlCatch RSPKEY;
     %global a; % audio channel for left and right audio cues
 
     datetime=sprintf('%02d',clock);
     diary(['log/WM_' datetime(1:12) ]);
 
     globalSettings();
-    WMsettings(); %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
+    WMsettings(varargin{:});
+    %global   gridsize   LEFT RIGHT LOADS  TIMES  totalfMRITime;
 
     
     
@@ -102,6 +112,9 @@ function subject=workingMemory(varargin)
     % what keys will we accept as correct/incorrect
     listenKeys = hostinfo.keys.WM;
     
+    % set keys based on CLI input (as parsed by WMsettings)
+    if ~isempty(RSPKEY.same),  listenKeys(1)=KbName(RSPKEY.same); end
+    if ~isempty(RSPKEY.diff), listenKeys(2)=KbName(RSPKEY.diff); end
     
     % we can pass "reversekeys or "normalkeys" to override the default
     % if subject.cb='A' then normal keys

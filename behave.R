@@ -56,4 +56,4 @@ ggsave(attRT,file="docs/prelim_2014-10-08/img/attRT.png")
 ggsave(attPC,file="docs/prelim_2014-10-08/img/attPC.png")
 
 sink('docs/prelim_2014-10-08/include/att_table.tex'); xtable(att); sink()
-sink('docs/prelim_2014-10-08/include/wm_table.tex'); xtable(wm); sink( <- 
+sink('docs/prelim_2014-10-08/include/wm_table.tex'); xtable(wm); sink( )
