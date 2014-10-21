@@ -134,7 +134,7 @@ function events = readWMEvents(trialsPerBlock,blocks,varargin)
         events(j).timing.mem.ideal    = optime{idx.mem+1}(j);
         events(j).timing.delay.ideal  = optime{idx.delay+1}(j);
         events(j).timing.probe.ideal  = optime{idx.probe+1}(j);
-        events(j).timing.finish.ideal = optime{idx.probe+1}(j) + durtimes(4);
+        events(j).timing.finish.ideal = optime{idx.probe+1}(j) + durtimes(5);
         
     end
     

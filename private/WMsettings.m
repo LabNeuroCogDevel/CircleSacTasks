@@ -10,7 +10,7 @@ function WMsettings(varargin)
     LOADS = [ 1 4 ];
     
     % how big to make the yellow ISI fixation cross
-    DLYFIXINC=1.2;
+    DLYFIXINC=2.5;
 
     % where to find timing files
     TIMEDIR='workingMemory_vardly';
