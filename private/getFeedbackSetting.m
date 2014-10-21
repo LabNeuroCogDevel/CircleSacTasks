@@ -1,3 +1,5 @@
+%% this now only sets feedback if asked for explictly with 'feedback'
+
 function feedback=getFeedbackSetting(modality,varargin)
   % did we say no feedback
   if any(cellfun(@(x) ischar(x)&&strcmpi(x,'nofeedback'), varargin))
@@ -6,7 +8,9 @@ function feedback=getFeedbackSetting(modality,varargin)
   elseif any(cellfun(@(x) ischar(x)&&strcmpi(x,'feedback'), varargin))
       feedback=1;
   elseif regexpi(modality,'practice')
-      feedback=1;
+      feedback=1;  
+      feedback=0;
+  
   %are we fMRI
   %elseif strcmpi(modality,'fMRI')
   %    feedback=1;
@@ -15,6 +19,9 @@ function feedback=getFeedbackSetting(modality,varargin)
       feedback=0;
   end
       
+
+  %%
+  
   if feedback
       fprintf('GIVING FEEDBACK\n')
   else
