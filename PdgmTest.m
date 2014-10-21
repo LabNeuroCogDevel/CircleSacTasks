@@ -1,7 +1,7 @@
 % TestMEG paradigm
 %
 %     test =PdgmTest ; genres=test.testAttGen; res=run(test)
-
+%                      testWMRead 
 classdef PdgmTest < matlab.unittest.TestCase
 
     properties
@@ -122,7 +122,32 @@ classdef PdgmTest < matlab.unittest.TestCase
                 pos,'UniformOutput',0));
             posCounts = histc(allPos,unique(allPos));
             
-        end
+            
+            
+            %% check timings
+            t=[];
+            fields={'fix','cue','isi','mem','delay','probe','finish'};
+            for i=1:(tpb*nb)
+                for j =1:(length(fields)-1)
+                    t(i,j) = e(i).timing.(fields{j+1}).ideal - e(i).timing.(fields{j}).ideal;
+                end
+            end
+            
+            probetime = mean(  t(:,  find(strcmp(fields,'probe'),1)  )   );
+            tc.verifyEqual(probetime,2);
+            
+            cuetime = mean(  t(:,  find(strcmp(fields,'cue'),1)  )   );
+            tc.verifyLessThanOrEqual(cuetime-.2,10^-5,'cue is always .2');
+            
+            dlys = t(:,  find(strcmp(fields,'delay'),1)  ) ;
+            dlys = dlys(dlys>0);
+            tc.verifyEqual(mean(dlys),2);
+            
+            
+            ititime = mean(  t(:,  find(strcmp(fields,'fix'),1)  )   );
+            isitime = mean(  t(:,  find(strcmp(fields,'isi'),1)  )   );
+
+         end
         
         %%% CHECH BALANCING
         % - colors are equally targets (ignore habitual)

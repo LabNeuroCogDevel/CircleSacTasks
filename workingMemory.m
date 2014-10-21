@@ -319,7 +319,7 @@ end
 
 function [when, wait, catchidx ]= catchTrialEnd(timing)
      
-     global trlCatch decMemArray; 
+     global trlCatch decMemArray;  decMemArray=.3
      % in private/WMsettings()
      %trlCatch.points= {'mem','longdelay','delay','probe'};
      %trlCatch.resume= {'snd','mem'      ,'mem', 'delay'};
