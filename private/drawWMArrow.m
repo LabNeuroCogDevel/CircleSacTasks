@@ -9,7 +9,7 @@ function drawWMArrow(w,playCue)
     x=-2.*(playCue==LEFT)+1;
     % (x;y x;y) (x;y x;y)
     scaleby=.3.*degsize;
-    linewidth=min(6,degsize/6); %GFX card on laptop maxs at 6.99
+    linewidth=min(5,degsize/6); %GFX card on laptop maxs at 6.99
     
     % two lines that make a < or > "chevron"
     arrowLines = [0 x, x 0; ...

@@ -64,6 +64,11 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.Admin_PC.keys.WM        = KbName({'7&','2@'});
     hostInfo.Admin_PC.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
        
+    
+    %charles
+    hostInfo.loeff114_think = hostInfo.reese_loeff114;
+    hostInfo.loeff114_think.screenResolution=[1280 900];
+    
     %% what computer are we on or do we want to pretend we are on
     % check for arguments to set hostname
     hostnameIDX=find(cellfun(@(x) ischar(x)&&strcmpi(x,'HOSTNAME'), varargin),1);
