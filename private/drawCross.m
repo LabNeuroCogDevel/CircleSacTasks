@@ -3,9 +3,9 @@
 function drawCross(w,varargin)
     global degsize paren;
     center = paren(Screen('Rect',w),[3,4])./2;
-    crosslen = degsize/5;
+    crosslen = degsize*.65;
     crossw = degsize/20;
-    color=[0,0,0];
+    color=[127,127,127];
     if(length(varargin)>=1)
         color=varargin{1};
     end
