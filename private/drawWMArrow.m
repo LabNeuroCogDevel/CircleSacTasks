@@ -1,14 +1,14 @@
 function drawWMArrow(w,playCue)
-    global degsize paren LEFT;
+    global degsize paren LEFT FIXCOLOR;
     center = paren(Screen('Rect',w),[3,4])./2;
     %how wide is the line
     % position of horizontal line
-    color=0.*[1 1 1];
+    color=FIXCOLOR;
     %Screen('DrawLines',w,pos,linew,color,center);
     
     x=-2.*(playCue==LEFT)+1;
     % (x;y x;y) (x;y x;y)
-    scaleby=.3.*degsize;
+    scaleby=.5.*.65.*degsize;
     linewidth=min(5,degsize/6); %GFX card on laptop maxs at 6.99
     
     % two lines that make a < or > "chevron"
@@ -60,13 +60,13 @@ function drawWMArrow(w,playCue)
     %   12     0     0   -12
     % Screen('DrawLine', windowPtr [,color], fromH, fromV, toH, toV [,penWidth]);
     
-    Screen('DrawLine', w, [ 0 0 0], ...
+    Screen('DrawLine', w, color, ...
         arrowLines(1,1)+center(1), ...
         arrowLines(2,1)+center(2),...
         arrowLines(1,2)+center(1), ...
         arrowLines(2,2)+center(2),linewidth );
 
-    Screen('DrawLine', w, [ 0 0 0], ...
+    Screen('DrawLine', w, color, ...
         arrowLines(1,3)+center(1), ...
         arrowLines(2,3)+center(2),...
         arrowLines(1,4)+center(1), ...

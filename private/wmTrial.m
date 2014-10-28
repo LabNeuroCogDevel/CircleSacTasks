@@ -9,7 +9,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
 
-    global LEFT RIGHT listenKeys TIMES colors DLYFIXINC;
+    global LEFT RIGHT listenKeys TIMES colors DLYFIXINC FIXCOLOR;
     %% -1. get Codes
     ttls = getCodes(playCue,number,changes);
     
@@ -63,7 +63,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
    
 
     %% 0. fixation
-    drawBorder(w,[0 0 0], 1);
+    drawBorder(w,[ 0 0 0], 1);
     timing.fix.onset = fixation(w,timing.fix.ideal);
     screenshot(w,'WM/fix',1);
 
@@ -74,7 +74,7 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     screenshot(w,'WM/cue');
     
     %% 1.5 ISI
-    [timing.isi.onset ] = fixation(w,timing.isi.ideal,[ 0 0 0]);
+    [timing.isi.onset ] = fixation(w,timing.isi.ideal,FIXCOLOR);
     screenshot(w,'WM/isi');
 
     %% 2. memory set
@@ -146,9 +146,9 @@ end
 
 %% 1. fixation
 function StimulusOnsetTime = fixation(w,when,varargin)
-
+    global FIXCOLOR
     %color of fix cross
-    ITIcolor=[255 255 255];
+    ITIcolor=FIXCOLOR;
     sizeinc=1;
     if ~isempty(varargin)
         ITIcolor=varargin{1};
@@ -186,8 +186,10 @@ end
 
 % border for clrear
 function drawCrossBorder(w,correct,wmfeedback)
+ global FIXCOLOR;
  if ~wmfeedback
-     color=[255 255 255];
+     %color=[255 255 255];
+     color=FIXCOLOR;
  elseif correct==1
      color=[0 250 0];
  elseif correct==0

@@ -1,6 +1,6 @@
 function [starttime]=startRun(w)
   %% startRun -- if fMRI wait for trigger, MEG reset codes
-  global modality;
+  global modality TEXTCOLOR;
  
   
   % remove any hold over from previous runs
@@ -12,7 +12,7 @@ function [starttime]=startRun(w)
   if(strcmpi(modality,'fMRI'))
      fprintf('Wait for =\n');
      DrawFormattedText(w, 'Get Ready! (waiting for scanner)', ...
-            'center','center',[0 0 0]);
+            'center','center',TEXTCOLOR);
      Screen('Flip', w);
      scannerTR=0;
      

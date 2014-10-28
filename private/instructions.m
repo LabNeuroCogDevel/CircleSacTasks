@@ -5,6 +5,9 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
     %ptbvid= find(ptbv=='.');
     %Vrev = str2double(ptbv((ptbvid(2)+1):end));
     
+    
+    global TEXTCOLOR; 
+    
     if any(cellfun(@(x) ischar(x)&&strcmpi(x,'instructions'), varargin))
         Instructions=newInstructions;
     else
@@ -31,7 +34,7 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
            DrawFormattedText(w, [ ...
                Instructions{instnum} ...
                ... '\n\n' num2str(instnum) '/' num2str(numInstrct) ...
-               ],'center','center',[0 0 0]);
+               ],'center','center',TEXTCOLOR);
            
            Screen('Flip', w);
            WaitSecs(1); % give a bit to release previous key
