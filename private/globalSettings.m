@@ -4,7 +4,7 @@ function globalSettings()
     %256/8
     backgroundColor=[32 32 32]; 
     
-    TEXTCOLOR=[256 256 256];
+    TEXTCOLOR=[255 255 255];
     
     % conviency ananomous function
     paren=@(x,varargin) x(varargin{:});
