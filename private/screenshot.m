@@ -1,3 +1,7 @@
+% global takescreenshots
+% takescreenshots=1
+% workingMemory cb A id brian sex m age 0 cb B HOSTNAME shots
+
 function screenshot(w,name,varargin)
     persistent trlcount;
     global takescreenshots

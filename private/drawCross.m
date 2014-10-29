@@ -11,7 +11,7 @@ function drawCross(w,varargin)
     end
     if(length(varargin)>=2)
         crosslen = crosslen.*varargin{2};
-        crossw   = crossw.*varargin{2};
+        crossw   = min(5,crossw.*varargin{2});
     end
     
     pos = [0 0 -1 1; -1 1 0 0].*crosslen.*.5;

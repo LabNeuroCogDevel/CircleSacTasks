@@ -57,8 +57,8 @@ function [ thishostinfo ] = setHostInfo( varargin )
     
     % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
     % deg size may force some WM dots off screen!
-    hostInfo.Admin_PC.hSize = 28.5; 
-    hostInfo.Admin_PC.vDist = 130; 
+    hostInfo.Admin_PC.hSize = 28.5;  % 29 from Brian (22 is height)
+    hostInfo.Admin_PC.vDist = 130;   % 
     hostInfo.Admin_PC.modality = 'fMRI';
     hostInfo.Admin_PC.keys.attention = KbName({'7&','2@','space'});
     hostInfo.Admin_PC.keys.WM        = KbName({'7&','2@'});
