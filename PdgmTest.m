@@ -45,6 +45,7 @@ classdef PdgmTest < matlab.unittest.TestCase
     methods (Test)
 
         function testWMRead(tc)
+            global TIMES longdelaytime;
             WMsettings();
             tpb=48;
             nb=2;
@@ -133,15 +134,29 @@ classdef PdgmTest < matlab.unittest.TestCase
                 end
             end
             
+            % expected times
+            %      fix-> cue-> isi->  memory->  delay->  probe->  finish
+            %        .5    .2     .4       .2        1      2 
+            %TIMES = [ .5  .2  .4  .2  1  2];
+            
+            expPrb=TIMES(6);
+            expDly=mean(TIMES(5)+longdelaytime);  %average of 1 and 3
+            expCue=TIMES(2);
+            expMem=TIMES(4);
+            
             probetime = mean(  t(:,  find(strcmp(fields,'probe'),1)  )   );
-            tc.verifyEqual(probetime,2);
+            tc.verifyLessThanOrEqual(probetime-expPrb,10^-5,'allProbes are 2s');
             
             cuetime = mean(  t(:,  find(strcmp(fields,'cue'),1)  )   );
-            tc.verifyLessThanOrEqual(cuetime-.2,10^-5,'cue is always .2');
+            tc.verifyLessThanOrEqual(cuetime-expCue,10^-5,'cue is always .2');
+            
+            memtime = mean(  t(:,  find(strcmp(fields,'mem'),1)  )   );
+            tc.verifyLessThanOrEqual(memtime-expMem,10^-5,'men is always .2');
             
             dlys = t(:,  find(strcmp(fields,'delay'),1)  ) ;
             dlys = dlys(dlys>0);
-            tc.verifyEqual(mean(dlys),2);
+            dlytime=mean(dlys)-10^-5;
+            tc.verifyLessThanOrEqual(dlytime-expDly,10^-5,'dlys average 2 (equal 1 and 3)');
             
             
             ititime = mean(  t(:,  find(strcmp(fields,'fix'),1)  )   );
