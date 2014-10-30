@@ -6,7 +6,7 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
     %Vrev = str2double(ptbv((ptbvid(2)+1):end));
     
     
-    global TEXTCOLOR; 
+    global TEXTCOLOR screenResolution degsize; 
     
     if any(cellfun(@(x) ischar(x)&&strcmpi(x,'instructions'), varargin))
         Instructions=newInstructions;
@@ -38,11 +38,11 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
            
            Screen('Flip', w);
        elseif iscell(Instructions{instnum})
-           startx=20; starty=400;  
+           startx=20; starty=screenResolution(2)/2-degsize;  
            subinst=Instructions{instnum};
            for subi=1:length(subinst)
                if ischar(subinst{subi})
-                 [startx, starty] =  DrawFormattedText(w,subinst{subi} ,startx,starty,TEXTCOLOR);
+                 [startx, starty] =  DrawFormattedText(w,subinst{subi} ,'center',starty,TEXTCOLOR);
                  startx=20;
                  starty=starty+100;
                else
