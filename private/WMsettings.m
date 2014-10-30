@@ -1,7 +1,7 @@
 function WMsettings(varargin)
     % colors screenResolution and gridsize are defined in setupScreen
     global   gridsize   LEFT RIGHT LOADS  TIMES totalfMRITime longdelaytime ...
-             trlCatch TIMEDIR DLYFIXINC RSPKEY FIXCOLOR ITICOLOR DLYCOLOR;
+             trlCatch TIMEDIR DLYFIXINC RSPKEY FIXCOLOR ITICOLOR DLYCOLOR CUECOLOR;
 
     % useful paradigmn info
     gridsize = [9 7];
@@ -10,8 +10,9 @@ function WMsettings(varargin)
     LOADS = [ 1 3 ];
     
     % colors
-    FIXCOLOR=1.*127;
+    FIXCOLOR=[255 255 255]; %1.*127;
     ITICOLOR=FIXCOLOR;
+    CUECOLOR=ITICOLOR;
     DLYCOLOR=[256 256 0 ]; % yellow
     
     
