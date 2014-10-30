@@ -38,7 +38,7 @@ function instructions(w,newInstructions,betweenInstructions,subject,varargin)
            
            Screen('Flip', w);
        elseif iscell(Instructions{instnum})
-           startx=20; starty=20;  
+           startx=20; starty=400;  
            subinst=Instructions{instnum};
            for subi=1:length(subinst)
                if ischar(subinst{subi})
