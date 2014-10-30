@@ -61,8 +61,8 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.Admin_PC.vDist = 130;   % 
     hostInfo.Admin_PC.modality = 'fMRI';
     hostInfo.Admin_PC.keys.attention = KbName({'7&','2@','space'});
-    hostInfo.Admin_PC.keys.WM        = KbName({'7&','2@'});
-    hostInfo.Admin_PC.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
+    hostInfo.Admin_PC.keys.WM        = KbName({'2@','3#'});
+    hostInfo.Admin_PC.keys.names  = {'right INDEX finger', 'right MIDDLE finger'};
        
     
     %charles
