@@ -25,14 +25,18 @@ There are `n` trials to schedule in 360 seconds. Trials types (high/low load + s
 
 TODO: show collinearity
 ```{r constants}
-# Power = Pr(Z>x)  where Z ~ N(0,1)
+## Power = Pr(Z>x)  where Z ~ N(0,1)
+
 k=3   # alpha=.0013
 s=15  # mesure error std dev
 AB=10 # a>b by 10 IRF of A 10 units greater than B
+AB=-10  # a<b by 10 
+# error function (normal cdf) 
 erf <- function(x) 2 * pnorm(x * sqrt(2)) - 1
+# Pr(Z>x)
 prz <- function(x) 1-1/2*(1+erf(x/sqrt(2)))
-# page 87 afni 3dDeconvolve man
-afniprz <- function(x) prz(k-AB/(s*x) )
+# page 87 afni 3dDeconvolve man, x is the norm std dev
+afniprz <- function(x) prz( k- (AB/(s*x))  )
 ```
 
 ```{r setup,echo=F}
