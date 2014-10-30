@@ -111,7 +111,7 @@ function subject = attention(varargin)
    % colors, paren, and degsize defined in setupscreen
    global TIMES listenKeys CUMULATIVE CLEARTIME modality filelist;
    %       fix->cue->attend->probe->clear  
-   TIMES = [  .5   .5      .4     .4 ]; % time between each event in seconds
+   TIMES = [  .5   .5      .5     .5 ]; % time between each event in seconds
    CLEARTIME = 1.5; % additional time to response after clearing the screen
    shrinkVal=1/2; % how big is the hole in the circles on probe
    % shrinkVal calc like (in drawRing.m)
