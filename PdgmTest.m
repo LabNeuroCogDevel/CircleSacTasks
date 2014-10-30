@@ -164,6 +164,57 @@ classdef PdgmTest < matlab.unittest.TestCase
 
          end
         
+        %
+        % Timings
+        %
+        function testAttReadTiming(tc)
+           %global TIMES; in startup
+           global TIMES CLEARTIME;
+           ATTsettings();
+           tpb=72;
+           nb=2;
+           e=readAttentionEvents(tpb,nb,'cb','A');
+
+           t=[];
+           fields={'fix','cue','attend','probe','clear'};
+           for fi=1:(tpb*nb)
+                for j =1:(length(fields)-1)
+                    t(fi,j) = e(fi).timing.(fields{j+1}).ideal - e(fi).timing.(fields{j}).ideal;
+                end
+                % get clear by comparing to the next fix onset
+                if mod(fi,tpb) && t(fi,j) ~= 0
+                    t(fi,j+1)= e(fi+1).timing.(fields{1}).ideal - e(fi).timing.(fields{j+1}).ideal;
+                else
+                    t(fi,j+1)= -1;
+                end
+           end
+
+
+            %         fix->cue->attend->probe->clear  
+            %TIMES = [  .5   .5      .5     .5 ];
+            expt.cue=TIMES(2);
+            expt.attend=TIMES(3);
+            expt.probe=TIMES(4);
+            expt.clear=CLEARTIME+TIMES(4);
+
+            for evt=fieldnames(expt)'
+                evt=evt{1};
+                % what index in t do we want
+                fidx=find(strcmp(fields,evt),1);
+                % where are the positive values
+                notCatch=t(:,fidx)>0;
+                
+                % what is our mean time
+                mutime = mean(  t(notCatch,fidx)   );
+                
+                %b/c we have a float, we need to use a funny check
+                % make sure we are close to our ideal value
+                tc.verifyLessThanOrEqual(...
+                     abs( mutime - expt.(evt)  )    ,10^-5,...
+                     [ evt ' are ' num2str(expt.(evt))] );
+            end
+        end
+        
         %%% CHECH BALANCING
         % - colors are equally targets (ignore habitual)
         % - cong/incog is balanced per position, implies
@@ -171,11 +222,9 @@ classdef PdgmTest < matlab.unittest.TestCase
         %    - response is equally balenced left/right
         %
         % x  color per position -- too many permuts
-        
         function testAttRead(tc)
-           %global TIMES; in startup
-           global TIMES
-           TIMES = [  .5   .5      .4     .4 ];
+
+           
            paren = @(x, varargin) x(varargin{:});
            trls=72;
            blks=2;
@@ -249,8 +298,6 @@ classdef PdgmTest < matlab.unittest.TestCase
                % seen
                
 
-               
-               
            end
        
         end
