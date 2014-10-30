@@ -165,8 +165,9 @@ end
 
 %% 2,4. memoryset, probe.
 function StimulusOnsetTime = drawCircles(w,colorArr,posArr,when)
+    global FIXCOLOR;
     Screen('FillOval',w,colorArr,posArr);
-    drawCross(w);
+    drawCross(w,FIXCOLOR,1);
     [VBLTimestamp, StimulusOnsetTime  ] = Screen('Flip',w,when);
 end
 
@@ -199,7 +200,7 @@ function drawCrossBorder(w,correct,wmfeedback)
      color=[250 0 0];
  end
  drawBorder(w,[0 0 0], 0);
- drawCross(w,color);
+ drawCross(w,color,1);
 end
 %% get trigger codes
 function triggers = getCodes(cueHemi,cLoad,changes)
