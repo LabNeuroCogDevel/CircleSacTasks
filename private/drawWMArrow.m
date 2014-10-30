@@ -1,9 +1,9 @@
 function drawWMArrow(w,playCue)
-    global degsize paren LEFT FIXCOLOR;
+    global degsize paren LEFT CUECOLOR;
     center = paren(Screen('Rect',w),[3,4])./2;
     %how wide is the line
     % position of horizontal line
-    color=FIXCOLOR;
+    color=CUECOLOR;
     %Screen('DrawLines',w,pos,linew,color,center);
     
     x=-2.*(playCue==LEFT)+1;
