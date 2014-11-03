@@ -4,38 +4,21 @@ function [ thishostinfo ] = setHostInfo( varargin )
 % uses actual hostname or ('HOSTNAME','fakehostname'} in arguments
 
     KbName('UnifyKeyNames');
-    %% MEG
-    %TODO: ACTUALLY MEASSURE THIS 
-    hostInfo.PUH1DMEG03.hSize = 56; 
-    hostInfo.PUH1DMEG03.vDist = 145;
-    hostInfo.PUH1DMEG03.modality = 'MEG';
-    %hostInfo.PUH1DMEG03.screenResolution=[800 600];
-    hostInfo.PUH1DMEG03.keys.attention = KbName({'7&','2@','space'});
-    hostInfo.PUH1DMEG03.keys.WM        = KbName({'7&','2@'});
-    hostInfo.PUH1DMEG03.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
 
-    %Tim's
-    hostInfo.OACO4CNRL6.hSize = 20;
-    hostInfo.OACO4CNRL6.vDist = 30;
-    hostInfo.OACO4CNRL6.screenResolution=[800 600];
-    hostInfo.OACO4CNRL6.modality = 'MEG';
-    hostInfo.OACO4CNRL6.keys.attention = KbName({'1!','2@','space'});
-    hostInfo.OACO4CNRL6.keys.WM        = KbName({'1!','2@'});   
-    hostInfo.OACO4CNRL6.keys.names  = {'number 1', 'number 2'};
-
-    
     %% fMRI
     % "new" eyetracking room
     hostInfo.upmc_56ce704785.hSize=41;
     hostInfo.upmc_56ce704785.vDist=55;
     hostInfo.upmc_56ce704785.modality = 'fMRI';
-    hostInfo.upmc_56ce704785.keys.attention = KbName({'7&','2@','space'});
-    hostInfo.upmc_56ce704785.keys.WM        = KbName({'7&','2@'});
-    hostInfo.upmc_56ce704785.keys.names  = {'7', '2'};
-    
-    %practice 
-    hostInfo.Practice_PC = hostInfo.upmc_56ce704785;
-    hostInfo.Practice_PC.keys.names  = {'LEFT index finger', 'RIGHT index finger'};
+    hostInfo.upmc_56ce704785.keys.attention = KbName({'f','j','space'});
+    hostInfo.upmc_56ce704785.keys.WM        = KbName({'j','k',...
+                                               'd','f'});
+                                           
+    hostInfo.upmc_56ce704785.keys.ATTnames  = {'left INDEX finger(f)','right INDEX finger (j)'};
+    hostInfo.upmc_56ce704785.keys.WMnames  = {'right INDEX finger (j)', 'right MIDDLE finger(k)',...
+                                     'left MIDDLE finger(d)','left INDEX finger(f)'};
+    % also the new eyelab
+    hostInfo.OACO4CNRL6 = hostInfo.upmc_56ce704785;
 
 
     
@@ -44,17 +27,21 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.reese_loeff114.vDist = 60;
     hostInfo.reese_loeff114.screenResolution=[1600 1200];
     hostInfo.reese_loeff114.modality = 'fMRI';
-    hostInfo.reese_loeff114.keys.attention = KbName({'1!','2@','space'});
-    hostInfo.reese_loeff114.keys.WM        = KbName({'1!','2@'});
-    hostInfo.reese_loeff114.keys.names  = {'1', '2'};
+    hostInfo.reese_loeff114.keys = hostInfo.upmc_56ce704785.keys;
     
+    %charles
+    hostInfo.loeff114_think = hostInfo.reese_loeff114;
+    hostInfo.loeff114_think.screenResolution=[1280 900];
+     
     % screenshot
     hostInfo.shots = hostInfo.reese_loeff114;
     hostInfo.shots.screenResolution=[800 600];
     hostInfo.shots.vDist = 160; % this makes everything larger :)
 
+    % will's laptop
     hostInfo.yogert = hostInfo.OACO4CNRL6;
     
+    %%%%%%%%%%%%%%%% SUBJECT FACING COMPUTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
     % deg size may force some WM dots off screen!
     hostInfo.Admin_PC.hSize = 28.5;  % 29 from Brian (22 is height)
@@ -66,13 +53,31 @@ function [ thishostinfo ] = setHostInfo( varargin )
     % N.B. on CB B/Y keys are flipped.
     % first (after flip if B) is always same
     % second                  is        diff
-    hostInfo.Admin_PC.keys.names  = {'right INDEX finger', 'right MIDDLE finger',...
-                                     'left MIDDLE finger','left INDEX finger'};
-       
+    hostInfo.Admin_PC.keys.WMnames  = {'right INDEX finger', 'right MIDDLE finger',...
+                                     'left MIDDLE finger','left INDEX finger'};   
+    hostInfo.Admin_PC.keys.ATTnames  = {'left INDEX finger','right INDEX finger'};
     
-    %charles
-    hostInfo.loeff114_think = hostInfo.reese_loeff114;
-    hostInfo.loeff114_think.screenResolution=[1280 900];
+    %practice 
+    hostInfo.Practice_PC = hostInfo.upmc_56ce704785;
+    hostInfo.Practice_PC.keys = hostInfo.Admin_PC.keys;
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% MEG
+    %TODO: ACTUALLY MEASSURE THIS 
+    hostInfo.PUH1DMEG03.hSize = 56; 
+    hostInfo.PUH1DMEG03.vDist = 145;
+    hostInfo.PUH1DMEG03.modality = 'MEG';
+    %hostInfo.PUH1DMEG03.screenResolution=[800 600];
+    hostInfo.PUH1DMEG03.keys = hostInfo.Admin_PC.keys;
+
+    %Tim's
+    hostInfo.OACO4CNRL6.hSize = 20;
+    hostInfo.OACO4CNRL6.vDist = 30;
+    hostInfo.OACO4CNRL6.screenResolution=[800 600];
+    hostInfo.OACO4CNRL6.modality = 'MEG';
+    hostInfo.OACO4CNRL6.keys = hostInfo.loeff114_think.keys;
+
+    
     
     %% what computer are we on or do we want to pretend we are on
     % check for arguments to set hostname

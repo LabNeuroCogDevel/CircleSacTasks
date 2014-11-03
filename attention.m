@@ -174,7 +174,8 @@ function subject = attention(varargin)
 
     
     % get display instructions
-    keylabels = {'left index finger','right index finger'};
+    %keylabels = {'left index finger','right index finger'};
+    keylabels=hostinfo.keys.ATTnames;
     
     
     thisBlk=subject.curBlk;

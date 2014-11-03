@@ -131,7 +131,7 @@ function subject=workingMemory(varargin)
     % flip instructions for counterbalanced subjects
     if subject.reversekeys
         listenKeys=fliplr(listenKeys);
-        hostinfo.keys.names=fliplr(hostinfo.keys.names);
+        hostinfo.keys.WMnames=fliplr(hostinfo.keys.WMnames);
     end
     
     
@@ -152,7 +152,7 @@ function subject=workingMemory(varargin)
 
     % what are the key instructions
     [newInstructions,betweenInstructions,endStructions] = ...
-         getWMInstructions(hostinfo.keys.names,thisBlk,prdgmStruct.(modality){2});
+         getWMInstructions(hostinfo.keys.WMnames,thisBlk,prdgmStruct.(modality){2});
 
     % reset the subject to this block
     startofblock=(thisBlk-1)*trialsPerBlock+1;
@@ -163,7 +163,7 @@ function subject=workingMemory(varargin)
     % some info to the command window
     fprintf('Using Reversed Keys? %d\n',subject.reversekeys );
 
-    for i=1:2, fprintf('%s is key %d\n', hostinfo.keys.names{i}, listenKeys(i)),end
+    for i=1:2, fprintf('%s is key %d\n', hostinfo.keys.WMnames{i}, listenKeys(i)),end
     
     %psychtoolbox bit
     try
