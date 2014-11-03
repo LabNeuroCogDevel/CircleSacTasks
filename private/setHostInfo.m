@@ -61,8 +61,13 @@ function [ thishostinfo ] = setHostInfo( varargin )
     hostInfo.Admin_PC.vDist = 130;   % 
     hostInfo.Admin_PC.modality = 'fMRI';
     hostInfo.Admin_PC.keys.attention = KbName({'7&','2@','space'});
-    hostInfo.Admin_PC.keys.WM        = KbName({'2@','3#'});
-    hostInfo.Admin_PC.keys.names  = {'right INDEX finger', 'right MIDDLE finger'};
+    hostInfo.Admin_PC.keys.WM        = KbName({'2@','3#',...
+                                               '8*','7&'});
+    % N.B. on CB B/Y keys are flipped.
+    % first (after flip if B) is always same
+    % second                  is        diff
+    hostInfo.Admin_PC.keys.names  = {'right INDEX finger', 'right MIDDLE finger',...
+                                     'left MIDDLE finger','left INDEX finger'};
        
     
     %charles
