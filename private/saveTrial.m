@@ -2,6 +2,19 @@ function subject=saveTrial(subject,trl,starttime)
 %saveTrial --  save trial given common subject structure
 %  need trl results
 %   save subject struct (containing events and trial info) to mat file
+%
+%   test:
+%   subject.curTrl=1;subject.curBlk=1;
+%
+
+  % remove key pressed from struct (it breaks something further down)
+  % add to it's own structure if it exists
+  if isfield(trl,'keyspressed')
+    % subject.curTrl,
+    % trl.keyspressed,
+    subject.kp{subject.curTrl} = trl.keyspressed;
+    trl=rmfield(trl,'keyspressed');
+  end
 
   subject.trial(subject.curTrl) = trl;
 

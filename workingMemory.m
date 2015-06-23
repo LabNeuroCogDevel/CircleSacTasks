@@ -113,7 +113,7 @@ function subject=workingMemory(varargin)
     listenKeys = hostinfo.keys.WM;
     
     % set keys based on CLI input (as parsed by WMsettings)
-    if ~isempty(RSPKEY.same),  listenKeys(1)=KbName(RSPKEY.same); end
+    if ~isempty(RSPKEY.same), listenKeys(1)=KbName(RSPKEY.same); end
     if ~isempty(RSPKEY.diff), listenKeys(2)=KbName(RSPKEY.diff); end
     
     % we can pass "reversekeys or "normalkeys" to override the default

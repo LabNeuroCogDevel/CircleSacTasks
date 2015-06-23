@@ -8,41 +8,52 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
 %  show 'number' of circles
 %  'changes' is which side actually changes; 0=nochange; RIGHT (1); LEFT (2), 3=BOTH
 %  'playVue' is LEFT | RIGHT beep
+%
+%  quick test:
+%    w=Screen('OpenWindow',0,150,[0 0 800 600])
+%    pos.LEFT=1;pos.RIGHT=1
+%    color.Mem.RIGHT=1;color.Mem.LEFT=1;color.Resp.RIGHT=1;color.Resp.LEFT=1
+%    tt=GetSecs()+10;for f={'fix','cue','isi','mem','delay','probe','finish'}, tt=tt+.2; timing.(f{1}).ideal=tt; end;
+%    timing.finish.ideal=timing.finish.ideal+2;
+%    wmTrial(w,1,0,1,color,pos,timing,[])
+%
 
-    global LEFT RIGHT listenKeys TIMES colors ...
-           DLYFIXINC FIXCOLOR ITICOLOR DLYCOLOR;
-    %% -1. get Codes
-    ttls = getCodes(playCue,number,changes);
-    
-    %% set trial info
-    trial.RT      = -Inf;  
-    trial.correct = nan;
-    trial.timing  = timing;
-    trial.load    = number;
-    trial.hemi    = changes;
-    trial.playCue = playCue;
-    trial.triggers= ttls;
-    
-    
-    % HACK, change timing: want .2s instead of 1
-    % BAD CODE SMELL
-    %  change timing here means all generated times and 
-    %  calcs dependent on TIMES can stay unchanged
-    %timing.delay.ideal = timing.delay.ideal - decMemArray;
-    
-    % defaults  -- mising color, pos, and timing
-    if isempty(number),    number=5;    end
-    if isempty(changes),   changes=0;   end
-    if isempty(playCue),   playCue=LEFT;end
-    
-    %% -1. calculations.
+   global LEFT RIGHT listenKeys TIMES colors ...
+          DLYFIXINC FIXCOLOR ITICOLOR DLYCOLOR;
+   
+   % defaults  -- mising color, pos, and timing
+   if isempty(number),    number=5;    end
+   if isempty(changes),   changes=0;   end
+   if isempty(playCue),   playCue=LEFT;end
 
-    offset=calcOffset(w); % get offset due to diff between window size and grid size
-    
-    
-    % get positions
-    lCirclePos = generateCirclePosns(pos.LEFT,offset);
-    rCirclePos = generateCirclePosns(pos.RIGHT,offset,6);
+   %% -1. get Codes
+   ttls = getCodes(playCue,number,changes);
+   
+   %% set trial info
+   trial.RT      = -Inf;  
+   trial.correct = nan;
+   trial.timing  = timing;
+   trial.load    = number;
+   trial.hemi    = changes;
+   trial.playCue = playCue;
+   trial.triggers= ttls;
+   
+   
+   % HACK, change timing: want .2s instead of 1
+   % BAD CODE SMELL
+   %  change timing here means all generated times and 
+   %  calcs dependent on TIMES can stay unchanged
+   %timing.delay.ideal = timing.delay.ideal - decMemArray;
+   
+   
+   %% -1. calculations.
+
+   offset=calcOffset(w); % get offset due to diff between window size and grid size
+   
+   
+   % get positions
+   lCirclePos = generateCirclePosns(pos.LEFT,offset);
+   rCirclePos = generateCirclePosns(pos.RIGHT,offset,6);
        
  
    %% -1. correct key
@@ -135,7 +146,8 @@ function trial = wmTrial(w,number,changes,playCue,color,pos,timing,wmfeedback)
     drawBorder(w,[0 0 0], 0);
     [ timing.finish.onset, ...
       timing.Response,     ...
-      trial.correct   ]     =  clearAndWait(w,timing.finish.ideal,timing.finish.ideal,...
+      trial.correct,       ...
+      trial.keyspressed   ]     =  clearAndWait(w,timing.finish.ideal,timing.finish.ideal,...
                                           listenKeys(correctKey),@drawCrossBorder,wmfeedback);
         
     trial.RT      = timing.Response-timing.probe.onset;                                  
