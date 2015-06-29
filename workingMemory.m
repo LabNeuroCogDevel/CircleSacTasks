@@ -76,6 +76,7 @@ function subject=workingMemory(varargin)
 
     datetime=sprintf('%02d',clock);
     diary(['log/WM_' datetime(1:12) ]);
+    fprintf('Last Updated 20150629\n')
 
     globalSettings();
     WMsettings(varargin{:});
