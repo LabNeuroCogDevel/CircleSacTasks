@@ -130,8 +130,8 @@ function subject=workingMemory(varargin)
     end 
     % flip instructions for counterbalanced subjects
     if subject.reversekeys
-        listenKeys=fliplr(listenKeys);
-        hostinfo.keys.WMnames=fliplr(hostinfo.keys.WMnames);
+        listenKeys=fliplr(listenKeys),
+        hostinfo.keys.WMnames=fliplr(hostinfo.keys.WMnames),
     end
     
     

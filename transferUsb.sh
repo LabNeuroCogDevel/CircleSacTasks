@@ -4,13 +4,15 @@ set -xe
 asdir=/mnt/usb/P5SzAttWm
 [ -d $asdir ] || sudo mount /dev/sdd1 /mnt/usb
 
-excludes=""
-rsync  -nrvhi --exclude 'atMR/' --exclude 'atMEG/'  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timing/*/stims' --exclude 'timing/deconvolve/' --exclude '.git/'  . $asdir
+# --exclude 'timing/*/stims' --exclude 'timing/deconvolve/'
+txcmd=" --exclude 'atMR/' --exclude 'atMEG/'  --exclude 'docs' --exclude 'sounds' --exclude 'old' --exclude 'log/' --exclude 'data/'  --include 'timing/' --include 'timing/[aw]*/' --include '/timing/[aw]*/best/' --include '/timing/[aw]*/best/*' --exclude 'timing/***' --exclude '1d' --exclude 'private/*/' --exclude 'parallelPort/'  --exclude 'testdata' --exclude '.git/' --exclude 'versionTests/' --exclude 'screenshots/' --exclude 'csv' . $asdir"
+
+eval "rsync  -nrvhi $txcmd"
 
 echo "good? C-c for no"
 read
 
-rsync  -rvhi --exclude 'atMR/' --exclude 'atMEG/'  --exclude 'old' --exclude 'log/' --exclude 'data/' --exclude 'timing/*/stims' --exclude 'timing/deconvolve/' --exclude '.git/'  . $asdir
+eval "rsync  -rvhi $txcmd"
 
 
 sudo sync

@@ -51,7 +51,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
 
     % 20150112 - WF - counter balence will be which finger instead of which hand
     hostInfo.Admin_PC.keys.WM        = KbName({'2@','3#',...
-                                               '3#','2@'});
+                                               }); ...'3#','2@'});
                                                ...% '8*','7&'});
     % N.B. on CB B/Y keys are flipped.
     % first (after flip if B) is always same
