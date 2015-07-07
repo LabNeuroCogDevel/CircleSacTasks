@@ -108,6 +108,9 @@ function subject=workingMemory(varargin)
     subject = getSubjectInfo(prdgmStruct,'task','WorkingMemory','modality',modality, varargin{:});
     
     
+    % put subject info into the log
+    fprintf('Subject: %s_%s\n',subject.id,subject.rundate);
+    fprintf('CB: %s\n',subject.cb);
     
     % setup keys such that the correct LEFT push is at LEFT index       
     % what keys will we accept as correct/incorrect
