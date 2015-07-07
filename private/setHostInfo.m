@@ -44,6 +44,7 @@ function [ thishostinfo ] = setHostInfo( varargin )
     %%%%%%%%%%%%%%%% SUBJECT FACING COMPUTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
     % deg size may force some WM dots off screen!
+    % hostInfo.Admin_PC.screenResolution=[800 600];
     hostInfo.Admin_PC.hSize = 28.5;  % 29 from Brian (22 is height)
     hostInfo.Admin_PC.vDist = 130;   % 
     hostInfo.Admin_PC.modality = 'fMRI';
