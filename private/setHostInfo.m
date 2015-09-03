@@ -41,6 +41,8 @@ function [ thishostinfo ] = setHostInfo( varargin )
     % will's laptop
     hostInfo.yogert = hostInfo.OACO4CNRL6;
     
+
+    
     %%%%%%%%%%%%%%%% SUBJECT FACING COMPUTERS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Admin-PC --> Admin_PC is fMRI (at the MRCTR)
     % deg size may force some WM dots off screen!
@@ -66,6 +68,10 @@ function [ thishostinfo ] = setHostInfo( varargin )
     %practice 
     hostInfo.Practice_PC = hostInfo.upmc_56ce704785;
     hostInfo.Practice_PC.keys = hostInfo.Admin_PC.keys;
+    
+    % undegrad hallway
+    hostInfo.JenPC = hostInfo.Admin_PC;
+    hostInfo.JenPC.screenResolution=[800 600];
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% MEG

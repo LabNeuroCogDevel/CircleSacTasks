@@ -48,7 +48,7 @@ function correct = reconstructFromLog(matf,varargin)
   % could have preallocated, but broke up into another function. each log is independent
   correct=[];
   for logf={logfs.name}
-   %logfile=[logdir logf{1}], m.cb,
+   logfile=[logdir logf{1}]; %m.cb,
    correct=[correct, getCorrect(logfile, m.cb(1)) ];
   end % each file
 

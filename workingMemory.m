@@ -170,7 +170,7 @@ function subject=workingMemory(varargin)
     for i=1:2, fprintf('%s is key %d\n', hostinfo.keys.WMnames{i}, listenKeys(i)),end
     
     %psychtoolbox bit
-    try
+    %try
          w = setupScreen();
          %a = setupAudio();
           
@@ -208,8 +208,11 @@ function subject=workingMemory(varargin)
               times= struct2array(times) ;
               times = [times.onset ];
               lasttime=min(times(times>0));
+              lasttimecheck=max(times);
             else
               lasttime=starttime;
+              lasttimecheck=starttime;
+
             end
               
             
@@ -218,6 +221,7 @@ function subject=workingMemory(varargin)
             %what will the wait be?
             wait=e.timing.cue.ideal-lasttime;
             fprintf('ITI: next fix is in %fs\n',wait);
+            fprintf('ITI: next fix is in %fs (from max instead of min) \n',e.timing.cue.ideal-lasttimecheck);
             subject.waitbefore(subject.curTrl)=wait;
           
             % sreen,audio,load,hemichange,playcue, colors, positions
@@ -317,13 +321,13 @@ function subject=workingMemory(varargin)
      instructions(w,endStructions,endStructions,subject);   
          
          
-     catch
- 
-         % error kill all.
-         closedown();
-         psychrethrow(psychlasterror);
+    %catch
+    %     
+    %     % error kill all.
+    %     closedown();
+    %     psychrethrow(psychlasterror);
          %clear a;
-     end
+    % end
     
     
     closedown();

@@ -61,7 +61,16 @@ function     [events, varargout] = generateWMcolorPos(events)
             % +/- 1
             colorChangeOpts=mod( origColor + floor(nColors/2)-1 + [-1:1],nColors );
             colorChangeOpts(colorChangeOpts==0)=nColors;
-            colorChange=RandSample(colorChangeOpts);
+            try
+              colorChange=RandSample(colorChangeOpts);
+            catch
+              try
+                colorChange=PsychRandSample(colorChangeOpts,[1 1]);
+              catch
+               fprintf('cannot generate randsample! -- PsychRandSample and RandSample fail')
+               closedown()
+              end
+            end
             % I thought it'd be nice if any of the colors close to the
             % opposite were NOT in original mem set, but there are not
             % enough colors for this
