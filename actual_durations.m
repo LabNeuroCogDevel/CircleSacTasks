@@ -21,7 +21,7 @@ function durs =  actual_durations()
     prevdurs = bdurs{ bdur(i,2) };
     
     % build by appending
-    bdurs{ bdur(i,2) } = [ prevdurs   ];
+    bdurs{ bdur(i,2) } = [ prevdurs  newdur ];
   end
   
   %% miniblock durations
@@ -37,7 +37,7 @@ function durs =  actual_durations()
   [unique_mbids,~,mbii] = unique( reshape(mbids,[],1) );
   
   % put all the durations into a long vector instead of a matrix
-  mbdur = reshape(m(:,7:10),[],1)
+  mbdur = reshape(m(:,7:10),[],1);
   
   % create a vector of durations for each miniblockbreak
   % by appending to an initially empty vector
@@ -52,11 +52,19 @@ function durs =  actual_durations()
     mbdurs{mbid} = [prevmbdurs thismbdur ];
   end
   
-  durs = struct('mb_breaks', mbdurs, 'block', bdurs );
+  % durs = struct('block', bdurs, 'mb_breaks', mbdurs, 'mbids',unique_mbids  );
+   durs = struct();
+   durs.block=bdurs;
+   durs.mb_breaks=mbdurs;
+   durs.mbids=unique_mbids;
+   durs.m    = m;
+   
+   % b=reshape(cell2mat(durs.block),[],3)
 end
 
 
 %% helper functions
+
 
 % want to combine 2 rows of values 1:3 into one distinct values
 % 1 2 becomes 12;  3 1 becomes 31
@@ -71,20 +79,21 @@ end
 function m = alltiming()
   f=glob('/mnt/B/bea_res/Data/Tasks/Attention/Control/*/*/mat/*mat');
   f= f(cellfun(@isempty, regexp(f,'practice') ));
-  
-  m = cell2mat( cellfun(@readmatfile,f,'UniformOutput',0) );
+  allvals = cellfun(@readmatfile,f,'UniformOutput',0);
+  m = cell2mat( allvals );
   % remove bad data (zeros in first column) -- 3 of them
   m = m( m(:,1)>0, :);
 end
 
 
 % parse attention mat files for timing duration info
-% returns a vector of 16 values
+% returns a vector of 17 values
 % 1:6   - duration of the actual block in order of presentation
 % 7:10  - duration of the mini block break in order of presentation
 % 11:16 - numeric id of blocks in order they occur (1: pop,2: hab,3: flex)
+% 17    - rundate
 function r =  readmatfile(matfile)
-   r=zeros(1,16);
+   r=zeros(1,17);
    matfile,
    
    %matfile='/mnt/B/bea_res/Data/Tasks/Attention/Clinical/11327/20140911/mat/Attention_11327_fMRI_20140911.mat'
@@ -139,7 +148,8 @@ function r =  readmatfile(matfile)
      b_dur(mbi) =  endtime(eidx) - cuetime(sidx);
    end
    
-   r=[b_dur mb_dur mb_order ];
+   r=[b_dur mb_dur mb_order str2num(s.rundate)  ];
+   %disp(size(r));
 
 end
 
