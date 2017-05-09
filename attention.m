@@ -210,7 +210,7 @@ function subject = attention(varargin)
       
       
       % start time, wait for ^ if needed
-      starttime = startRun(w);
+      starttime = startRun(w,varargin{:});
       %starttime=getSecs();
       
       subject.starttime(thisBlk)=starttime;

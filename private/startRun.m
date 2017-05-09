@@ -1,7 +1,21 @@
-function [starttime]=startRun(w)
+function [starttime]=startRun(w,varargin)
   %% startRun -- if fMRI wait for trigger, MEG reset codes
+  % optional varargin is keycode to wait for -- added so we can manual start scanner
   global modality TEXTCOLOR;
  
+
+
+  triggerKey=KbName('=+');
+  triggertxt='Get Ready! (waiting for scanner)'
+
+  % normally the scanner sends an '=' over the keyboard to signal first tr
+  % but sometimes it does it before discarding all the volumes!
+  % in this case we can use the argument/switch 'manualstart' and wait for a spacebar instead
+  useSpaceBar= any(cellfun(@(x) ischar(x)&&strcmpi(x,'manualStart'), varargin))
+  if useSpaceBar
+    triggerKey=KbName('space');
+    triggertxt='Get Ready! (waiting for manual spacebar start)'
+  end
   
   % remove any hold over from previous runs
   clear -global DIOHANDLE
@@ -11,15 +25,14 @@ function [starttime]=startRun(w)
 
   if(strcmpi(modality,'fMRI'))
      fprintf('Wait for =\n');
-     DrawFormattedText(w, 'Get Ready! (waiting for scanner)', ...
-            'center','center',TEXTCOLOR);
+     DrawFormattedText(w, triggertxt,'center','center',TEXTCOLOR);
      Screen('Flip', w);
      scannerTR=0;
      
      % wait for carrot
      while(~scannerTR)
          [keyPressed, responseTime, keyCode] = KbCheck;
-         if keyPressed && keyCode(KbName('=+')  )
+         if keyPressed && keyCode(triggerKey)
              scannerTR=1;
          end
      end

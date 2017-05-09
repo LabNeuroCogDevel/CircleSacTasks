@@ -178,7 +178,7 @@ function subject=workingMemory(varargin)
          instructions(w,newInstructions,betweenInstructions,subject,varargin{:});
          
          % starttime is now
-         starttime=startRun(w);
+         starttime=startRun(w,varargin{:});
          %starttime=GetSecs();
          subject.starttime(thisBlk) = starttime;
          % run the actual task
